@@ -1,0 +1,20 @@
+{
+  "name": "fernando-claude-marketplace",
+  "description": "Marketplace pessoal de plugins e skills para Claude Code e Cowork — foco em analise contratual brasileira, produtividade e criacao de conteudo.",
+  "owner": {
+    "name": "Fernando Costa",
+    "email": "fernandinho.costa.neto@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "legal-analyzer",
+      "description": "Suite de analise contratual BR — coordenador + 9 skills (revisar, triagem NDA, compliance LGPD, risco, briefings, fornecedor, resposta, assinatura) com verificacao numerica e classificacao tricolor.",
+      "version": "0.1.0",
+      "source": "./legal-analyzer",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": ["legal", "contratos", "brasil", "lgpd", "compliance", "portugues"]
+    }
+  ]
+}

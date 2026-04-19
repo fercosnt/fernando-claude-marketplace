@@ -1,0 +1,23 @@
+{
+  "skill_name": "checar-fornecedor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Preciso checar o status do fornecedor SaaS Acme Analytics. Temos:\n- NDA assinado em 10/01/2024, prazo 2 anos\n- Contrato de servico SaaS iniciado em 15/03/2024, termo de 12 meses\n- SOW de implementacao entregue em 01/06/2024, ja encerrado\n- Eles processam dados de nossos clientes (nomes, emails, historico de compras)\n\nO que falta? Qual a situacao?",
+      "expected_output": "Relatorio estruturado. Status: NDA VENCIDO (venceu 10/01/2026), contrato SaaS VENCIDO ou VENCENDO (iniciou 15/03/2024 com termo 12 meses, venceu 15/03/2025 — ja vencido), SOW ENCERRADO (OK), DPA AUSENTE (RED — processa dados pessoais, exige LGPD arts. 37-45), SLA AUSENTE (RED — servico SaaS critico), MSA AUSENTE (YELLOW — relacao recorrente). Timeline de vencimentos. Acoes: URGENTE renovar NDA, URGENTE renovar contrato, URGENTE celebrar DPA, ALTA celebrar SLA, MEDIA formalizar MSA. Disclaimer presente.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Estou contratando um fornecedor novo pra fazer um trabalho de consultoria pontual de R$ 8.000. Nao temos nenhum documento ainda. Ele vai ter acesso a alguns dados internos nossos mas nao a dados de clientes. Como devo proceder?",
+      "expected_output": "Relatorio de fornecedor novo. Todos os 5 documentos AUSENTE. Plano de onboarding documental com priorizacao pragmatica: NDA obrigatorio (acesso a dados internos), SOW recomendado (escopo e entregaveis pontuais), MSA dispensavel (trabalho pontual de baixo valor), DPA dispensavel (sem dados de clientes), SLA dispensavel (projeto pontual). Acoes claras com prazos sugeridos. Nao forcar os 5 documentos dado o porte da relacao. Disclaimer presente.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Fornecedor critico de infraestrutura (hospedagem de sistema core). MSA foi assinado em 01/06/2023 com prazo de 3 anos. SLA anexo ao MSA. DPA assinado em 01/06/2023 tambem. NDA nao tem porque esta embutido no MSA. Ha varios SOWs ativos. Como esta a situacao?",
+      "expected_output": "Relatorio. Status: MSA VENCENDO (vence 01/06/2026, janela de renovacao de 90 dias ja aberta — em abril/2026), SLA VENCENDO (junto com MSA), DPA VENCENDO, NDA DISPENSADO com justificativa (embutido no MSA — GREEN), SOWs listados como INDEFINIDO ou detalhados conforme info. Alerta ATENCAO/URGENTE para janela de renovacao de 90 dias do MSA/SLA/DPA. Recomendacao: iniciar renegociacao imediatamente dado o carater critico do servico. Disclaimer presente.",
+      "files": []
+    }
+  ]
+}

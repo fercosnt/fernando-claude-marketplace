@@ -1,0 +1,46 @@
+{
+  "skill_name": "triagem-nda",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Analisa esse NDA pra mim:\n\nACORDO DE CONFIDENCIALIDADE\n\nPelo presente instrumento, TECH SOLUTIONS LTDA, CNPJ 12.345.678/0001-90, sede em Sao Paulo/SP (\"Parte Divulgadora\") e INOVACAO DIGITAL LTDA, CNPJ 98.765.432/0001-10, sede em Curitiba/PR (\"Parte Receptora\"), firmam o presente Acordo de Confidencialidade (\"NDA\").\n\n1. OBJETO: A Parte Receptora se compromete a manter em sigilo todas as informacoes tecnicas, comerciais e financeiras compartilhadas pela Parte Divulgadora no ambito da avaliacao de parceria comercial para desenvolvimento de software.\n\n2. INFORMACAO CONFIDENCIAL: Considera-se confidencial toda informacao tecnica (codigo-fonte, arquitetura, APIs), comercial (clientes, precos, estrategia) e financeira (faturamento, projecoes) fornecida por escrito ou verbalmente, desde que identificada como confidencial no momento da divulgacao.\n\n3. EXCLUSOES: Nao serao consideradas confidenciais informacoes que: (a) sejam ou se tornem de dominio publico sem culpa da Parte Receptora; (b) ja estivessem em posse da Parte Receptora antes deste acordo; (c) sejam desenvolvidas independentemente; (d) sejam recebidas de terceiros sem obrigacao de sigilo; (e) sejam exigidas por lei ou ordem judicial.\n\n4. OBRIGACOES: A Parte Receptora devera: proteger as informacoes com o mesmo grau de cuidado que dispensa as suas proprias; limitar acesso a funcionarios e contratados com necessidade de saber; vincular tais pessoas a obrigacao de confidencialidade equivalente.\n\n5. DISCLOSURES: E permitida a divulgacao a funcionarios, contratados e consultores juridicos/financeiros da Parte Receptora, desde que vinculados por obrigacao de sigilo.\n\n6. PRAZO: Este acordo vigora por 2 (dois) anos a partir da assinatura. As obrigacoes de confidencialidade sobrevivem por 3 (tres) anos apos o termino.\n\n7. DEVOLUCAO: Ao termino, a Parte Receptora devolvera ou destruira todas as informacoes confidenciais em ate 30 dias, mediante certificacao escrita, ressalvadas copias exigidas por obrigacoes regulatorias.\n\n8. REMEDIOS: As partes reconhecem que a violacao podera causar dano irreparavel, autorizando tutela de urgencia. Clausula penal: R$ 50.000,00 por violacao.\n\n9. FORO: Fica eleito o foro da Comarca de Sao Paulo/SP.\n\nSao Paulo, 15 de marco de 2026.\n[assinaturas]",
+      "expected_output": "Classificacao final GREEN. Todas as 10 dimensoes devem ser avaliadas. Unilateral mas justificavel (YELLOW na dimensao 1). 5/5 carveouts (GREEN). Prazo razoavel. Sem clausulas problematicas. Foro definido.",
+      "files": [],
+      "assertions": [
+        {"type": "contains", "value": "GREEN", "description": "Classificacao final deve ser GREEN ou predominantemente GREEN"},
+        {"type": "contains", "value": "10", "description": "Deve avaliar todas as 10 dimensoes"},
+        {"type": "contains", "value": "5/5", "description": "Deve identificar 5/5 carveouts presentes"},
+        {"type": "contains", "value": "NAO constitui parecer juridico", "description": "Deve conter disclaimer obrigatorio"},
+        {"type": "contains", "value": "Resumo Executivo", "description": "Deve seguir estrutura do relatorio"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Olha esse NDA que me mandaram, ta estranho:\n\nTERMO DE SIGILO E NAO CONCORRENCIA\n\nENTRE: MEGA CORP S.A., CNPJ 11.111.111/0001-11, Sao Paulo/SP\nE: Joao da Silva, CPF 123.456.789-00\n\n1. CONFIDENCIALIDADE: Joao da Silva se compromete a manter em absoluto sigilo toda e qualquer informacao da MEGA CORP, sem excecao, por prazo indeterminado.\n\n2. NAO CONCORRENCIA: Durante a vigencia deste termo e por 5 (cinco) anos apos seu termino, Joao da Silva se compromete a nao exercer, direta ou indiretamente, qualquer atividade concorrente com a MEGA CORP em todo o territorio nacional.\n\n3. NAO SOLICITACAO: Joao da Silva nao podera, pelo prazo de 3 anos, contatar ou solicitar qualquer cliente, fornecedor ou funcionario da MEGA CORP.\n\n4. PENALIDADE: Em caso de violacao, Joao da Silva pagara multa de R$ 500.000,00 (quinhentos mil reais) por ocorrencia, sem prejuizo de perdas e danos.\n\n5. FORO: Foro da Comarca de Sao Paulo/SP.\n\nSao Paulo, 01 de abril de 2026.\n[assinaturas]",
+      "expected_output": "Classificacao final RED. Deve detectar: non-compete embutido (5 anos, sem compensacao, territorio nacional inteiro — falha nos 5 requisitos TST), NDA unilateral sem justificativa, definicao vaga de info confidencial, prazo perpetuo, ausencia de carveouts, clausula penal possivelmente excessiva com cumulacao vedada.",
+      "files": [],
+      "assertions": [
+        {"type": "contains", "value": "RED", "description": "Classificacao final deve ser RED"},
+        {"type": "contains_any", "values": ["non-compete", "nao-competicao", "nao concorrencia", "Non-Compete"], "description": "Deve detectar non-compete embutido"},
+        {"type": "contains", "value": "TST", "description": "Deve mencionar requisitos do TST"},
+        {"type": "contains_any", "values": ["compensacao", "contraprestacao"], "description": "Deve apontar ausencia de compensacao financeira"},
+        {"type": "contains_any", "values": ["perpetuo", "indeterminado", "sem prazo"], "description": "Deve identificar prazo abusivo"},
+        {"type": "contains_any", "values": ["carveout", "exclus"], "description": "Deve notar ausencia de carveouts"},
+        {"type": "contains", "value": "NAO constitui parecer juridico", "description": "Deve conter disclaimer"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Preciso assinar esse NDA amanha cedo, da uma olhada rapida:\n\nACORDO MUTUO DE CONFIDENCIALIDADE\n\nENTRE: ALPHA INDUSTRIA E COMERCIO LTDA, CNPJ 22.333.444/0001-55, Belo Horizonte/MG (\"Alpha\")\nE: BETA CONSULTORIA LTDA, CNPJ 55.666.777/0001-88, Rio de Janeiro/RJ (\"Beta\")\n\n1. OBJETO: As Partes desejam trocar informacoes confidenciais para avaliar potencial parceria na area de logistica.\n\n2. INFORMACAO CONFIDENCIAL: Informacoes tecnicas, comerciais, operacionais e estrategicas, fornecidas por qualquer meio, que sejam identificadas como confidenciais ou que, pela natureza, devam ser tratadas como tal.\n\n3. EXCLUSOES: Nao sao confidenciais: (a) informacoes publicas; (b) posse previa comprovada; (c) desenvolvimento independente.\n\n4. OBRIGACOES: Cada Parte protegera as informacoes recebidas com diligencia razoavel, limitando acesso a quem precise conhece-las.\n\n5. PRAZO: 1 ano de vigencia. Obrigacoes de sigilo por 2 anos apos o termino.\n\n6. DEVOLUCAO: Ao termino, devolver ou destruir materiais em 15 dias.\n\n7. CLAUSULA PENAL: R$ 100.000,00 por violacao.\n\n8. FORO: Arbitragem ad hoc.\n\nBelo Horizonte, 05 de abril de 2026.\n[assinaturas]",
+      "expected_output": "Classificacao YELLOW. Pontos: mutual (GREEN), definicao ok mas sem lista de exclusoes completa, faltam 2 carveouts (terceiros e compulsao legal), sem clausula de disclosures a terceiros, sem certificacao na devolucao, arbitragem sem instituicao (YELLOW), sem mencao a tutela de urgencia nos remedios.",
+      "files": [],
+      "assertions": [
+        {"type": "contains", "value": "YELLOW", "description": "Classificacao final deve ser YELLOW"},
+        {"type": "contains_any", "values": ["3/5", "3 de 5", "faltam 2", "faltam dois"], "description": "Deve identificar carveouts faltantes"},
+        {"type": "contains_any", "values": ["compulsao legal", "ordem judicial", "exigencia legal"], "description": "Deve notar ausencia do carveout de compulsao legal"},
+        {"type": "contains_any", "values": ["terceiros", "recebida de terceiro"], "description": "Deve notar ausencia do carveout de terceiros"},
+        {"type": "contains", "value": "NAO constitui parecer juridico", "description": "Deve conter disclaimer"}
+      ]
+    }
+  ]
+}

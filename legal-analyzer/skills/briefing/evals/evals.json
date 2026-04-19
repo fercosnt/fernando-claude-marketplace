@@ -1,0 +1,47 @@
+{
+  "skill_name": "briefing",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/briefing topico reajuste de aluguel comercial — meu contrato vence em 3 meses e o locador quer aplicar IGP-M acumulado de 2 anos, posso recusar?",
+      "expected_output": "Briefing com legislacao (Lei 8.245/1991, CC), jurisprudencia sobre revisional de aluguel, explicacao sobre IGP-M vs IPCA, next steps concretos incluindo negociacao e acao revisional",
+      "files": [],
+      "assertions": [
+        {"name": "has_resumo_executivo", "type": "contains_section", "check": "Resumo Executivo"},
+        {"name": "cites_lei_locacao", "type": "content_check", "check": "Menciona Lei 8.245/1991 ou Lei do Inquilinato"},
+        {"name": "has_next_steps", "type": "contains_section", "check": "Next Steps com checklist acionavel"},
+        {"name": "has_disclaimer", "type": "content_check", "check": "Contem disclaimer de nao constitui parecer juridico"},
+        {"name": "discusses_igpm_vs_ipca", "type": "content_check", "check": "Aborda diferenca ou adequacao IGP-M vs IPCA"},
+        {"name": "has_fontes", "type": "contains_section", "check": "Secao Fontes com referencias"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/briefing incidente descobrimos que um fornecedor de TI que tem acesso ao nosso banco de dados de clientes sofreu um vazamento de dados. Temos contrato de prestacao de servicos com eles mas sem clausula LGPD especifica.",
+      "expected_output": "Briefing de incidente com severidade CRITICA/ALTA, obrigacoes LGPD (notificacao ANPD 72h, titulares), contratos afetados, ausencia de DPA como agravante, next steps urgentes",
+      "files": [],
+      "assertions": [
+        {"name": "has_severidade", "type": "content_check", "check": "Classifica severidade (CRITICA ou ALTA)"},
+        {"name": "mentions_72h_anpd", "type": "content_check", "check": "Menciona prazo 72h para notificacao ANPD (art. 48 LGPD)"},
+        {"name": "identifies_lgpd_gap", "type": "content_check", "check": "Identifica ausencia de clausula LGPD/DPA como problema"},
+        {"name": "has_obrigacoes_imediatas", "type": "contains_section", "check": "Secao Obrigacoes Imediatas"},
+        {"name": "has_next_steps_urgentes", "type": "content_check", "check": "Next steps com acoes marcadas como URGENTE"},
+        {"name": "has_disclaimer", "type": "content_check", "check": "Contem disclaimer"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/briefing diario — estou acompanhando 3 contratos: um de locacao comercial que vence em 15 dias, um NDA com fornecedor que precisa renovar, e uma obra de reforma onde o empreiteiro atrasou 2 semanas",
+      "expected_output": "Briefing diario com tabela de prazos, pendencias por contrato, alertas priorizados (locacao como urgente), next steps para o dia",
+      "files": [],
+      "assertions": [
+        {"name": "has_prazos_proximos", "type": "contains_section", "check": "Secao Prazos Proximos com tabela"},
+        {"name": "prioritizes_locacao", "type": "content_check", "check": "Locacao aparece como item critico/urgente (vence em 15 dias)"},
+        {"name": "covers_all_3_contracts", "type": "content_check", "check": "Aborda os 3 contratos: locacao, NDA, obra"},
+        {"name": "has_alertas", "type": "contains_section", "check": "Secao Alertas com indicadores de prioridade"},
+        {"name": "has_next_steps_hoje", "type": "contains_section", "check": "Next Steps para Hoje com checklist"},
+        {"name": "has_disclaimer", "type": "content_check", "check": "Contem disclaimer"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "skill_name": "compliance",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Analisa a conformidade deste contrato de prestacao de servicos de TI:\n\nCONTRATO DE PRESTACAO DE SERVICOS DE TECNOLOGIA DA INFORMACAO\n\nCONTRATANTE: TechBras Solucoes Ltda, CNPJ 12.345.678/0001-00\nCONTRATADA: DataSync Informatica S.A., CNPJ 98.765.432/0001-00\n\n1. OBJETO: Prestacao de servicos de desenvolvimento e manutencao de sistema ERP, incluindo integracao com banco de dados de clientes.\n\n2. PRECO E PAGAMENTO: R$ 25.000,00 mensais, reajustados anualmente pelo IPCA/IBGE.\n\n3. PRAZO: 24 meses a partir da assinatura, renovavel por iguais periodos.\n\n4. CLAUSULA PENAL: Multa de 10% sobre o valor remanescente do contrato em caso de rescisao antecipada sem justa causa.\n\n5. LGPD — PROTECAO DE DADOS PESSOAIS:\n5.1. A CONTRATANTE atua como Controladora dos dados pessoais tratados no escopo deste contrato. A CONTRATADA atua como Operadora.\n5.2. Os dados pessoais de clientes serao tratados exclusivamente para fins de integracao do sistema ERP, com base na execucao de contrato (LGPD art. 7, V).\n5.3. A CONTRATADA adotara medidas tecnicas e administrativas de seguranca, incluindo criptografia em transito e repouso, controle de acesso por funcao e logs de auditoria (LGPD art. 46).\n5.4. Incidentes de seguranca serao comunicados a CONTRATANTE em ate 48 horas apos ciencia.\n5.5. A CONTRATADA nao subcontratara terceiros para tratamento de dados sem autorizacao previa e escrita da CONTRATANTE.\n5.6. A CONTRATADA cooperara com a CONTRATANTE para atender requisicoes de titulares conforme arts. 17-22 da LGPD, no prazo de 15 dias uteis.\n5.7. Ao termino do contrato, a CONTRATADA devolvera ou eliminara todos os dados pessoais em ate 30 dias, conforme instrucao da CONTRATANTE.\n\n6. RESCISAO: Aviso previo de 60 dias.\n\n7. FORO: Comarca de Sao Paulo/SP.",
+      "expected_output": "LGPD: maioria GREEN, item 4 (incidentes) YELLOW por prazo de 48h em vez de 72h recomendado. CC: GREEN na maioria. Classificacao geral YELLOW.",
+      "files": [],
+      "assertions": [
+        {"text": "Identifica corretamente os 7 itens do checklist LGPD", "type": "content"},
+        {"text": "Classifica notificacao de incidentes como YELLOW por prazo 48h vs 72h recomendado", "type": "content"},
+        {"text": "Avalia clausula penal como GREEN (10% sobre remanescente esta dentro do limite do CC art. 412)", "type": "content"},
+        {"text": "Classificacao geral e YELLOW (pelo menos 1 YELLOW, nenhum RED)", "type": "content"},
+        {"text": "Inclui disclaimer obrigatorio ao final", "type": "content"},
+        {"text": "Cita artigos reais da LGPD e CC sem inventar", "type": "content"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Verifica a compliance deste contrato de trabalho:\n\nCONTRATO INDIVIDUAL DE TRABALHO\n\nEMPREGADOR: Clinica Saude Total Ltda, CNPJ 11.222.333/0001-44\nEMPREGADO: Maria Silva, CPF 123.456.789-00\n\n1. FUNCAO: Recepcionista\n2. SALARIO: R$ 2.500,00 mensais\n3. JORNADA: 44 horas semanais\n\n4. PROTECAO DE DADOS: A empregada consente expressamente com o tratamento de seus dados pessoais para todas as finalidades relacionadas ao contrato de trabalho, incluindo envio de informacoes ao eSocial, controle de ponto biometrico e comunicacoes internas.\n\n5. CLAUSULA PENAL: Em caso de descumprimento de qualquer obrigacao contratual, a parte infratora pagara multa de R$ 50.000,00.\n\n6. CONFIDENCIALIDADE: A empregada obriga-se a manter sigilo absoluto sobre todas as informacoes da clinica por prazo indeterminado apos o termino do contrato.\n\n7. FORO: Comarca de Belo Horizonte/MG.",
+      "expected_output": "LGPD: RED na base legal (consentimento em relacao de emprego e inadequado — usar execucao de contrato art. 7 V ou obrigacao legal art. 7 II). RED ou YELLOW em varios itens LGPD ausentes (incidentes, suboperadores, direitos, destinacao). CC: RED na clausula penal (R$ 50k e desproporcional ao salario de R$ 2.500). Classificacao geral RED.",
+      "files": [],
+      "assertions": [
+        {"text": "Detecta que consentimento e base legal inadequada em relacao de emprego", "type": "content"},
+        {"text": "Recomenda execucao de contrato (art. 7, V) ou obrigacao legal (art. 7, II) como alternativa", "type": "content"},
+        {"text": "Classifica clausula penal como RED por desproporcionalidade (CC art. 412)", "type": "content"},
+        {"text": "Identifica ausencia de clausulas LGPD obrigatorias (incidentes, suboperadores, direitos, destinacao)", "type": "content"},
+        {"text": "Classificacao geral e RED", "type": "content"},
+        {"text": "Inclui disclaimer obrigatorio", "type": "content"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Faz avaliacao de compliance deste contrato:\n\nCONTRATO DE FORNECIMENTO DE MATERIAIS DE ESCRITORIO\n\nCOMPRADOR: Escritorio Contabil ABC Ltda, CNPJ 55.666.777/0001-88\nFORNECEDOR: Papelaria Express ME, CNPJ 99.888.777/0001-11\n\n1. OBJETO: Fornecimento mensal de materiais de escritorio conforme lista anexa.\n2. VALOR: R$ 3.000,00 mensais, reajustados pelo IGP-M.\n3. PRAZO: 12 meses.\n4. ENTREGA: Ate o 5o dia util de cada mes.\n5. PAGAMENTO: 30 dias apos entrega mediante boleto.\n6. GARANTIA: Troca de produtos com defeito em ate 7 dias da entrega.\n7. CLAUSULA PENAL: Atraso na entrega: 0,5% ao dia sobre o valor da parcela, limitada a 10%.\n8. RESCISAO: Aviso previo de 30 dias.\n9. FORO: Comarca de Curitiba/PR.",
+      "expected_output": "LGPD: nao aplicavel (contrato nao envolve dados pessoais). CC: GREEN na maioria — clausula penal proporcional, garantia presente, reajuste por IGP-M aceitavel. Possivel YELLOW no uso de IGP-M para materiais (IPCA seria mais usual). Classificacao geral GREEN ou YELLOW.",
+      "files": [],
+      "assertions": [
+        {"text": "Identifica que LGPD nao se aplica (sem tratamento de dados pessoais)", "type": "content"},
+        {"text": "Avalia clausula penal como GREEN (proporcional e limitada)", "type": "content"},
+        {"text": "Verifica garantia como adequada", "type": "content"},
+        {"text": "Classificacao geral GREEN ou YELLOW", "type": "content"},
+        {"text": "Inclui disclaimer obrigatorio", "type": "content"}
+      ]
+    }
+  ]
+}

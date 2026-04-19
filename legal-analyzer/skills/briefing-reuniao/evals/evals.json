@@ -1,0 +1,134 @@
+{
+  "skill_name": "briefing-reuniao",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Amanha tenho reuniao com o fornecedor TechServ para discutir o contrato de prestacao de servicos de TI. Eles querem aumentar o valor mensal de R$ 45.000 para R$ 62.000, alegando reajuste por IGP-M. Participam eu (gerente de compras), o diretor financeiro Marcelo e do lado deles o comercial Rafael e o juridico deles. O contrato vence em 60 dias e tem clausula de renovacao automatica. Me ajuda a preparar?",
+      "expected_output": "Briefing pre-reuniao completo com: mapa de participantes, pontos-chave sobre reajuste (IGP-M vs IPCA para servicos), red lines sobre clausula penal e renovacao automatica, talking points para negociar valor, perguntas estrategicas, decisoes necessarias. Deve citar CC arts. 478-480 (onerosidade) e mencionar que IGP-M pode nao ser indice adequado para servicos.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "has-participants-map",
+          "text": "Output contem tabela/mapa de participantes com nomes, cargos e papeis",
+          "type": "contains_structure"
+        },
+        {
+          "id": "has-red-lines",
+          "text": "Output contem secao de red lines com justificativa legal",
+          "type": "contains_section"
+        },
+        {
+          "id": "has-talking-points",
+          "text": "Output contem talking points praticos (frases que o usuario pode dizer)",
+          "type": "contains_section"
+        },
+        {
+          "id": "mentions-ipca-vs-igpm",
+          "text": "Output discute adequacao do indice de reajuste (IGP-M vs IPCA para servicos)",
+          "type": "contains_concept"
+        },
+        {
+          "id": "cites-real-articles",
+          "text": "Output cita artigos reais do CC (ex: 478-480 onerosidade, 473 renovacao)",
+          "type": "legal_citation"
+        },
+        {
+          "id": "has-disclaimer",
+          "text": "Output termina com disclaimer de que nao constitui parecer juridico",
+          "type": "contains_text"
+        },
+        {
+          "id": "has-decisions-needed",
+          "text": "Output contem lista de decisoes que precisam sair da reuniao",
+          "type": "contains_section"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Acabei de sair de uma reuniao com a construtora Edifica sobre o contrato de empreitada do novo galpao. Foram 2 horas. Deixa eu te contar o que rolou: o engenheiro deles (Paulo) disse que o cronograma vai atrasar 45 dias por causa de chuvas. O Marcos (nosso juridico) questionou que o contrato preve multa de 0,5% por dia de atraso. Eles pediram para trocar o indice de INCC para IGP-M no reajuste. A gente concordou em dar 15 dias extras mas nao os 45. Ficou de o Paulo mandar o novo cronograma ate sexta e o Marcos revisar a clausula de forca maior. A proxima reuniao ficou para dia 20.",
+      "expected_output": "Registro pos-reuniao estruturado com: participantes, resumo, decisoes (15 dias extras aprovados, IGP-M rejeitado), action items com responsavel e prazo (Paulo: cronograma ate sexta, Marcos: revisar forca maior), pontos nao resolvidos (30 dias restantes, indice de reajuste), proxima reuniao dia 20.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "has-action-items-table",
+          "text": "Output contem tabela de action items com colunas: acao, responsavel, prazo, prioridade",
+          "type": "contains_structure"
+        },
+        {
+          "id": "captures-paulo-action",
+          "text": "Output registra action item de Paulo (enviar cronograma ate sexta)",
+          "type": "contains_specific"
+        },
+        {
+          "id": "captures-marcos-action",
+          "text": "Output registra action item de Marcos (revisar clausula de forca maior)",
+          "type": "contains_specific"
+        },
+        {
+          "id": "captures-decisions",
+          "text": "Output registra decisao dos 15 dias extras e rejeicao do IGP-M",
+          "type": "contains_concept"
+        },
+        {
+          "id": "has-unresolved-points",
+          "text": "Output identifica pontos nao resolvidos (30 dias restantes, indice de reajuste)",
+          "type": "contains_section"
+        },
+        {
+          "id": "has-next-meeting",
+          "text": "Output registra proxima reuniao para dia 20",
+          "type": "contains_specific"
+        },
+        {
+          "id": "has-disclaimer",
+          "text": "Output termina com disclaimer de que nao constitui parecer juridico",
+          "type": "contains_text"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Preciso me preparar para uma reuniao de renovacao do contrato de locacao do nosso escritorio. O locador quer reajuste de 28% alegando IGP-M acumulado. Nosso contrato e de 5 anos e esta no 4o ano. Somos locatarios. Participam eu, nosso advogado externo Dra. Patricia, e do lado do locador o administrador do imovel Sr. Carlos e o advogado Dr. Fernando. Temos interesse em renovar por mais 5 anos pois investimos R$ 200.000 em benfeitorias. Gera o briefing completo.",
+      "expected_output": "Briefing pre-reuniao com: analise do direito a renovatoria (Lei 8.245/1991 art. 51), discussao IGP-M acumulado vs reajuste justo, benfeitorias como argumento de negociacao, red lines sobre percentual abusivo, talking points sobre renovatoria compulsoria, perguntas estrategicas sobre condicoes de renovacao.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "mentions-renovatoria",
+          "text": "Output menciona acao renovatoria (Lei 8.245/1991 art. 51) como argumento do locatario",
+          "type": "legal_citation"
+        },
+        {
+          "id": "discusses-benfeitorias",
+          "text": "Output usa benfeitorias (R$ 200.000) como ponto de negociacao",
+          "type": "contains_concept"
+        },
+        {
+          "id": "has-reajuste-analysis",
+          "text": "Output analisa se 28% de reajuste e razoavel e discute alternativas",
+          "type": "contains_concept"
+        },
+        {
+          "id": "has-participants-roles",
+          "text": "Output mapeia participantes com papeis claros (decisor, tecnico, juridico)",
+          "type": "contains_structure"
+        },
+        {
+          "id": "has-red-lines-legal",
+          "text": "Output define red lines com fundamentacao na Lei de Locacoes",
+          "type": "contains_section"
+        },
+        {
+          "id": "has-talking-points-practical",
+          "text": "Output contem talking points praticos sobre renovatoria e benfeitorias",
+          "type": "contains_section"
+        },
+        {
+          "id": "has-disclaimer",
+          "text": "Output termina com disclaimer de que nao constitui parecer juridico",
+          "type": "contains_text"
+        }
+      ]
+    }
+  ]
+}

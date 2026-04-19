@@ -1,0 +1,143 @@
+{
+  "skill_name": "assinatura",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Confere esse contrato antes de assinar:\n\nCONTRATO DE PRESTACAO DE SERVICOS\n\nPelo presente instrumento particular, de um lado [EMPRESA CONTRATANTE], pessoa juridica de direito privado, inscrita no CNPJ sob n. 12.345.678/0001-90, com sede na Rua das Flores, 100, Centro, Sao Paulo/SP, CEP 01000-000, neste ato representada por seu Diretor, Sr. Joao da Silva, portador do CPF [PREENCHER] (doravante CONTRATANTE), e de outro lado TECH SOLUCOES LTDA, inscrita no CNPJ sob n. 98.765.432/0001-10, com sede na [PREENCHER], neste ato representada por [PREENCHER] (doravante CONTRATADA).\n\nCLAUSULA 1 - OBJETO: Prestacao de servicos de consultoria em TI conforme especificacao no Anexo I.\n\nCLAUSULA 2 - VALOR: R$ 180.000,00 (cento e oitenta mil reais), pagos em 12 parcelas mensais de R$ 16.000,00.\n\nCLAUSULA 3 - PRAZO: 12 meses a partir da assinatura.\n\nCLAUSULA 5 - RESCISAO: Qualquer das partes pode rescindir mediante aviso previo de 30 dias.\n\nCLAUSULA 6 - FORO: Fica eleito o foro da Comarca de Sao Paulo/SP.\n\nE por estarem assim justas e contratadas, as partes assinam o presente em 2 vias.\n\nSao Paulo, __ de ______ de 2026.\n\n_________________________\nCONTRATANTE\n\n_________________________\nCONTRATADA",
+      "expected_output": "RED geral. Deve detectar: 3+ campos [PREENCHER], razao social contratante em branco, CPF do representante em branco, endereco contratada em branco, representante contratada em branco, soma 12x16000=192000 != 180000 (erro numerico), clausula 4 pulada (salto numeracao), sem testemunhas, data incompleta, Anexo I referenciado mas nao fornecido.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "campos_preencher_detectados",
+          "type": "contains",
+          "description": "Detecta todos os campos [PREENCHER] como RED",
+          "check": "Relatorio identifica pelo menos 3 campos [PREENCHER] e classifica como RED"
+        },
+        {
+          "name": "erro_numerico_detectado",
+          "type": "logic",
+          "description": "12 x R$16.000 = R$192.000, nao R$180.000",
+          "check": "Relatorio identifica inconsistencia entre valor total (180.000) e soma das parcelas (12 x 16.000 = 192.000)"
+        },
+        {
+          "name": "salto_clausula_detectado",
+          "type": "contains",
+          "description": "Clausula 4 ausente — numeracao pula de 3 para 5",
+          "check": "Relatorio menciona salto na numeracao de clausulas (3 para 5)"
+        },
+        {
+          "name": "testemunhas_ausentes",
+          "type": "contains",
+          "description": "Sem campo para testemunhas",
+          "check": "Relatorio menciona ausencia de testemunhas"
+        },
+        {
+          "name": "anexo_ausente_detectado",
+          "type": "contains",
+          "description": "Anexo I referenciado mas nao fornecido",
+          "check": "Relatorio menciona que Anexo I e referenciado mas nao esta presente"
+        },
+        {
+          "name": "resultado_geral_red",
+          "type": "logic",
+          "description": "Resultado geral deve ser RED dado os multiplos bloqueantes",
+          "check": "Resultado geral do checklist e RED"
+        },
+        {
+          "name": "disclaimer_presente",
+          "type": "contains",
+          "description": "Disclaimer obrigatorio presente",
+          "check": "Disclaimer de nao constituir parecer juridico presente no final"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Esse contrato de locacao esta pronto pra assinar? Confere pra mim:\n\nCONTRATO DE LOCACAO COMERCIAL\n\nLOCADOR: Maria Santos Oliveira, brasileira, empresaria, portadora do CPF 111.222.333-44, residente na Av. Brasil, 500, Apt 101, Jardins, Sao Paulo/SP, CEP 01430-000.\n\nLOCATARIO: COMERCIO RAPIDO LTDA, inscrita no CNPJ 55.666.777/0001-88, com sede na Rua Augusta, 200, Consolacao, Sao Paulo/SP, CEP 01304-000, neste ato representada por seu socio-administrador Pedro Henrique Costa, CPF 999.888.777-66.\n\nCLAUSULA 1 - OBJETO: Locacao do imovel comercial situado na Rua Oscar Freire, 350, loja 2, Jardins, Sao Paulo/SP.\n\nCLAUSULA 2 - PRAZO: 36 meses, com inicio em 01/05/2026 e termino em 30/04/2029.\n\nCLAUSULA 3 - ALUGUEL: R$ 12.000,00 mensais, com reajuste anual pelo IGP-M/FGV.\n\nCLAUSULA 4 - GARANTIA: Caucao de 3 meses (R$ 36.000,00) depositada na assinatura.\n\nCLAUSULA 5 - ENCARGOS: IPTU, condominio e seguro contra incendio por conta do locatario.\n\nCLAUSULA 6 - RESCISAO: Multa de 3 alugueis proporcional ao tempo restante.\n\nCLAUSULA 7 - VISTORIA: Sera realizada vistoria de entrada com laudo fotografico, Anexo I.\n\nCLAUSULA 8 - FORO: Comarca de Sao Paulo/SP.\n\nSao Paulo, 25 de abril de 2026.\n\n_________________________\nMaria Santos Oliveira - Locadora\n\n_________________________\nPedro Henrique Costa - Locatario\np/ COMERCIO RAPIDO LTDA\n\nTestemunhas:\n1. Nome: _____________ CPF: _____________\n2. Nome: _____________ CPF: _____________\n\nANEXO I - LAUDO DE VISTORIA\n[Laudo com fotos e descricao do estado do imovel - 5 paginas]",
+      "expected_output": "GREEN ou YELLOW geral. Contrato bem estruturado. Possiveis YELLOWs: testemunhas com campos em branco (precisam ser preenchidas na hora), falta de CEP do imovel locado, poderia ter clausula de confidencialidade. Nao deve ter REDs.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "resultado_nao_red",
+          "type": "logic",
+          "description": "Contrato bem estruturado nao deve ser RED",
+          "check": "Resultado geral e GREEN ou YELLOW, nao RED"
+        },
+        {
+          "name": "qualificacao_completa_reconhecida",
+          "type": "contains",
+          "description": "Reconhece que a qualificacao das partes esta completa",
+          "check": "Secao de qualificacao das partes tem itens GREEN"
+        },
+        {
+          "name": "consistencia_verificada",
+          "type": "contains",
+          "description": "Verifica consistencia corpo x anexo",
+          "check": "Relatorio verifica que o Anexo I (vistoria) esta presente e referenciado corretamente"
+        },
+        {
+          "name": "testemunhas_em_branco_notadas",
+          "type": "contains",
+          "description": "Nota que testemunhas tem campos em branco",
+          "check": "Menciona que campos de testemunhas precisam ser preenchidos"
+        },
+        {
+          "name": "proporcionalidade_mantida",
+          "type": "logic",
+          "description": "Nao deve ser catastrofista com contrato bem feito",
+          "check": "Recomendacao final e positiva (assinar ou assinar com pequenas correcoes)"
+        },
+        {
+          "name": "disclaimer_presente",
+          "type": "contains",
+          "description": "Disclaimer presente",
+          "check": "Disclaimer de nao constituir parecer juridico presente"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Confere a consistencia desse contrato com o anexo antes de assinar:\n\nCONTRATO:\nCLAUSULA 2 - VALOR: R$ 500.000,00 pelo fornecimento conforme Anexo II - Especificacao Tecnica.\nCLAUSULA 3 - PAGAMENTO: 5 parcelas de R$ 100.000,00 conforme cronograma no Anexo III.\nCLAUSULA 4 - PRAZO: Entrega em 90 dias conforme cronograma Anexo III.\nCLAUSULA 8 - FAZEM PARTE INTEGRANTE: Anexo I - Proposta Comercial, Anexo II - Especificacao Tecnica, Anexo III - Cronograma.\n\nANEXO II - ESPECIFICACAO TECNICA:\nFornecimento de equipamentos industriais conforme proposta ref. PC-2026-042.\nValor total: R$ 480.000,00.\n\nANEXO III - CRONOGRAMA:\nEtapa 1 (30 dias): R$ 120.000,00\nEtapa 2 (60 dias): R$ 120.000,00\nEtapa 3 (90 dias): R$ 120.000,00\nEtapa 4 (120 dias): R$ 120.000,00\nTotal: R$ 480.000,00\nPrazo total: 120 dias",
+      "expected_output": "RED. Deve detectar: valor corpo (500k) != valor anexo II (480k), parcelas corpo (5x100k=500k) != cronograma anexo III (4x120k=480k), prazo corpo (90 dias) != prazo anexo III (120 dias), Anexo I listado mas ausente, numero de parcelas divergente (5 no corpo, 4 no anexo).",
+      "files": [],
+      "assertions": [
+        {
+          "name": "valor_divergente_detectado",
+          "type": "contains",
+          "description": "Corpo diz 500k, anexos dizem 480k",
+          "check": "Relatorio identifica divergencia de valor entre corpo (R$ 500.000) e anexos (R$ 480.000)"
+        },
+        {
+          "name": "prazo_divergente_detectado",
+          "type": "contains",
+          "description": "Corpo diz 90 dias, cronograma diz 120 dias",
+          "check": "Relatorio identifica divergencia de prazo entre corpo (90 dias) e Anexo III (120 dias)"
+        },
+        {
+          "name": "parcelas_divergentes_detectadas",
+          "type": "contains",
+          "description": "Corpo: 5 parcelas, Anexo: 4 etapas",
+          "check": "Relatorio identifica divergencia no numero de parcelas/etapas"
+        },
+        {
+          "name": "anexo_ausente_detectado",
+          "type": "contains",
+          "description": "Anexo I listado na clausula 8 mas nao fornecido",
+          "check": "Relatorio identifica que Anexo I (Proposta Comercial) esta listado mas ausente"
+        },
+        {
+          "name": "resultado_red",
+          "type": "logic",
+          "description": "Multiplas divergencias criticas devem gerar RED",
+          "check": "Resultado geral e RED"
+        },
+        {
+          "name": "disclaimer_presente",
+          "type": "contains",
+          "description": "Disclaimer presente",
+          "check": "Disclaimer presente no final"
+        }
+      ]
+    }
+  ]
+}

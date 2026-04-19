@@ -1,0 +1,125 @@
+{
+  "skill_name": "avaliacao-risco",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Estamos renovando contrato de prestacao de servicos de TI com um fornecedor que atrasou entregas 3 vezes nos ultimos 6 meses. O contrato e de R$ 240.000/ano. O fornecedor agora quer incluir clausula de exclusividade sem prazo definido e remover a clausula de SLA. Qual o risco de renovar nessas condicoes?",
+      "expected_output": "Memo com score ORANGE ou RED. Deve identificar: exclusividade sem prazo como risco anticoncorrencial (Lei 12.529/2011), remocao de SLA como aumento de severidade, historico de atrasos como fator de probabilidade alta. Mitigacoes devem incluir manter SLA e limitar exclusividade.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "matriz_5x5_presente",
+          "type": "contains",
+          "description": "Memo contem matriz 5x5 com scores de severidade e probabilidade",
+          "check": "O memo apresenta scores numericos de severidade (1-5) e probabilidade (1-5) com justificativa para cada"
+        },
+        {
+          "name": "score_calculado_corretamente",
+          "type": "logic",
+          "description": "Score final = severidade x probabilidade, e classificacao corresponde a faixa correta",
+          "check": "O score final e o produto de S x P e a classificacao (GREEN/YELLOW/ORANGE/RED) corresponde a faixa"
+        },
+        {
+          "name": "classificacao_orange_ou_red",
+          "type": "logic",
+          "description": "Dado historico de atrasos + exclusividade sem prazo + remocao SLA, classificacao deve ser >= ORANGE",
+          "check": "Classificacao e ORANGE (10-15) ou RED (16-25)"
+        },
+        {
+          "name": "exclusividade_sem_prazo_identificada",
+          "type": "contains",
+          "description": "Identifica exclusividade sem prazo como risco",
+          "check": "Memo menciona exclusividade sem prazo como problema, preferencialmente citando Lei 12.529/2011 ou risco anticoncorrencial"
+        },
+        {
+          "name": "mitigacoes_concretas",
+          "type": "contains",
+          "description": "Plano de mitigacao com acoes concretas, responsavel e prazo",
+          "check": "Memo inclui tabela ou lista de mitigacoes com acoes especificas, responsavel sugerido e prazo"
+        },
+        {
+          "name": "disclaimer_presente",
+          "type": "contains",
+          "description": "Disclaimer obrigatorio no final do memo",
+          "check": "Memo termina com aviso de que nao constitui parecer juridico"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Recebemos notificacao extrajudicial de um ex-funcionario terceirizado alegando vinculo empregaticio. Ele trabalhou por 18 meses na nossa sede, com horario fixo, usando nossos equipamentos. O contrato de terceirizacao com a empresa dele e de R$ 15.000/mes. O que devo avaliar aqui?",
+      "expected_output": "Memo com score RED ou ORANGE alto. Deve identificar gatilho de escalacao (potencial litigio). Fatores: subordinacao direta, pessoalidade, habitualidade como indicios de vinculo (CLT arts. 2-3). Deve recomendar advogado trabalhista obrigatoriamente.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "escalacao_obrigatoria",
+          "type": "contains",
+          "description": "Detecta que ha potencial litigio e recomenda advogado",
+          "check": "Memo contem alerta de escalacao ou recomendacao expressa de consultar advogado trabalhista"
+        },
+        {
+          "name": "vinculo_empregaticio_analisado",
+          "type": "contains",
+          "description": "Analisa os requisitos de vinculo empregaticio",
+          "check": "Memo menciona subordinacao, pessoalidade, habitualidade ou onerosidade como fatores de risco"
+        },
+        {
+          "name": "score_elevado",
+          "type": "logic",
+          "description": "Score deve refletir risco elevado dado os indicios claros",
+          "check": "Score >= 10 (ORANGE ou RED)"
+        },
+        {
+          "name": "monitoramento_presente",
+          "type": "contains",
+          "description": "Secao de monitoramento com indicadores",
+          "check": "Memo inclui secao de monitoramento com indicadores e frequencia de acompanhamento"
+        },
+        {
+          "name": "disclaimer_presente",
+          "type": "contains",
+          "description": "Disclaimer obrigatorio presente",
+          "check": "Disclaimer de nao constituir parecer juridico presente"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Quero avaliar o risco de um contrato de locacao comercial que estamos assinando. Aluguel de R$ 8.500/mes, predio na Paulista, prazo de 36 meses. O contrato nao tem clausula de reajuste definida e a garantia e apenas caucao de 1 mes. Parece ok pra mim, mas quero uma segunda opiniao.",
+      "expected_output": "Memo com score YELLOW. Deve identificar: ausencia de indice de reajuste como risco moderado (deveria ser IGP-M para locacao), caucao de 1 mes como garantia baixa. Nao deve ser catastrofista — e uma locacao padrao com pontos de atencao, nao um desastre.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "reajuste_identificado",
+          "type": "contains",
+          "description": "Identifica ausencia de indice de reajuste como problema",
+          "check": "Memo menciona falta de indice de reajuste definido e sugere IGP-M como padrao para locacao"
+        },
+        {
+          "name": "proporcionalidade_mantida",
+          "type": "logic",
+          "description": "Score proporcional — nao catastrofista para locacao padrao",
+          "check": "Score entre 4 e 12 (GREEN alto a ORANGE baixo), refletindo risco moderado e nao critico"
+        },
+        {
+          "name": "lei_locacao_referenciada",
+          "type": "contains",
+          "description": "Referencia Lei 8.245/1991 ou legislacao de locacao",
+          "check": "Memo cita Lei 8.245/1991 ou Lei do Inquilinato"
+        },
+        {
+          "name": "fatores_contribuintes_equilibrados",
+          "type": "contains",
+          "description": "Lista fatores que aumentam E diminuem o risco",
+          "check": "Memo tem fatores positivos (localizacao, prazo definido) e negativos (sem reajuste, garantia baixa)"
+        },
+        {
+          "name": "disclaimer_presente",
+          "type": "contains",
+          "description": "Disclaimer obrigatorio presente",
+          "check": "Disclaimer de nao constituir parecer juridico presente"
+        }
+      ]
+    }
+  ]
+}

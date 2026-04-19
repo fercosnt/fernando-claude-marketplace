@@ -1,0 +1,8 @@
+{
+  "name": "legal-analyzer",
+  "version": "0.1.0",
+  "description": "Suite completa de analise contratual brasileira — coordenador + 9 skills especializadas (revisar, triagem NDA, compliance LGPD, risco, briefings, fornecedor, resposta, assinatura) com verificacao numerica, classificacao tricolor e playbook protocol.",
+  "author": {
+    "name": "Fernando Costa"
+  }
+}
