@@ -25,6 +25,16 @@
         "name": "Fernando Costa"
       },
       "tags": ["prd", "product-management", "requirements", "planning", "discovery", "deep-modules", "testing", "portugues"]
+    },
+    {
+      "name": "deck-builder",
+      "description": "Plugin para criar STORYBOARD.md de apresentacoes em 8 verticais (fundraising/sales/clinical/equipment/teaching/proposal/scientific/internal) + 2 auxiliares (image-prompts/reviewer) + 1 orquestrador (deck-orchestrator). Entry: /deck. 11 skills, 8 contratos compartilhados, 4 templates (storyboard + poster D8 + brands.yaml + env), lint shell+grep. Auto-detect Beauty Smile/Fotona/Carnaval 360. NotebookLM-aware (3 NBs, 734 sources).",
+      "version": "1.0.0",
+      "source": "./deck-builder",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": ["deck", "slides", "storyboard", "presentation", "fundraising", "sales", "clinical", "teaching", "scientific", "portugues", "brasil"]
     }
   ]
 }

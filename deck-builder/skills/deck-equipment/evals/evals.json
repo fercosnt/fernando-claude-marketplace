@@ -1,0 +1,58 @@
+{
+  "skill_name": "deck-equipment",
+  "evals": [
+    {
+      "id": 1,
+      "name": "fotona-lightwalker-smile-premium-sp",
+      "prompt": "Smile Premium SP esta avaliando comprar Fotona LightWalker AT S por R$280k a vista (ou R$320k em 36x). Clinica boutique com 4 cadeiras, projeta 18 pacientes/mes de laser, payback alvo 18 meses. Esta comparando com Lumenis LightSheer. Cria STORYBOARD pra aprovar a compra em 60 dias.",
+      "expected_output": "STORYBOARD modo padrao, 18 slides, com: (1) auto-detection Fotona ativada (tag anvisa-laser-classe-iii); (2) FAB 3 features Er:YAG, Nd:YAG e integracao dual; (3) comparativo respeitoso com Lumenis sem badmouth; (4) TCO 5 anos R$280k aquisicao + consumo Er+Nd + manutencao a partir Ano 3 + treinamento Ano 1/3 + total acumulado; (5) Payback 18m no realista; (6) Sensitivity 3 cenarios (otimista ~9m, realista 18m, pessimista ~30m com frase de defesa); (7) Compliance Anvisa Classe III + registro citado ou 🟡 a confirmar; (8) checklist 3 tiers preenchido.",
+      "assertions": [
+        {"text": "Frontmatter declara Skill geradora: deck-equipment e Marca: Fotona", "type": "manual"},
+        {"text": "Compliance tag anvisa-laser-classe-iii aparece (auto-detection Fotona)", "type": "manual"},
+        {"text": "Slides 5, 6 e 7 cada um tem F-A-B explicitos (3 blocos por slide)", "type": "manual"},
+        {"text": "Slide 8 cita Lumenis pelo nome SEM nenhuma das frases proibidas (inferior, ultrapassado, nao funciona, etc.)", "type": "manual"},
+        {"text": "Slide 10 tem tabela TCO 5 colunas (Ano 1-5) × 5 componentes (aquisicao, consumiveis, manutencao, treinamento, software/total)", "type": "manual"},
+        {"text": "Slide 11 declara payback 18 meses no cenario realista com formula explicita", "type": "manual"},
+        {"text": "Slide 12 tem 3 colunas (otimista/realista/pessimista) e frase de defesa do pessimista", "type": "manual"},
+        {"text": "Slide 14 menciona Classe III + numero registro (ou marca 🟡 a confirmar)", "type": "manual"},
+        {"text": "Bloco compliance no rodape do storyboard usa 3 tiers (🔴/🟡/✅)", "type": "manual"}
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "megagen-anyridge-dentista-solo-comparativo",
+      "prompt": "Dentista solo (1 dentista, 2 cadeiras) quer adotar Megagen AnyRidge Knife Thread como implante primario. Custo R$280/unidade em caixa de 10 = R$2.800. Pacote inicial 5 caixas = R$14k. Projeta 5 implantes/mes com payback alvo 18-24 meses. Esta comparando com Straumann (premium global) e Neodent (premium BR). Cria STORYBOARD.",
+      "expected_output": "STORYBOARD modo comparativo (3 marcas em E5), 18-20 slides com: (1) FAB 3 features AnyRidge (Knife Thread, superficie XPEED, conexao hexagonal); (2) Slides 8a + 8b + 8c expandidos (forcas / limites / criterio neutro de escolha); (3) tabela 8a com 3 colunas Megagen/Straumann/Neodent × 3 forcas cada; (4) tabela 8b com 3 colunas × 2 limites cada com fonte; (5) Slide 8c com criterio neutro de escolha (NAO declara vencedor geral); (6) TCO 5 anos com compra incremental por caixa; (7) Payback considera margem por implante e 5/mes; (8) Sensitivity 3 cenarios incluindo pessimista 3/mes; (9) Compliance Classe III Megagen Brasil.",
+      "assertions": [
+        {"text": "Modo comparativo detectado a partir de E5 com 2+ marcas", "type": "manual"},
+        {"text": "Slides 8a, 8b e 8c presentes (slide 8 expandido em 3)", "type": "manual"},
+        {"text": "Tabela 8a tem 3 colunas (Megagen/Straumann/Neodent) com 3 forcas cada", "type": "manual"},
+        {"text": "Tabela 8b tem 3 colunas com 2 limites cada e cada limite tem fonte", "type": "manual"},
+        {"text": "Slide 8c articula criterio NEUTRO (volume / mix / orcamento), nao declara vencedor geral", "type": "manual"},
+        {"text": "Nenhuma frase proibida do anti-badmouth em 8a/8b/8c", "type": "manual"},
+        {"text": "TCO 5 anos modela compra incremental por caixa (nao bloco unico R$14k)", "type": "manual"},
+        {"text": "Payback considera margem por implante e volume 5/mes", "type": "manual"},
+        {"text": "Sensitivity 3 cenarios com pessimista 3/mes (~50% do realista 5/mes)", "type": "manual"}
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "scanner-trios-5-ortodontista",
+      "prompt": "Ortodontista quer comprar 3Shape Trios 5 (R$110k aquisicao + assinatura Trios Care R$8.4k/ano + software 3Shape Communicate) pra migrar workflow ortodontico para digital. Consultorio com 1 ortodontista, 3 cadeiras. Projeta 12 casos digitais/mes com payback alvo 24 meses. Comparando com iTero 5D Plus. Cria STORYBOARD.",
+      "expected_output": "STORYBOARD modo padrao (1 alternativa unica em E5), 17 slides, com: (1) FAB 3 features Wireless+ScanAssist IA / abertura ortodontica multi-fabricante / workflow digital end-to-end; (2) Comparativo iTero respeitoso citando integracao Align como forca, vendor lock-in Align como limite, Trios como aberto; (3) TCO 5 anos incluindo assinatura anual Trios Care + software 3Shape; (4) Payback considera economia de moldagem analogica (R$500-1500 por aparelho); (5) Sensitivity 3 cenarios (otimista 24/mes, realista 12/mes, pessimista 8/mes); (6) Slide 14 declara Classe II + LGPD para STL/PLY; (7) Slide 13 enfatiza treinamento (curva wireless + 3Shape Communicate).",
+      "assertions": [
+        {"text": "Modo padrao detectado (1 alternativa unica em E5)", "type": "manual"},
+        {"text": "Slide 8 cita iTero pelo nome SEM frase proibida e destaca abertura Trios vs lock-in Align com fonte ou contexto neutro", "type": "manual"},
+        {"text": "TCO 5 anos inclui assinatura anual Trios Care (R$8.4k × 5)", "type": "manual"},
+        {"text": "Payback considera economia por digitalizacao do fluxo (economia de moldagem analogica), nao apenas margem direta", "type": "manual"},
+        {"text": "Sensitivity 3 cenarios com pessimista 8/mes (~67% do realista 12/mes)", "type": "manual"},
+        {"text": "Slide 14 declara Classe II + LGPD aplicada aos arquivos STL/PLY", "type": "manual"},
+        {"text": "Slide 13 enfatiza onboarding wireless + curva de aprendizado 3Shape Communicate", "type": "manual"},
+        {"text": "Frontmatter Marca: 3Shape ou generico (sem auto-detect Fotona)", "type": "manual"}
+      ],
+      "files": []
+    }
+  ]
+}

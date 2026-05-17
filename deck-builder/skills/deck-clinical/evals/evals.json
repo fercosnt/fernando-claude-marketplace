@@ -1,0 +1,56 @@
+{
+  "skill_name": "deck-clinical",
+  "evals": [
+    {
+      "id": 1,
+      "name": "er-yag-clareamento-peer",
+      "prompt": "Preciso preparar uma apresentacao de 20min pra dentistas no curso pos-graduacao Beauty Smile. Big Idea: 'Dentistas aprovam protocolo Er:YAG como alternativa ao peroxido em casos de hipersensibilidade severa'. Audiencia: dentistas clinicos gerais + esteticos. Protocolo: clareamento dental com Er:YAG 2940nm Fotona (off-label vs peroxido convencional). Indicacao: hipersensibilidade severa + recessao gengival. Evidencia: 1 case series + 2 RCTs piloto, GRADE moderate para clareamento, LOW para cura sintomatica 12m. Audiencia especialista. Tenho antes-e-depois COM TCLE assinado.",
+      "expected_output": "STORYBOARD modo peer-facing com 12 slides Calgary-Cambridge: capa, caso clinico, problema geral, mecanismo Er:YAG, GRADE por outcome explicito, protocolo dosimetria, demo, antes-e-depois com TCLE mencionado no body, outcome curto, follow-up 6m, slide compliance com Anvisa Classe III + COI Fotona, CTA Q&A. Bloco final 3 tiers preenchido (provavelmente 🔴 vazio ou pendencia placeholder Anvisa, 🟡 sobre off-label/COI graduacao, ✅ TCLE/GRADE/Anvisa/COI). Tag anvisa-laser-classe-iii injetada.",
+      "assertions": [
+        {"text": "Frontmatter Meta tem Modo: peer-facing", "category": "structural"},
+        {"text": "12 slides gerados (faixa peer-facing 10-14)", "category": "structural"},
+        {"text": "Slide tipo comparativo (antes-e-depois) menciona TCLE explicitamente no body", "category": "compliance-critical"},
+        {"text": "Slide tipo disclaimer cita registro Anvisa + COI Fotona", "category": "compliance-critical"},
+        {"text": "Slide tipo dados de evidencia contem string 'GRADE' com nivel especificado", "category": "framework"},
+        {"text": "Compliance tag anvisa-laser-classe-iii presente no Meta header", "category": "auto-detection"},
+        {"text": "Bloco Compliance & Disclaimers (3 tiers) tem pelo menos 1 linha por tier", "category": "compliance-d7"},
+        {"text": "Nenhum termo proibido (cura/garantido/100%/reverte completamente) presente no STORYBOARD", "category": "language"}
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "all-on-4-patient-sem-tcle-BLOCKER",
+      "prompt": "Vou apresentar plano de tratamento pra paciente de 55 anos na proxima consulta. Big Idea: 'Paciente aprova plano All-on-4 e agenda procedimento em 30 dias'. Paciente perdeu 8 dentes superiores, prefere solucao definitiva, saudavel, expectativa vida >20a. Plano: All-on-4 maxilar (4 implantes + protocolo carga imediata). Evidencia: systematic review Malo et al. 2021, 95% sobrevivencia 10a, GRADE HIGH. Marca: Beauty Smile. Tenho antes-e-depois de outro caso mas TCLE pendente — paciente do caso original ainda nao assinou liberacao.",
+      "expected_output": "STORYBOARD modo patient-facing com 7 slides AIDET. Slide 1 capa acolhedora; slide 2 A+I (Dr. Fernando + Beauty Smile); slide 3-4 E (situacao + plano em linguagem leiga); slide 5 D (duracao); slide 6 alternativas (All-on-4 / removivel / unitarios / NAO fazer nada — OBRIGATORIO porque invasivo); slide 7 T (proximos passos). Bloco final compliance DEVE ter 🔴 BLOCKER para TCLE pendente (CFO Res. 196/2019 art. 18 II g) + recomendacao de remover antes-e-depois OU obter TCLE. STORYBOARD foi gerado mesmo com 🔴 (D7 SEM hard-block — valida regra). Sem jargao tecnico nos titulos (osseointegracao/carga imediata substituidos).",
+      "assertions": [
+        {"text": "Frontmatter Meta tem Modo: patient-facing", "category": "structural"},
+        {"text": "7 slides gerados (faixa patient-facing 6-8)", "category": "structural"},
+        {"text": "Slide tipo comparativo (alternativas) lista pelo menos 4 opcoes incluindo 'nao fazer nada'", "category": "consent-critical"},
+        {"text": "Bloco Compliance tem linha 🔴 BLOCKER mencionando TCLE pendente + cita CFO Res. 196/2019", "category": "compliance-critical"},
+        {"text": "STORYBOARD foi gerado completo mesmo com BLOCKER (valida D7 sem hard-block)", "category": "compliance-d7"},
+        {"text": "Nenhum action title contem termos tecnicos (osseointegracao, carga imediata, periodontite)", "category": "language-leiga"},
+        {"text": "Bloco Compliance & Disclaimers (3 tiers) tem pelo menos 1 linha por tier", "category": "compliance-d7"},
+        {"text": "AIDET aplicado: slide 2 = A+I, slide 5 = D, slides 3-4 = E, slide 7 = T", "category": "framework"}
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "ciosp-laser-endodontia-peer",
+      "prompt": "Aula no CIOSP 'Laser na endodontia — Nd:YAG vs Er:YAG'. 45min + Q&A. Audiencia: endodontistas + clinico-gerais (~80 pessoas). Big Idea: 'Dentistas do CIOSP saem entendendo quando aplicar Nd:YAG vs Er:YAG em endodontia'. Protocolo: descontaminacao do canal radicular comparando Nd:YAG 1064nm + Er:YAG 2940nm Fotona. Indicacao: necrose pulpar com infeccao persistente, retratamento. Evidencia: 3 systematic reviews + 1 meta-analise descontaminacao GRADE HIGH; 1 RCT pequeno alto vies cura sintomatica 6m GRADE LOW. Sou KOL Fotona. Tenho antes-e-depois com TCLE + imagens radiograficas pre/pos.",
+      "expected_output": "STORYBOARD modo peer-facing 14 slides Calgary-Cambridge: capa, caso clinico (dente 36 necrose 2 retratamentos), problema irrigacao convencional, mecanismo Nd:YAG vs Er:YAG, 3 slides evidencia (GRADE HIGH descontaminacao SEPARADO de GRADE LOW cura sintomatica), protocolos separados Nd:YAG e Er:YAG com dosimetria, demo procedural, antes-e-depois radiografico com TCLE, slide compliance Fotona Anvisa Classe III + COI KOL declarado, CTA Q&A, apendice 5 papers. Bloco final 3 tiers: 🔴 placeholder registro Anvisa, 🟡 confirmacoes dosimetria bula + off-label, ✅ TCLE/GRADE-por-outcome/COI/Anvisa/bloco-evidencia/apendice.",
+      "assertions": [
+        {"text": "Frontmatter Meta tem Modo: peer-facing", "category": "structural"},
+        {"text": "14 slides gerados (faixa peer-facing 10-14)", "category": "structural"},
+        {"text": "Aparecem DUAS mencoes de GRADE em slides distintos (HIGH descontaminacao e LOW cura sintomatica)", "category": "framework-rigor"},
+        {"text": "Apendice tem 5 papers de referencia", "category": "structural"},
+        {"text": "Slide tipo comparativo menciona TCLE no body", "category": "compliance-critical"},
+        {"text": "COI Fotona declarado em slide proprio (compliance/disclaimer) E no bloco final 3 tiers", "category": "compliance-critical"},
+        {"text": "Compliance tag anvisa-laser-classe-iii presente no Meta header", "category": "auto-detection"},
+        {"text": "Bloco Compliance & Disclaimers (3 tiers) tem pelo menos 1 linha por tier", "category": "compliance-d7"}
+      ],
+      "files": []
+    }
+  ]
+}

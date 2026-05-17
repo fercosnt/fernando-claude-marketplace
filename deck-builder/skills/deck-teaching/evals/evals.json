@@ -1,0 +1,66 @@
+{
+  "skill_name": "deck-teaching",
+  "evals": [
+    {
+      "id": 1,
+      "name": "aula-60min-dosimetria-eryag",
+      "prompt": "Preciso preparar uma aula de 60min sobre dosimetria laser Er:YAG para dentistas pos-graduados. Eles tem base de laser mas nao calculam fluence sozinhos. Quero 2 hands-on (calculo + protocolo simulado) e quiz somativo de 8 questoes no final. Audiencia mista iniciante/intermediario. Big Idea: 'Fluence calculada vence o achismo do equipamento'. Marca Fotona.",
+      "expected_output": "STORYBOARD modo aula-tecnica ~45-55 slides com Meta declarando max_ctas:4, verbo Bloom APLICAR, 8 chunks <=7min cada com retrieval practice, 2 hands-on estruturados (tempo+materiais+criterio), quiz somativo final, 4 CTAs [PRATICA][LEITURA][QUIZ][PROXIMO], invoca laser-physics para formulas, invoca deck-image-prompts para capa + slides conceituais. SEM Sparkline Duarte. Slide 2 lista 3+ objetivos iniciando com APLICAR.",
+      "files": [],
+      "assertions": [
+        {"text": "Meta declara 'Modo: aula-tecnica'", "type": "contains"},
+        {"text": "Meta declara 'max_ctas: 4'", "type": "contains"},
+        {"text": "Meta declara verbo Bloom alvo APLICAR", "type": "contains"},
+        {"text": "Slide 2 lista objetivos iniciando com APLICAR em caixa alta", "type": "structural"},
+        {"text": "Apresenta 8 chunks com tempo estimado <=7min cada", "type": "structural"},
+        {"text": "Cada chunk tem slide de retrieval practice/quiz formativo no final", "type": "structural"},
+        {"text": "2 hands-on contados e estruturados com tempo+materiais+criterio", "type": "structural"},
+        {"text": "Slide final com 4 CTAs tagueados [PRATICA] [LEITURA] [QUIZ] [PROXIMO]", "type": "structural"},
+        {"text": "Cross-skill: invoca laser-physics no protocolo de execucao", "type": "process"},
+        {"text": "Invoca deck-image-prompts para capa e slides conceituais", "type": "process"},
+        {"text": "Nao usa Sparkline Duarte (exclusivo de keynote)", "type": "negative"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "workshop-4h-implantodontia",
+      "prompt": "Workshop de 4 horas sobre implantodontia basica. Dentistas clinicos sem experiencia em implante. Quero 2 hands-on (modelo plastico + caso integrador) e avaliacao final por caso integrador. Big Idea: 'Primeiro implante mata o medo do segundo'. Marca generica.",
+      "expected_output": "STORYBOARD modo workshop-hands-on ~30-40 slides com Meta declarando max_ctas:4, verbo Bloom APLICAR, 3-4 modulos conceituais alternados com 2 hands-on + caso integrador final. Slide 3 = pre-avaliacao + agenda visivel. Cada hands-on com briefing+execucao+debrief. 4 CTAs [APLICAR][LEITURA][FECHAR CASO][PROXIMO]. Worksheets referenciados em apendice (NAO produzidos). SEM chunks <=7min rigidos. SEM Sparkline.",
+      "files": [],
+      "assertions": [
+        {"text": "Meta declara 'Modo: workshop-hands-on'", "type": "contains"},
+        {"text": "Meta declara 'max_ctas: 4'", "type": "contains"},
+        {"text": "Meta declara verbo Bloom alvo APLICAR", "type": "contains"},
+        {"text": "Slide 2 lista objetivos iniciando com APLICAR em caixa alta", "type": "structural"},
+        {"text": "Estrutura: 3-4 modulos conceituais alternados com 2 hands-on", "type": "structural"},
+        {"text": "Cada hands-on tem briefing+execucao+debrief com tempo+materiais+criterio", "type": "structural"},
+        {"text": "Caso integrador no final (T5)", "type": "structural"},
+        {"text": "Slide final com 4 CTAs tagueados [APLICAR] [LEITURA] [FECHAR CASO] [PROXIMO]", "type": "structural"},
+        {"text": "Worksheets referenciados em apendice (NAO produzidos pela skill)", "type": "structural"},
+        {"text": "Nao impoe chunks <=7min rigidos (workshop opera em modulos)", "type": "negative"},
+        {"text": "Nao usa Sparkline Duarte", "type": "negative"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "keynote-18min-futuro-odonto-premium",
+      "prompt": "Vou dar um keynote inspiracional de 18min em evento para dentistas-proprietarios sobre o futuro da odontologia premium. Quero que saiam com uma nova visao sobre o papel deles. Big Idea: 'Voce esta vendendo procedimento; o futuro vende transformacao'. Marca Beauty Smile. Sem hands-on, sem quiz.",
+      "expected_output": "STORYBOARD modo keynote-inspirational 15-18 slides com Sparkline Duarte aplicado (capa+BigIdea -> contexto what-is -> promessa what-could-be -> tensao 1 -> resolucao 1 -> tensao 2 mais profunda -> resolucao 2 revelacao -> BigIdea reforcada -> 1 call provocativo unico). Meta declara max_ctas:1 (override do default teaching=4), verbo Bloom AVALIAR. Big Idea identica no slide 1 e no penultimo. SEM chunks <=7min, SEM hands-on, SEM quiz. Tom narrativo nas speaker notes. Brand tokens Beauty Smile injetados.",
+      "files": [],
+      "assertions": [
+        {"text": "Meta declara 'Modo: keynote-inspirational'", "type": "contains"},
+        {"text": "Meta declara 'max_ctas: 1' (override do default teaching=4)", "type": "contains"},
+        {"text": "Meta declara verbo Bloom alvo AVALIAR", "type": "contains"},
+        {"text": "Slide 2 lista objetivo iniciando com AVALIAR em caixa alta", "type": "structural"},
+        {"text": "Sparkline Duarte detectado: capa-BigIdea, contexto, promessa, 2 tensoes, 2 resolucoes, BigIdea reforcada, call unico", "type": "structural"},
+        {"text": "Big Idea no slide 1 e no penultimo slide com frase IDENTICA", "type": "structural"},
+        {"text": "Apenas 1 CTA provocativo (decisao de identidade, nao operacional)", "type": "structural"},
+        {"text": "Total de slides entre 12 e 20", "type": "structural"},
+        {"text": "Nao usa chunks <=7min (Sparkline nao segmenta)", "type": "negative"},
+        {"text": "Nao tem hands-on", "type": "negative"},
+        {"text": "Nao tem quiz formativo nem somativo", "type": "negative"},
+        {"text": "Cross-skill: tenta invocar beauty-smile-design-system se instalado", "type": "process"}
+      ]
+    }
+  ]
+}

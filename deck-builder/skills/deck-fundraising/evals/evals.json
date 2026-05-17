@@ -1,0 +1,220 @@
+{
+  "skill_name": "deck-fundraising",
+  "version": "v1",
+  "description": "3 eval cases obrigatorios — 1 por modo (padrao / sponsorship / demo-day). Detalhes em references/eval-cases-fundraising.md.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "beauty-smile-anjo-r500k-padrao",
+      "prompt": "Preciso de um STORYBOARD pra deck de pitch da Beauty Smile pra um investidor anjo no Iguatemi SP. Vou pedir R$500k em troca de 8% equity post-money (cap R$6,25M) pra abrir a 2a unidade em SP em 6 meses. Audiencia: anjo alto patrimonio, sem experiencia em healthcare. Reuniao presencial 1:1, 12 minutos. Big Idea: 'Beauty Smile prova que dentista premium escala como rede butique — nao como franquia comoditizada'. Tracao: R$180k/mes receita, NPS 91, 247 pacientes ativos, 89% retention 12m. Concorrente: clinica generica de bairro. Diferencial: protocolos com evidencia + UX butique premium. Risco maior que ele vai levantar: escalabilidade — vai manter a qualidade na 2a unidade?",
+      "expected_output": "STORYBOARD modo padrao 13 slides (Sequoia + Raskin). Big Idea no slide 4 (Promised Land), Ask tripartido (R$500k + 3 buckets + 6m), TAM bottom-up, disclaimer separado, compliance tags Beauty Smile (odontologia-br, cfo-cfm). 7 slides whitelist com Prompt de imagem preenchido.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "1.1",
+          "text": "STORYBOARD tem entre 12 e 14 slides (modo padrao)",
+          "type": "count",
+          "check": "count slide headers (## Slide N) >= 12 AND <= 14"
+        },
+        {
+          "id": "1.2",
+          "text": "Meta contem 'Modo: padrao' e 'Framework principal: Sequoia + Andy Raskin'",
+          "type": "regex",
+          "check": "(?i)modo:\\s*padrao.*framework principal:\\s*sequoia"
+        },
+        {
+          "id": "1.3",
+          "text": "Slide 4 (Promised Land) contem Big Idea verbatim ou paraphrase com 70%+ overlap dos termos 'rede butique', 'premium', 'franquia comoditizada'",
+          "type": "semantic",
+          "check": "slide 4 mentions rede butique + premium dental + diferenciacao de franquia"
+        },
+        {
+          "id": "1.4",
+          "text": "Slide CTA contem 3 partes: valor + uso 3 buckets com % + timeline com milestone",
+          "type": "regex",
+          "check": "R\\$500k.*(SAFE|equity|cap).*\\d{2}%.*\\d{2}%.*\\d{2}%.*\\d+\\s*(m|mes|meses)"
+        },
+        {
+          "id": "1.5",
+          "text": "Slide disclaimer (forward-looking) presente como slide separado",
+          "type": "regex",
+          "check": "(?i)forward[- ]looking|declaracoes prospectivas|CVM"
+        },
+        {
+          "id": "1.6",
+          "text": "Slide 7 (Mercado) usa TAM bottom-up (regex 'clinicas.*ticket' ou '×' decompondo)",
+          "type": "regex",
+          "check": "\\d+k?\\s*clinicas?.*×.*R\\$|\\d+\\s*×\\s*\\d+\\s*×.*=.*R\\$"
+        },
+        {
+          "id": "1.7",
+          "text": "Slide tracao (9) contem NPS, receita mensal, retention",
+          "type": "regex",
+          "check": "(?i)NPS.*91.*R\\$180k.*89%|R\\$180k.*NPS.*retention"
+        },
+        {
+          "id": "1.8",
+          "text": "7 slides whitelist (1,2,3,4,5,9,11) tem 'Prompt de imagem' preenchido (NAO '—')",
+          "type": "count",
+          "check": "count 'Prompt de imagem:' nas linhas dos slides 1,2,3,4,5,9,11 que nao sao '—' >= 6"
+        },
+        {
+          "id": "1.9",
+          "text": "Compliance tags 'odontologia-br' OU 'cfo-cfm' mencionadas no STORYBOARD",
+          "type": "regex",
+          "check": "(?i)odontologia-br|cfo-cfm|CFO/CFM"
+        },
+        {
+          "id": "1.10",
+          "text": "Action titles, NAO titulos descritivos genericos como 'Mercado', 'Equipe', 'Problema'",
+          "type": "semantic",
+          "check": "slide action titles sao frases declarativas de 5-9 palavras, NAO substantivos isolados"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "carnaval-360-master-r2m-sponsorship",
+      "prompt": "Preciso de STORYBOARD pra deck de patrocinio master do Carnaval 360 R$2M. Vou apresentar pra diretora de marketing de uma marca de bebida premium (vodka/cerveja artesanal/whisky), decisao de R$5-10M anuais em patrocinio. Big Idea: 'Carnaval 360 e o unico evento que entrega 80k cariocas classe A em 360 graus de imersao de marca, nao so logo na fachada'. Tracao: 80k pessoas/edicao, presenca midia G1+Globo Rio+Veja Rio, 15 marcas patrocinadoras edicoes anteriores. Patrocinio cultural com Lei Rouanet aplicavel (PRONAC em fase de aprovacao). Reuniao 15min em escritorio do patrocinador. Risco: 'ROI nao mensuravel — como calcula retorno de patrocinio cultural?'",
+      "expected_output": "STORYBOARD modo sponsorship 10 + 4 slides. Big Idea slide 4 = visao do EVENTO. Bloco contrapartida (niveis bronze/silver/gold/master + contrapartidas master detalhadas + ROI metodologia). Ask com Rouanet (4% IRPJ dedutivel). Disclaimer PRONAC + Lei 8.313/91. 6 slides whitelist com prompt de imagem.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "2.1",
+          "text": "STORYBOARD tem entre 11 e 14 slides (sponsorship)",
+          "type": "count",
+          "check": "count slide headers >= 11 AND <= 14"
+        },
+        {
+          "id": "2.2",
+          "text": "Meta contem 'Modo: sponsorship'",
+          "type": "regex",
+          "check": "(?i)modo:\\s*sponsorship"
+        },
+        {
+          "id": "2.3",
+          "text": "Slide niveis contem 4 tiers (bronze/silver/gold/master) com valores em R$",
+          "type": "regex",
+          "check": "(?i)bronze.*R\\$.*silver.*R\\$.*gold.*R\\$.*master.*R\\$"
+        },
+        {
+          "id": "2.4",
+          "text": "Slide ROI contem metodologia (impressoes / CPM / earned media)",
+          "type": "regex",
+          "check": "(?i)impress[oõ]es.*(CPM|earned media|alcance)"
+        },
+        {
+          "id": "2.5",
+          "text": "Slide Ask contem Lei Rouanet OU PRONAC OU 8.313/91",
+          "type": "regex",
+          "check": "(?i)Rouanet|PRONAC|8\\.313"
+        },
+        {
+          "id": "2.6",
+          "text": "Slide disclaimer contem PRONAC + Lei + MinC",
+          "type": "regex",
+          "check": "(?i)PRONAC.*(Lei|MinC|Minist[eé]rio.*Cultura)"
+        },
+        {
+          "id": "2.7",
+          "text": "Big Idea no slide 4 menciona 80k OR cariocas OR imersao 360 OR classe A",
+          "type": "regex",
+          "check": "(?i)80k|cariocas|imers[aã]o 360|classe A"
+        },
+        {
+          "id": "2.8",
+          "text": "Slide tracao contem patrocinadores anteriores OU midia (G1/Globo/Veja)",
+          "type": "regex",
+          "check": "(?i)15 marcas|G1|Globo Rio|Veja Rio|patrocinadores"
+        },
+        {
+          "id": "2.9",
+          "text": "6 slides whitelist tem 'Prompt de imagem' preenchido (capa/problema/comparativo/conceitual/demo/prova-social + opc contrapartida=conceitual)",
+          "type": "count",
+          "check": "count slides com 'Prompt de imagem:' preenchido (nao '—') >= 6"
+        },
+        {
+          "id": "2.10",
+          "text": "Compliance & Disclaimers tem secao com tiers 🔴/🟡/✅ (ou equivalente)",
+          "type": "regex",
+          "check": "(?i)compliance.*disclaimers|tier|🔴|🟡|bloqueante|verificar"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "fotona-distribuidor-br-r5m-anvisa",
+      "prompt": "Preciso de STORYBOARD pra captar US$1M (≈R$5M) de fundo de healthcare pra ser distribuidor exclusivo Fotona LightWalker no Brasil. Big Idea: 'A janela competitiva BR pra dental laser de alta potencia esta abrindo agora — em 24 meses tera 3 distribuidores nacionais bloqueando entrada'. Audiencia: fundo BR ou US tier 1 com tese medical devices LATAM, ticket US$1-3M. Pitch 18min presencial ou call. Estagio Series A. Tracao: 12 unidades LightWalker instaladas BR, pipeline 30 clinicas premium incluindo Beauty Smile, 4 anos relacionamento direto com Fotona Eslovenia. Concorrente: Konig + LASERmed (distribuidores generalistas multi-marca). Diferencial: exclusividade Fotona + capacitacao tecnica + suporte clinico. Risco: 'Por que voces e nao a Fotona Brasil direta?'",
+      "expected_output": "STORYBOARD modo padrao 14 slides (Sequoia + Raskin + 1 slide Anvisa). Auto-detect Fotona com compliance tags anvisa-laser-classe-iii + cfo-laser. Slide compliance Anvisa RDC 185/2001 + responsavel tecnico CRO. Footnote regulatorio no slide produto. Ask tripartido US$1M + 3 buckets + 24m timeline. 7 slides whitelist com prompt de imagem.",
+      "files": [],
+      "assertions": [
+        {
+          "id": "3.1",
+          "text": "STORYBOARD tem entre 13 e 15 slides",
+          "type": "count",
+          "check": "count slide headers >= 13 AND <= 15"
+        },
+        {
+          "id": "3.2",
+          "text": "Auto-detect Fotona aplicado — compliance tags 'anvisa-laser-classe-iii' E 'cfo-laser' mencionadas",
+          "type": "regex",
+          "check": "(?i)anvisa-laser-classe-iii.*cfo-laser|cfo-laser.*anvisa-laser-classe-iii"
+        },
+        {
+          "id": "3.3",
+          "text": "Slide especifico de compliance Anvisa presente (Classe III + RDC 185 ou similar)",
+          "type": "regex",
+          "check": "(?i)Anvisa.*Classe III|RDC\\s*185|Classe III.*RDC"
+        },
+        {
+          "id": "3.4",
+          "text": "Slide demo (produto) contem footnote ou referencia regulatoria (Anvisa OR CRO OR responsavel tecnico)",
+          "type": "regex",
+          "check": "(?i)respons[aá]vel t[eé]cnico|CRO|Anvisa.*Classe"
+        },
+        {
+          "id": "3.5",
+          "text": "Slide CTA contem US$1M + 3 buckets de uso + 24m",
+          "type": "regex",
+          "check": "US\\$1M.*\\d{2}%.*\\d{2}%.*\\d{2}%.*24\\s*(m|mes|meses)"
+        },
+        {
+          "id": "3.6",
+          "text": "Slide 4 (Promised Land) contem 'janela competitiva' OR equivalente Big Idea",
+          "type": "regex",
+          "check": "(?i)janela competitiva|24 meses|distribuidores nacionais"
+        },
+        {
+          "id": "3.7",
+          "text": "Slide tracao contem 12 unidades + pipeline 30 + Fotona Eslovenia",
+          "type": "regex",
+          "check": "(?i)12 unidades.*30 cl[ií]nicas|Fotona Eslov[eê]nia"
+        },
+        {
+          "id": "3.8",
+          "text": "TAM bottom-up (clinicas premium × ticket × adocao)",
+          "type": "regex",
+          "check": "(?i)\\d+k?\\s*cl[ií]nicas.*US\\$|\\d+\\s*×.*\\d+%.*×.*US\\$"
+        },
+        {
+          "id": "3.9",
+          "text": "Slide disclaimer (forward-looking) presente",
+          "type": "regex",
+          "check": "(?i)forward[- ]looking|declaracoes prospectivas|CVM|disclaimer"
+        },
+        {
+          "id": "3.10",
+          "text": "7 slides whitelist tem 'Prompt de imagem' preenchido",
+          "type": "count",
+          "check": "count slides com 'Prompt de imagem:' preenchido (nao '—') >= 6"
+        }
+      ]
+    }
+  ],
+  "pass_threshold": {
+    "PASS": "80%+ asserts passam",
+    "PARTIAL": "60-79% (revisar 1 iteracao)",
+    "FAIL": "<60% (reescrever skill)"
+  },
+  "grading_method": "regex + semantic via skill-creator agents/grader.md"
+}
