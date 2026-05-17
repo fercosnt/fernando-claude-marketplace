@@ -4,6 +4,48 @@ Todas as mudanças notáveis do plugin `deck-builder` são documentadas aqui.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/) e versionamento [SemVer](https://semver.org/).
 
+## [1.2.0] - 2026-05-17
+
+### Added
+
+- **`deck-reviewer` Critico 4 — VERIFICAR Auditor** — quarto critico adversarial dedicado a absorver as marcações `[VERIFICAR: descricao]` introduzidas em v1.1. Workflow expandido de 3 para 4 passes sequenciais.
+- **`shared/.../skills/deck-reviewer/references/critico-verificar.md`** (NOVO) — documenta:
+  - Algoritmo de coleta via regex `\[VERIFICAR:[^]]+\]`
+  - Mapeamento ao slide (incluindo tipo + bloco interno onde flag aparece)
+  - Classificação automática de severidade baseada no tipo do slide:
+    - `CTA` / `disclaimer` / `compliance` → 🔴 BLOCKER (decisor)
+    - `dados` / `financeiro` / `prova-social` / `problema/comparativo com número` → 🟡 MAJOR
+    - `equipe` / `conceitual` / `contexto` / `capa` / `demo` → 🟢 MINOR
+    - `apêndice` / `agradecimento` → ignorado
+  - Ajustes contextuais (modo_entrega=enviado-para-leitura escala 🟢→🟡; compliance tags clínicas escalam 🟡→🔴; flag em Speaker notes downgrade em modo enviado)
+- **Bloco `## Audit [VERIFICAR] flags` no review.md** — dedicado, alem do bloco geral de severidade. Lista flags por severidade com slide afetado + texto da flag + sugestão concreta de fonte/ação + totais + densidade.
+- **Caso especial: 0 flags** — bloco gera warning de potencial over-claiming (skill pode ter inventado dados sem flagar).
+- **Eval case 5** — W1 v1.1 Beauty Smile pitch anjo (22 flags reais) como fixture viva, valida 3 🔴 + 14 🟡 + 5 🟢 com classificação esperada documentada.
+- **Recommended next action consolidada (4 críticos)** — regra v1.2 considera flags VERIFICAR:
+  - 1+ 🔴 em CTA/disclaimer → "Resolver N blocker(s) E confirmar dado(s) decisor(es) com fonte antes de apresentar"
+  - Total flags ≥ 10 sem 🔴 → "Confirmar N dados com fonte antes de apresentar — alta densidade de inferencias"
+
+### Changed
+
+- **`deck-reviewer/SKILL.md`** workflow de 3 para 4 passes; novo schema do output com Meta expandida (modo_entrega, total flags por severidade) + bloco dedicado.
+- **`shared/verificar-flag.md`** seção "O que o reviewer faz com flags" reescrita para refletir o Critico 4 com algoritmo completo (coleta → mapeamento → classificação automática → bloco dedicado → ajustes contextuais → contribuição para recommended action).
+- **DoD `deck-reviewer`** atualizado: 5 eval cases (era 4); 4 críticos como passes sequenciais (era 3); leitura de `modo_entrega` da Meta; bloco `## Audit [VERIFICAR]` no output.
+
+### Validation
+
+Prova de conceito: `STORYBOARD-beauty-smile-pitch-anjo.review.md` gerado aplicando os 4 críticos contra W1 v1.1 (22 marcações [VERIFICAR] reais). Resultado:
+- 3 🔴 BLOCKER (TCLE quote slide 9 + SAFE BR slide 12 + Res. CVM 160/22 slide 13)
+- 14 🟡 MAJOR (dados de problema/dados/financeiro/prova-social/roadmap)
+- 5 🟢 MINOR (KPIs capa + bios equipe)
+- Critico 1 (Clareza): 0 issues — STORYBOARD v1.1 estruturalmente impecável
+- Critico 2 (Persuasão): 0 issues estruturais — hook + CTA passam filtros
+- Critico 3 (SUCCESs): 0 issues — todos os 6 elementos cobertos
+- Recommended action: "Resolver 3 blockers E confirmar 14 dados com fonte antes de apresentar — alta densidade de inferências"
+
+### Why v1.2
+
+Em v1.1, as skills verticais ganharam disciplina `[VERIFICAR]` para flagar dados inferidos (NPS, %, R$, papers, registros regulatórios). Mas o `deck-reviewer` ainda ignorava essas flags — passava direto sem capturar. v1.2 fecha a alça: agora o reviewer absorve as flags, classifica severidade automaticamente baseado no tipo do slide, e produz um bloco dedicado no review.md listando exatamente o que precisa ser confirmado antes da apresentação. Combinado com os outros 3 críticos, o usuário tem uma audit list completa para resolver entre a geração do STORYBOARD e a apresentação real.
+
 ## [1.1.0] - 2026-05-17
 
 ### Added

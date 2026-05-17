@@ -1,8 +1,8 @@
-# Eval Cases — deck-reviewer
+# Eval Cases — deck-reviewer (v1.2)
 
-4 cases canonicos. DoD §13.6 exige 3+ passando. Alvo: 4/4.
+5 cases canonicos. DoD §13.6 exige 3+ passando. Alvo v1.2: 5/5.
 
-Fixtures em [fixtures/](fixtures/).
+Fixtures em [fixtures/](fixtures/). Case 5 (v1.2) usa o W1 v1.1 publicado no marketplace como fixture viva.
 
 ---
 
@@ -150,7 +150,88 @@ Fixtures em [fixtures/](fixtures/).
 
 ---
 
-## Resumo de validacao DoD
+---
+
+## Case 5 — W1 v1.1 Beauty Smile pitch anjo (Critico 4 [VERIFICAR] auditor) 🆕 v1.2
+
+**Fixture viva:** `STORYBOARD-beauty-smile-pitch-anjo-v1.1-1306.md` gerado durante validacao v1.1 (modo_entrega: hibrido, 13 slides Sequoia+Raskin, 25 marcacoes [VERIFICAR]).
+
+**Caracteristicas do input:**
+- 13 slides (capa / problema / comparativo / conceitual / demo / dados×3 / financeiro / prova-social / equipe / CTA / disclaimer)
+- modo_entrega: hibrido
+- max_ctas: 1 (count_ctas=1, OK)
+- Big Idea forte (Promised Land slide 4)
+- Ask tripartido completo (slide 12)
+- **25 marcacoes `[VERIFICAR: descricao]`** distribuidas em:
+  - Slide 1 (capa): 4 flags (KPIs autoreporte)
+  - Slide 2 (problema): 2 flags (40% + margem 28→19%)
+  - Slide 3 (comparativo): 1 flag (NYC Smile Design / Lana Rozenberg)
+  - Slide 5 (demo): 1 flag (protocolos V1.4 / V2.1)
+  - Slide 6 (dados): 2 flags (78% + 22% a.a.)
+  - Slide 7 (dados): 1 flag (12k IBGE)
+  - Slide 8 (financeiro): 4 flags (ticket / margem / CAC / LTV)
+  - Slide 9 (prova-social): 2 flags (NPS + 68% indicacao)
+  - Slide 10 (dados — roadmap): 1 flag (R$400k MRR projecao)
+  - Slide 11 (equipe): 3 flags (3 bios)
+  - Slide 12 (CTA): 1 flag (estrutura SAFE BR)
+  - Slide 13 (disclaimer): 1 flag (Res. CVM 160/22 versao)
+  - Total ≈ 25 flags
+
+**Issues esperadas do Critico 4 (VERIFICAR auditor):**
+
+🔴 BLOCKER esperados (2-3):
+- **Slide 12 (CTA)** — "estrutura SAFE BR aplicavel" [VERIFICAR] → Sugestao: consultar advogado tributarista
+- **Slide 13 (disclaimer)** — "Res. CVM 160/22 versao vigente" [VERIFICAR] → Sugestao: verificar regulamentacao atual CVM
+- (opcional 3o) escalonamento: se modo=enviado-para-leitura, slide 9 (NPS metodologia) viraria 🔴 — mas modo=hibrido, mantem 🟡
+
+🟡 MAJOR esperados (~15-18):
+- Slide 2 (problema): 40% das clinicas fecharam + margem 28→19% (gancho do deck, escrutinado)
+- Slide 6 (dados): 78% + 22% a.a. (tailwinds — escrutinados)
+- Slide 7 (dados): 12k IBGE (TAM calculation)
+- Slide 8 (financeiro): 4 flags unit economics
+- Slide 9 (prova-social): NPS metodologia + 68% indicacao
+- Slide 10 (dados — roadmap): R$400k MRR (ja coberto por disclaimer slide 13, mas dado projecao)
+
+🟢 MINOR esperados (~5):
+- Slide 1 (capa): KPIs autoreporte (auto-referenciados pelo deck)
+- Slide 3 (comparativo): nomes internacionais (fácil corrigir)
+- Slide 5 (demo): protocolos V1.4/V2.1 (nomenclatura interna, facil)
+- Slide 11 (equipe): 3 bios (faceis de corrigir)
+
+**Bloco `## Audit [VERIFICAR] flags` esperado no review.md:**
+
+```markdown
+## Audit [VERIFICAR] flags (Critico 4 — v1.2)
+
+🔴 BLOCKER:
+- **Slide 12 (CTA) — Action title:** SAFE 8% post-money cap R$6M [VERIFICAR: confirmar estrutura SAFE BR aplicavel]
+  Sugestao: consultar advogado tributarista — SAFE no Brasil tem implicacoes especificas vs US
+- **Slide 13 (disclaimer):** Res. CVM 160/22 [VERIFICAR: confirmar referencia regulatoria]
+  Sugestao: verificar versao vigente CVM antes de imprimir
+
+🟡 MAJOR: (15-18 flags listadas)
+
+🟢 MINOR: (4-6 flags listadas)
+
+Total: 25 flags (2-3 🔴 / 15-18 🟡 / 4-6 🟢)
+Densidade: alta — 25 flags em 13 slides ≈ 2 dados-nao-conferidos por slide.
+```
+
+**Recommended next action esperada:**
+- "Resolver 2-3 blocker(s) E confirmar 15-18 dado(s) com fonte antes de apresentar." (regra v1.2 — caso especial 1+ 🔴 do Critico 4 em CTA/disclaimer)
+
+**Criterios de PASS:**
+1. Pelo menos 2 🔴 BLOCKER em slide CTA (12) E disclaimer (13)
+2. Bloco `## Audit [VERIFICAR] flags` presente no review.md (alem do bloco geral)
+3. Total de flags identificadas no review = numero real no STORYBOARD (±2 OK por variacao de regex)
+4. Sugestao concreta em cada 🔴 (NAO so "verificar")
+5. NAO emite score numerico
+6. Recommended action menciona "blocker" + "confirmar dado(s)"
+7. Meta inclui `Criticos aplicados: clareza + persuasao + SUCCESs + VERIFICAR (v1.2)`
+
+---
+
+## Resumo de validacao DoD (v1.2 — 5 cases)
 
 Para cada case rodar o reviewer manualmente OU spawned subagent com a skill carregada. Verificar contra `Criterios de PASS`.
 
@@ -160,18 +241,22 @@ Para cada case rodar o reviewer manualmente OU spawned subagent com a skill carr
 | 2. Clinical promessa cura | 1+ (slide 7) | optional | optional | criterios 1-4 acima |
 | 3. Teaching sem hands-on | 0 | 1+ (hands-on) | optional | criterios 1-5 acima |
 | 4. Scientific 4 CTAs | 0 | 1+ (max_ctas) | optional | criterios 1-5 acima |
+| 5. **W1 v1.1 25 flags** | **2-3 (CTA + disclaimer)** | **15-18** | **4-6** | **criterios 1-7 acima** |
 
-**Universal (todos os 4 cases):**
+**Universal (todos os 5 cases v1.2):**
 - Output em arquivo `.review.md` paralelo (NUNCA sobrescreve fixture)
 - SEM score numerico em nenhum lugar
 - Recommended next action presente
-- Meta inclui `Criticos aplicados: clareza + persuasao + SUCCESs`
+- Meta inclui `Criticos aplicados: clareza + persuasao + SUCCESs + VERIFICAR (v1.2)`
+- **Bloco `## Audit [VERIFICAR] flags` presente** (vazio se 0 flags, com warning de over-claiming)
 
 ## Como rodar (manual)
 
 ```
 1. Copiar fixture pra um path temp: cp fixtures/case1-fundraising-sem-ask.md /tmp/STORYBOARD-test-1647.md
-2. Invocar reviewer mentalmente OU via subagent: "Le /tmp/STORYBOARD-test-1647.md, aplica deck-reviewer (3 criticos), grava .review.md paralelo"
+2. Invocar reviewer mentalmente OU via subagent: "Le /tmp/STORYBOARD-test-1647.md, aplica deck-reviewer (4 criticos v1.2), grava .review.md paralelo"
 3. Inspecionar /tmp/STORYBOARD-test-1647.review.md
 4. Validar contra Criterios de PASS deste case
 ```
+
+Para case 5: usar `STORYBOARD-beauty-smile-pitch-anjo-v1.1-1306.md` (publicado em v1.1) ou regenerar com `/deck Beauty Smile pitch pra anjo R$500k` em sessao fresh.
