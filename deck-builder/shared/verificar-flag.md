@@ -57,16 +57,37 @@ Action title: NPS 91, n=131 [VERIFICAR: metodologia Bain padrao, calculo proprio
 Speaker notes: ... NPS 91 (autoreporte, metodologia Bain padrao, n=131 respondentes Jan-Mar 2026) [VERIFICAR: confirmar n + datas + metodologia documentada]
 ```
 
-## O que o reviewer (`deck-reviewer`) faz com flags
+## O que o reviewer (`deck-reviewer`) faz com flags (v1.2 — Critico 4)
 
-`deck-reviewer` no segundo passe:
+A partir de **v1.2**, o `deck-reviewer` ganhou um 4º critico adversarial dedicado: **VERIFICAR Auditor**. Detalhes completos em `../skills/deck-reviewer/references/critico-verificar.md`. Resumo:
 
-1. **Lista todos os `[VERIFICAR]` encontrados** no bloco final `🟡 Verificar antes`.
-2. **Classifica severidade:**
-   - Se número aparece em slide CTA / Ask / Compliance → eleva pra `🔴 BLOQUEANTE` (dado decisor não pode ir sem auditoria).
-   - Demais → `🟡 VERIFICAR` (resolver antes de apresentar mas não bloqueia geração).
-3. **Sugere ação concreta:**
-   - "Slide N (action title) — confirmar fonte X antes de apresentar".
+1. **Coleta** todas as marcacoes `[VERIFICAR: ...]` do STORYBOARD via regex (`grep -nE '\[VERIFICAR:[^]]+\]'`).
+2. **Mapeia** cada flag para o slide onde aparece (incluindo tipo do slide e bloco interno — Action title, Conteúdo do slide, Speaker notes).
+3. **Classifica severidade automaticamente** baseado no tipo do slide:
+   - `CTA` / `disclaimer` / `compliance` → **🔴 BLOCKER** (dado decisor não pode ir sem confirmacao)
+   - `dados` / `financeiro` / `prova-social` / `problema` (com numero) / `comparativo` (com numero) → **🟡 MAJOR**
+   - `equipe` / `conceitual` / `contexto` / `capa` / `demo` → **🟢 MINOR**
+   - `apendice` / Storyboard de Imagens / Compliance & Disclaimers blocks → ignorado
+4. **Ajustes contextuais (override):**
+   - `modo_entrega = enviado-para-leitura` → escala 🟢 de problema/comparativo/equipe/conceitual para 🟡 (leitor nao tem apresentador)
+   - Compliance tag `cfo-cfm` / `anvisa-laser-classe-iii` → escala 🟡 para 🔴 se contem termo medico/regulatorio (Anvisa, CFO, CFM, GRADE, RCT)
+   - Flag em Speaker notes quando modo=enviado-para-leitura → downgrade para 🟢 (speaker notes nao vao pro leitor)
+5. **Gera bloco dedicado** `## Audit [VERIFICAR] flags` no review.md (alem das issues por severidade) com:
+   - Lista por severidade
+   - Slide afetado + tipo + bloco onde aparece
+   - Texto original da flag
+   - Sugestao concreta de fonte/acao
+   - Total + densidade
+6. **Contribui para Recommended next action consolidada** (4 criticos):
+   - Caso especial v1.2: se 1+ 🔴 do Critico 4 em CTA/disclaimer, recommended action menciona "Resolver N blocker(s) E confirmar dado(s) decisor(es) com fonte antes de apresentar"
+   - Se total flags ≥ 10 E 0 🔴, ainda assim recomenda "Confirmar N dados com fonte antes de apresentar — alta densidade de inferencias"
+7. **Caso especial: 0 flags encontradas** → bloco gera warning de potencial over-claiming (skill pode ter inventado dados sem flagar):
+   ```markdown
+   ⚠️ Atencao: Nenhuma flag [VERIFICAR:] encontrada. Pode significar:
+   1. Skill geradora aplicou disciplina v1.1 corretamente (cenario ideal)
+   2. OU skill inventou dados sem flagar (risco — over-claiming sem auditoria)
+   Recomendacao: revisar manualmente padroes suspeitos.
+   ```
 
 ## O que o lint script faz
 
