@@ -18,8 +18,8 @@
     },
     {
       "name": "skill-prd",
-      "description": "Skill de criacao, validacao e melhoria de PRDs estruturados — 4 modos (Guided/Context Dump/Best Guess/From Brief), 3 niveis (Lean/Standard/Comprehensive), scorecard 5D, frameworks embutidos (MITRE/OST/Epic Hypothesis/MoSCoW/3 camadas), Deep Modules (Ousterhout), Testing Decisions com prior art, hygiene anti-rot, suporte a ADRs e domain glossary.",
-      "version": "0.2.0",
+      "description": "Skill de criacao, validacao e melhoria de PRDs estruturados — 4 modos (Guided/Context Dump/Best Guess/From Brief), 3 niveis (Lean/Standard/Comprehensive), scorecard 5D, frameworks embutidos (MITRE/OST/Epic Hypothesis/MoSCoW/3 camadas), Deep Modules (Ousterhout), Testing Decisions com prior art, hygiene anti-rot, suporte a ADRs e domain glossary. Gera tasks vertical-slice (tracer bullets) com labels Direto/Bloqueante e rastreabilidade Parent.",
+      "version": "0.3.0",
       "source": "./skill-prd",
       "author": {
         "name": "Fernando Costa"

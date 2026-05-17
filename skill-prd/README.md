@@ -103,5 +103,6 @@ skill-prd/
 
 ## Changelog
 
+- **v0.3.0** (2026-05-16) — Cross-pollination com `to-issues` de Matt Pocock: task generation passa de horizontal slicing (DB→Backend→Frontend, anti-padrao) para **vertical slicing (tracer bullets)** como default — cada slice toca multiplas camadas e e demonstravel sozinha. Cada slice ganha label `[Direto]` (executavel) ou `[Bloqueante]` (precisa decisao humana — declara decisor). Header do `tasks-*.md` ganha **Parent** (link pro PRD), **Slicing**, **Total slices**. Slices declaram **Demo** (1 frase end-to-end), **Camadas tocadas**, **Bloqueado por** formal. Horizontal slicing so com justificativa explicita declarada. Exemplo CRUD de Pagamentos reescrito mostrando 4 slices verticais demonstraveis vs 6 tarefas horizontais.
 - **v0.2.0** (2026-05-16) — Cross-pollination com `to-prd` de Matt Pocock: Deep Modules (Ousterhout), Testing Decisions com prior art (secao 7b obrigatoria Std+), regra anti-rot (NAO colar paths/code-dumps), busca de ADRs + domain glossary no Passo 0, 5 novos anti-patterns no quality-checklist.
 - **v0.1.0** (2026-04-21) — Migracao Opus 4.7: `effort: xhigh`, vocabulario atualizado (Extended Thinking → Adaptive Thinking).

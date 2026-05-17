@@ -30,7 +30,7 @@ Depois selecione `legal-analyzer` (ou outros plugins) na lista.
 | Plugin | Descricao | Skills | Versao |
 |--------|-----------|--------|--------|
 | [legal-analyzer](./legal-analyzer/) | Analise contratual BR — coordenador + 9 skills (revisar, NDA, LGPD, risco, briefings, fornecedor, resposta, assinatura) | 10 | 0.1.0 |
-| [skill-prd](./skill-prd/) | Criacao, validacao e melhoria de PRDs estruturados — 4 modos, 3 niveis, scorecard 5D, Deep Modules, Testing Decisions com prior art, anti-rot | 1 | 0.2.0 |
+| [skill-prd](./skill-prd/) | Criacao, validacao e melhoria de PRDs estruturados — 4 modos, 3 niveis, scorecard 5D, Deep Modules, Testing Decisions com prior art, anti-rot, vertical slicing (tracer bullets) Direto/Bloqueante | 1 | 0.3.0 |
 
 ## Roadmap
 

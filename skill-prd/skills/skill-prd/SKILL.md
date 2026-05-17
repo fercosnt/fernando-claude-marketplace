@@ -198,10 +198,12 @@ Proximos passos:
 ```
 
 **Ao receber "Go"**, consultar `references/task-generation.md` e gerar tasks:
-1. Ordenar por dependencia: DB → Backend → Frontend
-2. Tasks atomicas (1 sessao focada do Claude Code cada — descricao em 2-3 frases)
-3. Formato com Relevant Files, Instructions, Tasks com sub-tasks + Verificacao + Done
-4. Salvar em `PRD/tasks-[nome-do-projeto].md`
+1. **Vertical slicing (tracer bullets)** como default — cada slice toca multiplas camadas (schema+API+UI+teste) e e demonstravel sozinha. NAO horizontal (DB→Backend→Frontend horizontal e anti-padrao explicito). Horizontal so com justificativa declarada.
+2. Cada slice rotulada `[Direto]` (executavel sem decisao humana) ou `[Bloqueante]` (precisa de decisao/aprovacao). Default `Direto`. Se >40% Bloqueante, voltar e refinar o PRD.
+3. Header obrigatorio do arquivo: **Parent** (PRD/PRD.md ou issue URL), **Gerado em**, **Slicing** (vertical|horizontal+justificativa), **Total slices** (N: D Direto / B Bloqueante).
+4. Cada slice declara: **Demo** (1 frase end-to-end), **Camadas tocadas**, **Bloqueado por** (slices anteriores ou "Nenhum"), **Subtarefas**, **Arquivos relevantes**, **Verificacao end-to-end**, **Commit**.
+5. Slices atomicas (demonstraveis em <5min de uso). Se >5min, dividir por fluxo do usuario, NUNCA por camada.
+6. Salvar em `PRD/tasks-[nome-do-projeto].md`. NAO publicar automaticamente em tracker — informar disponibilidade de publicar via Notion MCP / GitHub Issues como passo opcional.
 
 ### Passo 4: CLAUDE.md Bridge (Opcional)
 

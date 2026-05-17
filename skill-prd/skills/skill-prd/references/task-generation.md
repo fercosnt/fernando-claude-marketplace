@@ -12,24 +12,119 @@ Cada tarefa deve ser **atomica o suficiente para 1 sessao focada** do Claude Cod
 
 ---
 
-## Ordem de Dependencias
+## Vertical Slicing (Tracer Bullets) — Default
 
-Tarefas SEMPRE seguem esta ordem:
+> Cada tarefa entrega uma **fatia vertical fina** que atravessa TODAS as camadas (schema + API + UI + teste) end-to-end. Uma fatia completa e demonstravel/verificavel sozinha. **Prefira muitas fatias finas a poucas grossas.**
 
+Termo origem: *The Pragmatic Programmer* (Hunt & Thomas). Anti-padrao oposto: **horizontal slicing** — fazer "todas as migrations primeiro, depois todas as APIs, depois toda a UI". Resultado horizontal: nada e demonstravel ate o ultimo dia. Tracer bullets entregam valor incremental shipavel.
+
+### Como desenhar uma fatia vertical
+
+Para cada slice:
+1. Escolher 1 user story ou 1 caso de uso pequeno do PRD
+2. Listar o minimo necessario em cada camada para fechar o fluxo:
+   - Schema: so as colunas/tabelas que ESSE slice precisa (incremental)
+   - API: so o endpoint que ESSE slice consome
+   - UI: so a tela/componente que ESSE slice mostra
+   - Teste: cenario happy path do slice (edge cases sao slices futuros)
+3. Verificar: "esse slice e demonstravel sozinho?" Se nao, expandir minimo.
+
+### Exemplo: CRUD de Pagamentos — vertical vs horizontal
+
+**❌ Horizontal (anti-padrao):**
 ```
-0. Feature branch
-1. Migracao SQL (schema + RLS + indexes)
-2. Backend (API Routes + Zod schemas)
-3. Frontend (componentes + paginas)
-4. Testes (unitarios + integracao)
-5. Integracao final + verificacao
+Tarefa 1: Migration completa (pagamentos + comissoes + audit_log)
+Tarefa 2: Todas as 5 API routes (GET list, GET one, POST, PUT, DELETE)
+Tarefa 3: Todos os Zod schemas
+Tarefa 4: PagamentoTable + PagamentoForm + PagamentoFilters
+Tarefa 5: Pagina lista + pagina novo + pagina detalhe
+Tarefa 6: Todos os testes
+→ Feature so demonstravel apos Tarefa 5. Bug encontrado na Tarefa 4 forca rework.
 ```
 
-**Por que esta ordem?**
-- Schema define a estrutura de dados — tudo depende dele
-- API Routes consomem o schema — precisam da tabela existindo
-- Frontend consome as APIs — precisa dos endpoints prontos
-- Testes validam tudo — precisam de codigo para testar
+**✅ Vertical (tracer bullets):**
+```
+Slice 1: "Admin ve lista vazia de pagamentos"
+  - Migration minima (so tabela pagamentos, sem comissoes ainda)
+  - GET /api/pagamentos (retorna [])
+  - Pagina /admin/pagamentos com tabela vazia + empty state
+  - Teste: GET retorna 200 com array vazio
+  → DEMONSTRAVEL. Slice fechada, deployavel.
+
+Slice 2: "Admin registra primeiro pagamento simples (valor+data+parceiro)"
+  - Sem mudanca de schema
+  - POST /api/pagamentos (sem calculo de comissao ainda)
+  - Pagina /admin/pagamentos/novo com form basico
+  - Teste: POST cria registro, GET agora retorna lista nao-vazia
+  → DEMONSTRAVEL. Fluxo create-then-read funcionando.
+
+Slice 3: "Pagamento confirmado calcula comissao automaticamente"
+  - Migration adiciona percentual_comissao + valor_comissao
+  - PUT /api/pagamentos/[id]/confirm trigga calculo
+  - Botao "Confirmar" na tabela
+  - Teste: confirma pagamento, valor_comissao = valor * percentual
+  → DEMONSTRAVEL. Regra de negocio nuclear funcionando.
+
+Slice 4: "Admin filtra pagamentos por mes"
+  - Sem mudanca de schema (data_pagamento ja existe)
+  - GET aceita ?mes=YYYY-MM
+  - Componente PagamentoFilters acima da tabela
+  - Teste: filtro retorna so os do mes
+  → DEMONSTRAVEL. UX de filtragem fechada.
+
+... e assim por diante (cancelar / exportar CSV / vista do parceiro / ...)
+```
+
+### Quando horizontal cabe (excecoes raras)
+
+Vertical e default. Use horizontal SO quando:
+- **Data migration grande** desacoplada de feature (ex: backfill de 50M linhas, particionamento) — nao tem fatia vertical natural
+- **Infra/biblioteca compartilhada** que multiplas features dependem (ex: criar `lib/supabase/admin.ts` que 3 PRDs vao consumir) — fatiar vertical artificialmente atrasa tudo
+- **Refator preparatorio** sem mudanca de comportamento (extracao de modulo, rename) — nao tem demo
+
+Quando usar horizontal, **declarar explicitamente** no header do tasks-*.md: `Slicing: horizontal (justificativa: ...)`. Sem justificativa explicita, default vertical.
+
+### Ordem dentro do slice
+
+Dentro de UM slice vertical, a ordem interna ainda e: schema-minimo → API → UI → teste (ou TDD: teste → API → UI). Mas isso e ORDEM DE EXECUCAO de uma slice, nao quebra de slices.
+
+---
+
+## Header obrigatorio do tasks-*.md
+
+Todo arquivo de tarefas comeca com header de rastreabilidade:
+
+```markdown
+# Tasks — [Nome do Projeto/Feature]
+
+**Parent**: `PRD/PRD.md` (ou URL do issue/PRD upstream)
+**Gerado em**: YYYY-MM-DD
+**Slicing**: vertical (default) | horizontal (justificativa: ...)
+**Total slices**: N (D direto / B bloqueante)
+```
+
+O `Parent` mantem rastreabilidade quando ha varios PRDs/tasks no projeto. `Slicing` declara abordagem (vertical e o padrao — qualquer outra coisa precisa de justificativa explicita).
+
+---
+
+## Classificacao: Direto vs Bloqueante
+
+Cada slice recebe um label:
+
+| Label | Significado | Quando usar |
+|-------|-------------|-------------|
+| **Direto (D)** | Executavel sem intervencao humana | Implementacao com decisao ja tomada no PRD; padrao reconhecivel; sem ambiguidade de design |
+| **Bloqueante (B)** | Requer decisao/aprovacao humana antes ou durante | Design review necessario; trade-off arquitetural nao resolvido no PRD; impacto em outras areas; aprovacao de stakeholder |
+
+**Por que rotular**: permite executar lote `Direto` em background (via `gsd-execute-phase` ou subagentes paralelos) enquanto `Bloqueante` aguarda janela humana. Tambem sinaliza visualmente onde o desenho do PRD ficou raso (se >40% das slices sao `B`, o PRD nao decidiu o suficiente — voltar e refinar).
+
+**Sinais de Bloqueante**:
+- Slice envolve escolha entre 2+ abordagens nao decidida no PRD
+- Slice toca area com ADR pendente
+- Slice precisa de aprovacao de copy/UX/design system
+- Slice altera contrato publico (API breaking change) que outros times consomem
+
+**Default**: se na duvida, `Direto` — `Bloqueante` deve ser excecao, nao norma.
 
 ---
 
@@ -38,7 +133,7 @@ Tarefas SEMPRE seguem esta ordem:
 Toda lista comeca com:
 
 ```markdown
-- [ ] **Tarefa 0: Criar feature branch**
+- [ ] **Slice 0: Criar feature branch** [Direto]
   - Branch: `feature/[nome-descritivo]`
   - Base: `main`
   - Verificar que main esta atualizado (`git pull`)
@@ -46,143 +141,187 @@ Toda lista comeca com:
 
 ---
 
-## Formato de Tarefa
+## Formato de Slice
 
 ```markdown
-- [ ] **Tarefa N: [Titulo curto e descritivo]**
+- [ ] **Slice N: [Titulo end-to-end demonstravel]** [Direto | Bloqueante]
 
-  **Descricao**: [2-3 frases explicando O QUE fazer e PORQUÊ]
+  **Demo**: [1 frase descrevendo o que e demonstravel apos esta slice — voz do usuario]
 
-  **Subtarefas**:
-  - [ ] [Passo concreto 1]
-  - [ ] [Passo concreto 2]
-  - [ ] [Passo concreto 3]
+  **Camadas tocadas**: schema / API / UI / teste (marcar as aplicaveis)
+
+  **Bloqueado por**: Slice X, Slice Y (ou "Nenhum — pode comecar imediato")
+
+  **Se Bloqueante — decisao pendente**: [o que precisa ser decidido por humano + quem decide]
+
+  **Subtarefas** (ordem interna schema → API → UI → teste):
+  - [ ] [Passo 1]
+  - [ ] [Passo 2]
+  - [ ] [Passo 3]
 
   **Arquivos relevantes**:
-  - `caminho/para/arquivo1.ts`
-  - `caminho/para/arquivo2.sql`
+  - `caminho/relevante1.ts`
+  - `caminho/relevante2.sql`
 
-  **Verificacao**:
-  - [ ] [Criterio testavel de que a tarefa esta completa]
-  - [ ] [Segundo criterio se necessario]
+  **Verificacao** (slice e DEMONSTRAVEL quando):
+  - [ ] [Criterio end-to-end testavel]
+  - [ ] [Comando de smoke test do fluxo]
 
-  **Commit**: `feat: [descricao curta]`
+  **Commit**: `feat: [descricao end-to-end do slice]`
 ```
+
+**Diferenca chave do formato antigo**: campo `Demo` (descreve fluxo demonstravel ao usuario, nao codigo entregue) + `Camadas tocadas` (sempre multiplas — se so 1 camada, suspeitar de horizontal slicing) + label `Direto|Bloqueante` + `Bloqueado por` formal.
 
 ---
 
-## Principio de Atomicidade
+## Principio de Atomicidade (dentro do vertical slicing)
 
-### Sinais de tarefa grande demais:
+### Sinais de slice grande demais:
 
-- Lista de subtarefas com 7+ itens
-- Arquivos relevantes em 4+ diretorios diferentes
-- Descricao precisa de mais de 3 frases
-- Mistura schema + API + frontend na mesma tarefa
+- Demo descreve 3+ fluxos distintos do usuario
+- Subtarefas internas com 7+ itens
+- Toca >2 entidades novas ou >3 endpoints
+- Descricao da demo precisa de mais de 1 frase
+- Slice nao e demonstravel em <5 min de uso
 
-### Como dividir:
+### Como dividir slice grande:
+
+Divida pelo **fluxo do usuario**, nao pela camada:
 
 ```
-ANTES (grande demais):
-Tarefa 1: Implementar modulo de pagamentos completo
+❌ ANTES (slice grande horizontal):
+Slice 1: CRUD completo de pagamentos
 
-DEPOIS (atomico):
-Tarefa 1: Criar migracao SQL para tabela pagamentos
-Tarefa 2: Criar Zod schema de validacao de pagamento
-Tarefa 3: Implementar API Route GET/POST para pagamentos
-Tarefa 4: Implementar API Route PUT/DELETE para pagamentos
-Tarefa 5: Criar componente PagamentoForm com React Hook Form
-Tarefa 6: Criar componente PagamentoTable com filtros
-Tarefa 7: Criar pagina de listagem de pagamentos
-Tarefa 8: Criar pagina de novo pagamento
-Tarefa 9: Testes unitarios para API de pagamentos
-Tarefa 10: Testes de integracao para RLS de pagamentos
+❌ ANTES (sub-divisao horizontal — erro comum):
+Slice 1: Schema + RLS + indexes
+Slice 2: Todas as APIs (GET/POST/PUT/DELETE)
+Slice 3: Toda a UI
+
+✅ DEPOIS (vertical por fluxo do usuario):
+Slice 1: Admin ve lista vazia
+Slice 2: Admin cria pagamento simples
+Slice 3: Admin confirma pagamento (com comissao)
+Slice 4: Admin filtra por mes
+Slice 5: Admin cancela pagamento (soft delete)
+Slice 6: Admin exporta CSV
+Slice 7: Parceiro ve seus proprios pagamentos (RLS read-only)
 ```
+
+Cada slice acima e: end-to-end, demonstravel, shipavel, e adiciona valor incremental para o usuario.
 
 ---
 
-## Exemplo Completo: CRUD de Pagamentos
+## Exemplo Completo: CRUD de Pagamentos (vertical)
 
 ```markdown
-## Tarefas de Implementacao
+# Tasks — CRUD de Pagamentos
 
-- [ ] **Tarefa 0: Criar feature branch**
+**Parent**: `PRD/PRD.md`
+**Gerado em**: 2026-05-16
+**Slicing**: vertical
+**Total slices**: 5 (4 Direto / 1 Bloqueante)
+
+---
+
+- [ ] **Slice 0: Criar feature branch** [Direto]
   - Branch: `feature/pagamentos-crud`
   - Base: `main`
 
 ---
 
-- [ ] **Tarefa 1: Migracao SQL — tabela pagamentos**
+- [ ] **Slice 1: Admin ve lista vazia de pagamentos** [Direto]
 
-  **Descricao**: Criar tabela de pagamentos com schema completo, indexes, RLS policies
-  e enum de status. Segue convencoes SQL do projeto.
+  **Demo**: Admin acessa `/admin/pagamentos` e ve tabela vazia com empty state "Nenhum pagamento registrado".
+
+  **Camadas tocadas**: schema + API + UI + teste
+
+  **Bloqueado por**: Nenhum — pode comecar imediato
 
   **Subtarefas**:
-  - [ ] Criar enum `status_pagamento` (pendente, confirmado, cancelado)
-  - [ ] Criar tabela `pagamentos` com todos os campos
-  - [ ] Adicionar indexes compostos (tenant_id + data_pagamento)
-  - [ ] Adicionar unique constraint para prevenir duplicatas
-  - [ ] Habilitar RLS e criar policies com is_admin() e auth_tenant_id()
-  - [ ] Adicionar trigger update_updated_at()
+  - [ ] Migration minima: tabela `pagamentos` (so id+tenant_id+valor+data_pagamento+parceiro_id+timestamps+ativo) + RLS basico
+  - [ ] GET /api/pagamentos — retorna array filtrado por RLS
+  - [ ] Pagina `/admin/pagamentos` com PagamentoTable + empty state
+  - [ ] Teste integracao: GET retorna 200 com [] para tenant sem registros
 
   **Arquivos relevantes**:
   - `supabase/migrations/00X_pagamentos.sql`
-
-  **Verificacao**:
-  - [ ] `npx supabase db reset` executa sem erros
-  - [ ] RLS policies testadas com diferentes roles
-
-  **Commit**: `feat: add pagamentos table with RLS and indexes`
-
----
-
-- [ ] **Tarefa 2: Zod schemas de validacao**
-
-  **Descricao**: Criar schemas Zod para validacao de input de pagamentos.
-  Compartilhado entre frontend (UX) e backend (seguranca).
-
-  **Subtarefas**:
-  - [ ] Schema de criacao (CreatePagamentoSchema)
-  - [ ] Schema de edicao (UpdatePagamentoSchema)
-  - [ ] Schema de filtros (PagamentoFilterSchema)
-  - [ ] Tipos TypeScript inferidos dos schemas
-
-  **Arquivos relevantes**:
-  - `lib/schemas/pagamento.ts`
-
-  **Verificacao**:
-  - [ ] Schemas rejeitam valores monetarios negativos
-  - [ ] Schemas rejeitam datas futuras (se regra de negocio)
-  - [ ] TypeScript compila sem erros
-
-  **Commit**: `feat: add Zod schemas for pagamentos validation`
-
----
-
-- [ ] **Tarefa 3: API Routes — GET e POST**
-
-  **Descricao**: Implementar listagem com filtros e criacao de pagamentos.
-  Validacao com Zod, auth com createServerClient().
-
-  **Subtarefas**:
-  - [ ] GET /api/pagamentos — lista com filtros (parceiro, mes, status)
-  - [ ] POST /api/pagamentos — cria pagamento com validacao
-  - [ ] Calcular comissao automaticamente (valor * percentual)
-  - [ ] Retornar { data } para sucesso, { error } para erros
-
-  **Arquivos relevantes**:
   - `app/api/pagamentos/route.ts`
+  - `app/(admin)/pagamentos/page.tsx`
+  - `tests/api/pagamentos.test.ts`
+
+  **Verificacao** (slice e DEMONSTRAVEL quando):
+  - [ ] `npm run dev` + login admin + abrir /admin/pagamentos mostra empty state
+  - [ ] `npm test pagamentos` passa
+
+  **Commit**: `feat: empty payments list page with RLS-filtered API`
+
+---
+
+- [ ] **Slice 2: Admin registra primeiro pagamento (valor+data+parceiro)** [Direto]
+
+  **Demo**: Admin clica "Novo", preenche valor+data+parceiro, submete, ve registro aparecer na tabela.
+
+  **Camadas tocadas**: API + UI + teste (schema ja existe)
+
+  **Bloqueado por**: Slice 1
+
+  **Subtarefas**:
+  - [ ] CreatePagamentoSchema (Zod) com valor>0 + data+parceiro_id obrigatorios
+  - [ ] POST /api/pagamentos — valida Zod, insere, retorna 201
+  - [ ] Pagina `/admin/pagamentos/novo` com PagamentoForm (React Hook Form + Zod resolver)
+  - [ ] Teste: POST cria registro, GET passa a listar
+
+  **Arquivos relevantes**:
   - `lib/schemas/pagamento.ts`
-  - `lib/supabase/server.ts`
+  - `app/api/pagamentos/route.ts`
+  - `app/(admin)/pagamentos/novo/page.tsx`
 
   **Verificacao**:
-  - [ ] GET retorna lista filtrada por RLS
-  - [ ] POST valida input e retorna 201
-  - [ ] Input invalido retorna 400 com mensagem clara
-  - [ ] Sem sessao retorna 401
+  - [ ] Submit valido cria registro e redireciona pra lista
+  - [ ] Submit invalido (valor=0) mostra erro inline
+  - [ ] `npm test` passa
 
-  **Commit**: `feat: add GET/POST API routes for pagamentos`
+  **Commit**: `feat: create payment via form with Zod validation`
+
+---
+
+- [ ] **Slice 3: Pagamento confirmado calcula comissao automaticamente** [Bloqueante]
+
+  **Demo**: Admin clica "Confirmar" em pagamento pendente, sistema calcula comissao via regra do parceiro e mostra valor na tabela.
+
+  **Camadas tocadas**: schema + API + UI + teste
+
+  **Bloqueado por**: Slice 2
+
+  **Se Bloqueante — decisao pendente**: a regra de comissao varia por parceiro (percentual fixo? tier por volume? bonus retroativo?). PRD nao decidiu. Decisor: Financeiro + Fernando.
+
+  **Subtarefas**:
+  - [ ] Migration adiciona `percentual_comissao` + `valor_comissao` + enum `status_pagamento`
+  - [ ] PUT /api/pagamentos/[id]/confirm aplica regra decidida
+  - [ ] Botao "Confirmar" na tabela com confirmacao
+  - [ ] Teste: confirma pagamento, `valor_comissao = valor * percentual`
+
+  **Arquivos relevantes**:
+  - `supabase/migrations/00Y_pagamentos_comissao.sql`
+  - `app/api/pagamentos/[id]/confirm/route.ts`
+  - `app/(admin)/pagamentos/components/PagamentoTable.tsx`
+
+  **Verificacao**:
+  - [ ] Confirmar atualiza status + calcula comissao
+  - [ ] Pagamento ja confirmado nao re-confirma (idempotente)
+
+  **Commit**: `feat: confirm payment with auto commission calculation`
+
+---
+
+- [ ] **Slice 4: Admin filtra pagamentos por mes** [Direto]
+
+  **Demo**: Admin seleciona mes no filtro, tabela atualiza mostrando so registros do periodo.
+
+  ...
 ```
+
+**Note como cada slice e demonstravel sozinho** — depois da Slice 1 ja da pra mostrar pagina (empty state); depois da Slice 2 ja da pra criar e ver registro; depois da Slice 3 ja da pra confirmar e ver comissao. Sem slice horizontal "todas as migrations primeiro".
 
 ---
 
@@ -221,10 +360,18 @@ Criterios devem ser **verificaveis** — nao "funciona corretamente" mas sim "GE
 
 ## Checklist de Validacao
 
-- [ ] Tarefa 0 e "Criar feature branch"?
-- [ ] Ordem de dependencias respeitada (SQL → API → Frontend → Testes)?
-- [ ] Cada tarefa e atomica (descricao em 2-3 frases, 1 sessao focada)?
-- [ ] Subtarefas sao concretas (nao vagas)?
-- [ ] Arquivos relevantes listados para cada tarefa?
-- [ ] Bloco de verificacao com criterios testaveis?
-- [ ] Commits seguem Conventional Commits?
+- [ ] Header presente com **Parent** + **Gerado em** + **Slicing** + **Total slices**?
+- [ ] Slice 0 e "Criar feature branch"?
+- [ ] **Cada slice e VERTICAL** (toca multiplas camadas + tem demo end-to-end)?
+- [ ] Se algum slice e horizontal, justificativa esta declarada no header?
+- [ ] Cada slice tem campo **Demo** descrevendo fluxo demonstravel ao usuario?
+- [ ] Cada slice tem label **[Direto] ou [Bloqueante]**?
+- [ ] Slices `Bloqueante` declaram **decisao pendente + decisor**?
+- [ ] **Bloqueado por** declarado formalmente (ou "Nenhum")?
+- [ ] Slices em **dependency order** (blockers antes)?
+- [ ] Razao Bloqueante/Direto saudavel (<40% Bloqueante)?
+- [ ] Cada slice e atomico (demo em 1 frase, demonstravel em <5min)?
+- [ ] Subtarefas concretas (nao vagas)?
+- [ ] Arquivos relevantes listados?
+- [ ] Verificacao end-to-end (testa o fluxo da demo, nao so a camada)?
+- [ ] Commits seguem Conventional Commits descrevendo end-to-end?
