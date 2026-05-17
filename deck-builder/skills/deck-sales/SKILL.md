@@ -208,3 +208,27 @@ YAML em `~/.config/deck-builder/brands.yaml`. 3 marcas pre-povoadas no install d
 - [ ] Schema §10.2 valido (cabecalho Meta + estrutura narrativa + slides + 3 tiers compliance)
 - [ ] Instalada Code (`~/.claude/skills/deck-sales/`) + Cowork Desktop (`skills-plugin/.../skills/deck-sales/`)
 - [ ] Testada com 1 caso real (nao-eval) — apos instalacao
+
+## v1.1 — Adendo: `modo_entrega` + `[VERIFICAR]` + Layout sugerido
+
+A partir de v1.1 do plugin, esta skill aplica 4 disciplinas adicionais ao gerar STORYBOARD. Detalhes canônicos em `../../shared/storyboard-schema.md` e `../../shared/verificar-flag.md`.
+
+**1. `modo_entrega` adapta densidade do slide** (regra 7 do schema):
+- `apresentado-ao-vivo` (U4=1/2): slides minimalistas (2-3 bullets) + speaker notes RICOS
+- `enviado-para-leitura` (U4=3): slides DENSOS (4-6 bullets + dados inline + 1 quote curto) + speaker notes opcionais ou curtos
+- `hibrido` (U4=4): meio-termo, ambos preenchidos
+
+Preencher bloco `Conteúdo do slide (visível na projeção)` em cada slide, calibrado ao `modo_entrega`.
+
+**2. `Layout sugerido` em cada slide** (regra 8 do schema): grid + tipografia + componentes visuais + animação. Sem isso, designer/Gamma/Claude Design/PowerPoint recebe o deck "no escuro".
+
+**3. `[VERIFICAR]` em dados fabricados** (regra 9 do schema + `verificar-flag.md`): todo R$/%/n=/RCT/NPS/GRADE/CFO/Anvisa que a skill **inferir** (não veio do usuário; não é público canonicamente conhecido) recebe `[VERIFICAR: descrição]` inline ou em footnote. Lint v1.1 emite WARN quando ausente. Reviewer converte em 🟡 ou 🔴 no segundo passe.
+
+**4. Bold opcional nos rótulos:** preferir `**Tipo:**`, `**Action title:**`, `**Mensagem-chave:**` para facilitar leitura visual. Lint aceita ambos formatos.
+
+**Checklist v1.1 ao gerar cada slide:**
+- [ ] `**Tipo:**`, `**Action title:**`, `**Mensagem-chave:**` em bold
+- [ ] Bloco `Conteúdo do slide (visível na projeção)` preenchido com densidade adaptada ao `modo_entrega`
+- [ ] Bloco `Layout sugerido` com grid + tipografia + componentes
+- [ ] Dados específicos inferidos marcados com `[VERIFICAR: ...]`
+- [ ] `Imagens sugeridas` no formato v1.1 (Quantidade explícita + variações em blocos separados)

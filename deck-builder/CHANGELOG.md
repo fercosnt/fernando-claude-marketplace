@@ -4,6 +4,58 @@ Todas as mudanças notáveis do plugin `deck-builder` são documentadas aqui.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/) e versionamento [SemVer](https://semver.org/).
 
+## [1.1.0] - 2026-05-17
+
+### Added
+
+- **`modo_entrega` em `## Meta`** — derivado de U4. Valores: `apresentado-ao-vivo` (U4=1/2), `enviado-para-leitura` (U4=3), `hibrido` (U4=4). Adapta densidade dos slides (minimalista para apresentado vs denso para enviado).
+- **Bloco `Conteúdo do slide (visível na projeção)`** em cada slide — separa o que aparece no slide do que o apresentador fala (speaker notes). Densidade calibrada ao `modo_entrega`. Resolve issue: slides minimalistas demais quando deck é enviado para leitura.
+- **Bloco `Layout sugerido`** em cada slide — handoff explícito para designer / Gamma / Claude Design / PowerPoint com grid + tipografia + componentes visuais + animação. Resolve issue: instruções vagas para construção visual.
+- **Formato `Imagens sugeridas` reformatado** — Quantidade declarada explicitamente (1 imagem hero com 3 variações vs N imagens distintas) + cada variação em bloco markdown separado com 6 campos labeled (Aspect ratio / Estilo / Composição / Prompt / Negative / Mood ref). Resolve issue: prompts confusos com config misturada com prompt.
+- **`[VERIFICAR]` flag** — disciplina anti-fabricação. Toda data específica inferida (R$/%/n=/RCT/NPS/GRADE/CFO/Anvisa) sem fonte conferida pela skill marca `[VERIFICAR: descrição]`. Documentado em novo `shared/verificar-flag.md`. Lint v1.1 emite WARN quando ausente. Reviewer converte flags em 🟡 ou 🔴.
+- **Bold opcional nos rótulos** (`**Tipo:**`, `**Action title:**`, `**Mensagem-chave:**`, etc.) — facilita scan visual ao revisar STORYBOARD. Lint aceita ambos formatos (texto puro e bold).
+- **Adendo v1.1 em todas as 8 verticais** — cada SKILL.md das skills verticais documenta as 4 disciplinas novas (modo_entrega / Conteúdo do slide / Layout sugerido / [VERIFICAR]).
+
+### Changed
+
+- **Lint script `lint-storyboard-schema.sh`** atualizado:
+  - Regex aceita campos com bold opcional (`\*?\*?Field:\*?\*?`)
+  - Adicionado check obrigatório: `Modo de entrega:` em Meta (13 campos no total agora)
+  - Adicionado check (WARN): bloco `Conteúdo do slide` em cada slide
+  - Adicionado check (WARN): bloco `Layout sugerido` em cada slide
+  - Adicionado check (WARN): dados R$/%/n=/RCT/NPS/GRADE sem `[VERIFICAR]` flag
+  - Header de usage atualizado para refletir validações v1.1
+- **Schema `storyboard-schema.md`** reformulado com 3 regras adicionais (7, 8, 9):
+  - Regra 7: Conteúdo do slide adaptado ao `modo_entrega`
+  - Regra 8: Layout sugerido obrigatório em cada slide
+  - Regra 9: `[VERIFICAR]` em dados fabricados
+- **`deck-image-prompts/SKILL.md`** seção "Formato de output" reformulada com novo bloco `Imagens sugeridas:` (Quantidade + 3 variações em blocos separados). Formato v1.0 deprecated mas ainda aceito pelo lint para retrocompatibilidade.
+- **`entrevista-universal-u1-u6.md`** documenta como `modo_entrega` deriva de U4 + impacto explícito no STORYBOARD (densidade vs speaker notes).
+
+### Migration v1.0 → v1.1
+
+STORYBOARDs gerados em v1.0 ainda passam o lint v1.1 EXCETO no novo campo obrigatório `Modo de entrega:` em Meta. Para migrar manualmente:
+
+1. Adicionar `- Modo de entrega: <apresentado-ao-vivo|enviado-para-leitura|hibrido>` em `## Meta` (derive de U4 / Formato).
+2. Para cada slide, adicionar bloco `Conteúdo do slide` extraindo bullets implícitos da Mensagem-chave + Speaker notes.
+3. Para cada slide, adicionar bloco `Layout sugerido` (grid + tipografia + componentes + animação).
+4. Reformatar bloco `Prompt de imagem` em `Imagens sugeridas` com Quantidade explícita + variações em blocos.
+5. Marcar dados fabricados com `[VERIFICAR: descrição]`.
+6. (Opcional) Bold nos rótulos: `Tipo:` → `**Tipo:**`.
+
+### Why v1.1
+
+Após o build v1.0 ser validado por simulação com lint PASS em 3 walkthroughs, o usuário forneceu feedback substantivo (UAT humano real) apontando 4 issues estruturais:
+
+1. Speaker notes dominam o conteúdo, slide visual fica vazio
+2. Falta pergunta "deck será apresentado ou enviado?" — densidade adaptativa ausente
+3. Instruções para handoff visual (Claude Design / Gamma / PowerPoint) fracas
+4. Prompts de imagem confusos (quantidade, config vs prompt, qualidade)
+
+Adicionalmente, durante o feedback foi identificado que skills inventam números plausíveis (NPS 91 n=131, "40% fecharam", papers RCT fabricados) sem flag — risco de over-claiming em apresentação real. v1.1 introduz `[VERIFICAR]` para resolver.
+
+Esse é exatamente o "ponto de falsificação do trade-off D1" previsto no PRD §9 risco #1 — input humano real captou o que a simulação determinística não pegou.
+
 ## [1.0.0] - 2026-05-17
 
 ### Added

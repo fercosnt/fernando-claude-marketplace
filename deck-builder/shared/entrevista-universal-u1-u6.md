@@ -24,9 +24,25 @@ duracao_min: <U3>
 formato: <U4>
 big_idea: <U5>
 marca: <U6>
+modo_entrega: <derivado de U4 — ver tabela abaixo>
 ```
 
 Estas variáveis preenchem o cabeçalho `## Meta` do `STORYBOARD.md` (ver `storyboard-schema.md`).
+
+## Modo de entrega — derivado de U4 (LOCKED v1.1)
+
+`modo_entrega` é a variável que mais impacta a forma do STORYBOARD (densidade de conteúdo visível no slide vs. speaker notes). Derivada de U4:
+
+| U4 | modo_entrega | Impacto no STORYBOARD |
+|----|--------------|------------------------|
+| (1) pitch presencial | `apresentado-ao-vivo` | Slides minimalistas (Action title + 2-3 bullets curtos). Speaker notes RICOS (apresentador fala o detalhe). Tempo estimado por slide relevante. |
+| (2) call remota | `apresentado-ao-vivo` | Idem (1). |
+| (3) envio para leitura | `enviado-para-leitura` | Slides DENSOS (4-6 bullets + dados inline + quotes). Speaker notes opcionais ou curtos. Tempo estimado irrelevante. Texto autossuficiente — quem lê não tem apresentador. |
+| (4) híbrido | `hibrido` | Ambos preenchidos: slides com conteúdo médio (3-4 bullets + dados-chave) + speaker notes ricos. Usuário pode usar a mesma deck em ambos os contextos. |
+
+**Por que isto importa:** deck `enviado-para-leitura` com slides minimalistas vira pôster vazio para o leitor. Deck `apresentado-ao-vivo` com slides densos vira tela poluída — apresentador compete com o slide. Cada modo tem sua densidade ótima.
+
+**Quando U4 está ambíguo:** pergunte explicitamente: "Esse deck vai ser apresentado por você ao vivo, ou enviado para leitura assíncrona?" Se "ambos", `modo_entrega = hibrido`.
 
 ## Regras de eficiência
 
