@@ -30,10 +30,12 @@ Depois selecione `legal-analyzer` (ou outros plugins) na lista.
 | Plugin | Descricao | Skills | Versao |
 |--------|-----------|--------|--------|
 | [legal-analyzer](./legal-analyzer/) | Analise contratual BR — coordenador + 9 skills (revisar, NDA, LGPD, risco, briefings, fornecedor, resposta, assinatura) | 10 | 0.1.0 |
+| [skill-prd](./skill-prd/) | Criacao, validacao e melhoria de PRDs estruturados — 4 modos, 3 niveis, scorecard 5D, Deep Modules, Testing Decisions com prior art, anti-rot | 1 | 0.2.0 |
 
 ## Roadmap
 
-Fase 2 (proximos):
+Fase 2 (em curso):
+- ✅ `skill-prd` — empacotada 2026-05-16 (cross-pollination com to-prd de Matt Pocock)
 - `content-suite` — social-media-strategist + copy + elevenlabs-formatter + press-release-writer
 - `gsd-essentials` — core do workflow GSD empacotado
 - `claude-md-generator` — skill standalone como plugin
@@ -51,6 +53,10 @@ claude-marketplace/
 │   ├── skills/ (10)
 │   ├── references/
 │   ├── assets/
+│   └── README.md
+├── skill-prd/                  # Plugin de PRDs estruturados
+│   ├── .claude-plugin/plugin.json
+│   ├── skills/skill-prd/       # SKILL.md + references/ + assets/ + evals/
 │   └── README.md
 └── README.md
 ```

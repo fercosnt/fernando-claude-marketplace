@@ -1,0 +1,133 @@
+{
+  "skill_name": "skill-prd",
+  "evals": [
+    {
+      "id": 1,
+      "name": "saas-multi-tenant-dashboard",
+      "prompt": "Preciso criar um PRD para um sistema de gestao financeira para clinicas odontologicas parceiras. Cada clinica ve so seus dados, o admin ve tudo. Stack: Next.js 14 + Supabase + Tailwind. Precisa ter dashboard com KPIs, gestao de pagamentos e relatorios mensais. Quero o PRD completo com tasks.",
+      "expected_output": "PRD nivel Standard/Comprehensive com: problema na voz do gestor da clinica, escopo v1/v2, Fora do Escopo como secao separada com justificativas, metricas em 3 camadas (primaria + secundarias + guardrail), schema com RLS, endpoints de API, HMW formulada, epicos como hipoteses testaveis, tasks atomicas ordenadas por dependencia, scorecard >= 7.5",
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "name": "feature-simples-notificacoes",
+      "prompt": "Quero adicionar notificacoes por email quando um pagamento e confirmado no sistema. Ja tenho o modulo de pagamentos funcionando. So preciso do PRD pra essa feature.",
+      "expected_output": "PRD nivel Lean com: problema claro, escopo enxuto, Fora do Escopo como secao separada, metrica primaria + guardrail, requisitos com criterio de aceite, consideracoes tecnicas sobre integracao de email, questoes em aberto. Maximo 2 paginas.",
+      "assertions": []
+    },
+    {
+      "id": 3,
+      "name": "skill-claude-code",
+      "prompt": "Quero criar uma skill pro Claude Code que ajuda a fazer code review automatizado. A skill deve analisar o diff do git, identificar problemas e sugerir melhorias. Preciso do PRD e depois as tasks.",
+      "expected_output": "PRD que reconhece que o produto e uma skill (nao webapp). Secao tecnica com estrutura de skill (SKILL.md, references/). Fora do Escopo documentado. Metricas em 3 camadas. Recomenda skill-creator para implementacao. Tasks focadas em criacao de arquivos da skill, nao em codigo de app.",
+      "assertions": []
+    },
+    {
+      "id": 4,
+      "name": "context-dump-briefing-completo",
+      "prompt": "aqui esta todo o contexto: Estou construindo um app de gestao de tarefas para equipes remotas. O problema: equipes remotas perdem visibilidade do progresso dos projetos, levando a duplicacao de trabalho e atrasos. Usuarios: PM (admin), devs (membros), stakeholders (view-only). Stack: Next.js + Supabase. Metricas: reducao de 50% em reunioes de status, adocao >80% em 30 dias. Escopo v1: board kanban, atribuicao de tarefas, dashboard de progresso. Fora do escopo: integracao com Jira, time tracking, chat integrado. Riscos: resistencia a adocao, complexidade de permissoes.",
+      "expected_output": "Skill detecta modo Context Dump automaticamente. Analise de gaps mostra maioria coberta, possiveis gaps em detalhes tecnicos ou metricas guardrail. Faz 0-2 perguntas focadas nos gaps. Gera PRD com todas as novas secoes (Fora do Escopo separado, metricas 3 camadas, HMW). NAO faz entrevista completa.",
+      "assertions": []
+    },
+    {
+      "id": 5,
+      "name": "context-dump-briefing-parcial",
+      "prompt": "aqui esta todo o contexto: Quero um dashboard financeiro pro meu negocio de clinicas. Os parceiros precisam ver seus numeros sem depender do admin. Stack: Next.js + Supabase.",
+      "expected_output": "Skill detecta modo Context Dump. Analise de gaps identifica: problema parcialmente coberto, personas parciais, metricas ausentes, escopo v1 indefinido, riscos ausentes. Faz 3+ perguntas focadas APENAS nos gaps detectados. NAO repete perguntas sobre o que ja foi fornecido.",
+      "assertions": []
+    },
+    {
+      "id": 6,
+      "name": "best-guess-com-claude-md",
+      "prompt": "faz o PRD com best guess para uma feature de relatorio mensal automatizado que envia por email para cada parceiro",
+      "expected_output": "Skill gera PRD completo usando contexto do CLAUDE.md e codebase. Suposicoes marcadas com [ASSUMIDO] inline. Lista consolidada de suposicoes no final para validacao rapida. Fora do Escopo presente. Metricas em 3 camadas com [ASSUMIDO] onde necessario. Nenhum dado quantitativo inventado sem marcar.",
+      "assertions": []
+    },
+    {
+      "id": 7,
+      "name": "best-guess-sem-contexto",
+      "prompt": "faz o PRD com best guess para um sistema de agendamento de consultas online para dentistas",
+      "expected_output": "Skill gera PRD com muitas suposicoes, TODAS marcadas [ASSUMIDO]. Lista final com 8+ suposicoes para validacao. Suposicoes razoaveis baseadas em dominio (odontologia). Nao inventa dados quantitativos — marca como [ASSUMIDO][TBD]. Fora do Escopo presente com suposicoes. Metricas guardrail presentes.",
+      "assertions": []
+    },
+    {
+      "id": 8,
+      "name": "guardrail-metrics-presentes",
+      "prompt": "Preciso de um PRD para otimizar o onboarding do nosso SaaS. Hoje 60% dos usuarios abandonam no primeiro dia. Quero reduzir para 20%. Stack ja definida no CLAUDE.md.",
+      "expected_output": "PRD com metricas em 3 camadas: Primaria (reducao de abandono de 60% para 20%), Secundarias (tempo de setup, completude do onboarding), Guardrail (NPS nao cai, features existentes nao quebram, performance nao degrada). Fora do Escopo como secao separada.",
+      "assertions": []
+    },
+    {
+      "id": 9,
+      "name": "fora-do-escopo-obrigatorio",
+      "prompt": "cria um PRD lean para adicionar dark mode no app. nao tem nada fora do escopo, e so dark mode",
+      "expected_output": "Skill DEVE gerar secao Fora do Escopo mesmo quando usuario diz que nao tem. Deve sugerir itens como: temas customizaveis, preferencia por horario, sincronizacao com OS, suporte a high-contrast mode. Cada item com razao e consideracao futura. Secao NAO pode estar vazia.",
+      "assertions": []
+    },
+    {
+      "id": 10,
+      "name": "anti-patterns-auto-correcao",
+      "prompt": "Preciso de um PRD. O problema: precisamos de um dashboard. Todos os requisitos sao criticos. Metrica: melhorar a UX. O sistema deve ser rapido.",
+      "expected_output": "Skill detecta multiplos anti-patterns (solucao disfarçada de problema, todos requisitos Must, metrica vaga, linguagem imprecisa). Corrige automaticamente: extrai problema real por tras do dashboard, aplica MoSCoW com <=60% Must, quantifica metrica, especifica performance. Informa ao usuario o que foi ajustado.",
+      "assertions": []
+    },
+    {
+      "id": 11,
+      "name": "hmw-e-epic-hypothesis",
+      "prompt": "Preciso de um PRD Standard para um modulo de gestao de estoque para clinicas. Problema: clinicas perdem materiais por falta de controle, gastam 20% a mais do que precisariam. 2 personas: admin e auxiliar.",
+      "expected_output": "PRD Standard com: HMW formulada (ex: 'Como podemos dar visibilidade de estoque para clinicas de modo que reduzam desperdicio em 20%?'). Epicos formulados como hipoteses testaveis com formato 'Se nos X para Y, entao Z. Saberemos quando W.' Pelo menos 1 tiny act of discovery por epico.",
+      "assertions": []
+    },
+    {
+      "id": 12,
+      "name": "scorecard-validacao-completa",
+      "prompt": "valida esse PRD:\n\n# Sistema de Agendamento — PRD\n**Nivel**: Standard\n\n## 1. Problema & Contexto\nPrecisamos de um sistema de agendamento online.\n\n## 2. Objetivos & Metricas\nMelhorar a experiencia do usuario.\n\n## 3. Escopo\n- Agendamento online\n- Confirmacao por email\n\n## 5. Requisitos Funcionais\n| ID | Requisito | Criterio de Aceite | Prioridade |\n|----|-----------|-------------------|------------|\n| RF-01 | Sistema agenda consultas | Sistema funciona | Must |\n| RF-02 | Sistema envia confirmacao | Email enviado | Must |\n| RF-03 | Sistema cancela consulta | Consulta cancelada | Must |\n\n## 7. Consideracoes Tecnicas\nNext.js + Supabase",
+      "expected_output": "Scorecard com nota < 7.5 (PRD tem problemas graves). Deve detectar: problema e solucao disfarçada (sem voz do usuario), metricas vagas, Fora do Escopo AUSENTE (deve ser flagged como critico), requisitos sem Given/When/Then, 100% Must (viola regra 60%), sem evidencias, sem HMW, sem Epic Hypothesis. Nota final calculada com pesos corretos. Lista de melhorias prioritarias.",
+      "assertions": []
+    },
+    {
+      "id": 13,
+      "name": "questoes-em-aberto-obrigatorias",
+      "prompt": "Preciso de um PRD Lean para adicionar busca por texto nos registros de pagamento. Ja tenho a tabela pagamentos com campos valor, data, parceiro, descricao. Stack: Next.js + Supabase.",
+      "expected_output": "PRD Lean com secao 'Questoes em Aberto' preenchida (NAO pode estar vazia). Deve conter pelo menos 2-3 questoes reais: ex. busca full-text vs LIKE, indexacao necessaria, paginacao de resultados. Demonstra que SEMPRE existem questoes em aberto. PRD salvo em PRD/PRD.md.",
+      "assertions": []
+    },
+    {
+      "id": 14,
+      "name": "from-brief-auto-detection",
+      "prompt": "faz o PRD",
+      "expected_output": "Skill detecta BRIEF/BRIEF.md no projeto (se existir) e sugere modo From Brief automaticamente. Mostra mapa de cobertura do brief → PRD. Perguntas focadas apenas em gaps (tipicamente detalhe tecnico, metricas quantitativas). Se brief nao existe, fallback para Guiado. Cabecalho do PRD inclui 'Upstream: Brief'.",
+      "files": ["BRIEF/BRIEF.md"],
+      "assertions": []
+    },
+    {
+      "id": 15,
+      "name": "from-brief-handoff-mapping",
+      "prompt": "ja fiz o brief com a skill idea-to-brief, agora quero o PRD completo com tasks",
+      "expected_output": "Skill le BRIEF/BRIEF.md, mapeia secoes ao PRD (MITRE→Problema, OST→Escopo, Lean UX→Riscos). Secoes herdadas marcadas [DO BRIEF]. Nao refaz entrevista — pergunta apenas gaps. PRD aprofunda o que o brief ja tem (ex: user stories com criterio de aceite, schema, endpoints). Tasks geradas ao final.",
+      "files": ["BRIEF/BRIEF.md"],
+      "assertions": []
+    },
+    {
+      "id": 16,
+      "name": "notebooklm-consultation",
+      "prompt": "faz o PRD com best guess para um sistema de CRM para clinicas. temos um notebook no NotebookLM com pesquisa sobre CRMs dentais, o ID e abc123",
+      "expected_output": "Skill registra notebook_id abc123. Durante redacao, ao encontrar gap que seria [TBD], consulta NotebookLM primeiro (notebooklm ask). Respostas do notebook incorporadas com tag [NOTEBOOK]. Gaps sem resposta no notebook marcados [TBD]. Cabecalho inclui 'Upstream: NotebookLM'.",
+      "assertions": []
+    },
+    {
+      "id": 17,
+      "name": "pesquisa-como-evidencia",
+      "prompt": "fiz uma pesquisa profunda sobre sistemas de agendamento online. ta em pesquisas/agendamento/PESQUISA-agendamento.md. agora quero o PRD",
+      "expected_output": "Skill le a pesquisa compilada e usa como fonte de evidencia. Secao de Problema cita dados da pesquisa. Consideracoes Tecnicas referenciam comparacoes da pesquisa. Cabecalho inclui 'Upstream: Pesquisa'. Nao repete pesquisa ja feita — aprofunda com foco em requisitos e implementacao.",
+      "assertions": []
+    },
+    {
+      "id": 18,
+      "name": "pipeline-completo-research-brief-prd",
+      "prompt": "ja rodei o deep-research e o idea-to-brief. tenho pesquisa em pesquisas/crm/ e brief em BRIEF/BRIEF.md. faz o PRD standard com tasks",
+      "expected_output": "Skill detecta AMBOS artefatos upstream. Usa brief como estrutura principal (From Brief) e pesquisa como evidencia adicional. Cabecalho: 'Upstream: Brief + Pesquisa'. Rastreabilidade clara: [DO BRIEF] e [PESQUISA] nas secoes. Minimal questioning — material rico ja disponivel. PRD + tasks gerados.",
+      "assertions": []
+    }
+  ]
+}
