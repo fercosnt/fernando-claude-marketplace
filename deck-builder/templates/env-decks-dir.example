@@ -1,0 +1,33 @@
+# env-decks-dir.example — configuracao do $DECKS_DIR (§10.4 / D4)
+#
+# 1) Adicionar ao ~/.zshrc (ou ~/.bashrc) para tornar permanente:
+#
+#    echo 'export DECKS_DIR=~/Documents/decks/' >> ~/.zshrc
+#    source ~/.zshrc
+#
+# 2) Override por contexto (recomendado para cliente especifico):
+#
+#    cd ~/Clientes/Fotona/
+#    export DECKS_DIR=./decks/
+#    # /deck a partir daqui salva em ~/Clientes/Fotona/decks/{YYYY-MM}/
+#
+# 3) Default (se $DECKS_DIR nao estiver setado):
+#
+#    ~/Documents/decks/
+#
+# 4) Estrutura resultante:
+#
+#    $DECKS_DIR/
+#    └── 2026-05/
+#        ├── STORYBOARD-beauty-smile-pitch-anjo-1647.md
+#        ├── STORYBOARD-beauty-smile-pitch-anjo-1647.review.md
+#        ├── POSTER-eryag-aaoms-2026-0930.md
+#        ├── SIXPAGER-politica-viagens-ceo-1430.md
+#        └── img/
+#            └── beauty-smile-pitch-anjo/
+#                ├── slide-1.png
+#                ├── slide-3.png
+#                └── ...
+#
+# Exemplo de export (descomentar e ajustar):
+# export DECKS_DIR=~/Documents/decks/

@@ -1,0 +1,48 @@
+# brands.yaml — auto-detection de marca (§10.5 / D6)
+#
+# Instalar em ~/.config/deck-builder/brands.yaml:
+#   mkdir -p ~/.config/deck-builder
+#   cp ~/.claude/plugins/deck-builder/templates/brands.yaml.example \
+#      ~/.config/deck-builder/brands.yaml
+#
+# Editar para adicionar marcas próprias. Ordem de detecção: primeiro match vence.
+
+schema_version: 1
+
+brands:
+  # --- 3 marcas pré-povoadas Fernando ---
+
+  - name: "Beauty Smile"
+    regex: '\bBeauty Smile\b|beautysmile'
+    design_system_skill: "beauty-smile-design-system"
+    compliance_tags:
+      - "odontologia-br"
+      - "cfo-cfm"
+
+  - name: "Fotona"
+    regex: '\bFotona\b|LightWalker|Er:YAG|Nd:YAG'
+    design_system_skill: null
+    compliance_tags:
+      - "anvisa-laser-classe-iii"
+      - "cfo-laser"
+
+  - name: "Carnaval 360"
+    regex: '\bCarnaval 360\b|carnaval360'
+    design_system_skill: null
+    compliance_tags: []
+
+  # --- Exemplos comentados (descomentar e adaptar) ---
+
+  # - name: "Cliente XYZ"
+  #   regex: '\bXYZ\b|xyz-corp|clientexyz\.com'
+  #   design_system_skill: null
+  #   compliance_tags:
+  #     - "b2b-saas"
+  #     - "lgpd"
+
+  # - name: "Pioon"
+  #   regex: '\bPioon\b|laser-fda-510k'
+  #   design_system_skill: null
+  #   compliance_tags:
+  #     - "anvisa-laser-classe-iii"
+  #     - "fda-510k"

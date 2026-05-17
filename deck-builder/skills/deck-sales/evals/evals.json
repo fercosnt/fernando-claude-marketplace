@@ -1,0 +1,90 @@
+{
+  "skill_name": "deck-sales",
+  "version": "v1.0.0",
+  "created": "2026-05-16",
+  "description": "3 eval cases canonicos do deck-sales (vertical 2/8 do plugin deck-builder): Fotona LightWalker premium / Beauty Smile franchising / Carnaval 360 corporativo. Cobre DoD do bundle 04: 2 modos, insight Challenger slide 2, comparativo sem badmouth, ROI/payback obrigatorio.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "fotona-lightwalker-dentista-premium-sp",
+      "prompt": "Preciso vender LightWalker pra clinica premium SP — fechar pedido R$280k em 60 dias. Dentista-proprietario decide. Perdemos deals para Lumenis as vezes. Cliente referencia: Clinica Smile Premium SP, payback 14 meses, ampliou mix premium de 30% pra 52% em 8 meses.",
+      "expected_output": "STORYBOARD 17 slides modo padrao com: (1) slide 2 insight Challenger sobre 80% high-end com laser ate 2027 SEM 'obrigado'; (2) slides 3-5 Gap Selling quantificado; (3) slide 6 Old vs New World; (4) slide 11 case Smile Premium nominado; (5) slides 12-13 Payback 14m base + Sensitivity 3 cenarios; (6) slide 14 comparativo Lumenis responsavel pelo que ELES fazem bem; (7) compliance tier 🟡 ANVISA Classe III.",
+      "files": [],
+      "assertions": [
+        {"id": "1.1", "text": "Slide 1 capa com action title = Big Idea, NAO 'Apresentacao Fotona'", "type": "regex_negative", "pattern": "Apresentacao|obrigado|agenda"},
+        {"id": "1.2", "text": "Slide 2 = insight provocador com dado de mercado + reframe + implicacao", "type": "manual"},
+        {"id": "1.3", "text": "Slide 2 NAO comeca cerimonial", "type": "regex_negative", "scope": "slide_2", "pattern": "obrigado pela reuniao|vamos apresentar a empresa|primeiro deixa eu"},
+        {"id": "1.4", "text": "Slides 3-5 = Gap Selling com numero/R$/numero", "type": "manual"},
+        {"id": "1.5", "text": "Slide 6 = Old World vs New World layout lado a lado", "type": "regex_positive", "pattern": "Old World|New World|Velho mundo|Novo mundo"},
+        {"id": "1.6", "text": "Slides 12-13 = Payback em meses + Sensitivity 3 cenarios", "type": "manual"},
+        {"id": "1.7", "text": "Payback base = 14 meses (consistente com S5)", "type": "regex_positive", "pattern": "14 meses"},
+        {"id": "1.8", "text": "Slide 14 comparativo Lumenis SEM badmouth", "type": "regex_negative", "scope": "slide_14", "pattern": "Lumenis.*(caro|ruim|nao funciona|inferior|ultrapassado)"},
+        {"id": "1.9", "text": "Modo = padrao", "type": "regex_positive", "scope": "meta", "pattern": "Modo: padrao"},
+        {"id": "1.10", "text": "CTA unico no slide final com data", "type": "manual"},
+        {"id": "1.11", "text": "Auto-detection Fotona acionou ANVISA tier 🟡", "type": "regex_positive", "pattern": "ANVISA"},
+        {"id": "1.12", "text": "Schema §10.2 valido (Meta + Estrutura + slides + Apendice + Storyboard de Imagens + Checklist Revisao + Compliance 3 tiers)", "type": "manual"},
+        {"id": "1.13", "text": "Cabecalho Meta tem 'Skill geradora: deck-sales'", "type": "regex_positive", "pattern": "Skill geradora: deck-sales"},
+        {"id": "1.14", "text": "max_ctas: 1 no cabecalho Meta", "type": "regex_positive", "pattern": "max_ctas: 1"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "beauty-smile-franchising-interior-sp",
+      "prompt": "Recrutar dentista para abrir franquia Beauty Smile no interior SP — fechar contrato R$150k entrada. Dentista solo, 8 anos, 1-2 cadeiras, quer escalar mas nao tem brand. Cases: 3 franquias ativas com retencao 18 meses+, ticket medio cresceu 40% no primeiro ano. Maior medo do prospect: perder autonomia clinica.",
+      "expected_output": "STORYBOARD 16 slides modo padrao com: (1) slide 2 insight sobre 84% dentistas solo / crescimento virou jogo de brand; (2) Gap Selling solo vs solo-com-teto vs brand-consolidada; (3) slide 6 Old World (solo administrador) vs New World (dentista com brand); (4) slide 11 case 3 franquias ativas com S5 dados; (5) slide 12 Payback ≤12m + slide 13 Sensitivity; (6) slide 14 (se presente) SEM badmouth de Sorridents/OdontoCompany/outras; (7) endereca medo de autonomia no apendice FAQ; (8) compliance tier 🟡 CFO 196/2019.",
+      "files": [],
+      "assertions": [
+        {"id": "2.1", "text": "Slide 1 capa com Big Idea", "type": "regex_negative", "pattern": "Apresentacao Beauty Smile|obrigado"},
+        {"id": "2.2", "text": "Slide 2 = insight provocador com dado + reframe", "type": "manual"},
+        {"id": "2.3", "text": "Slide 2 NAO comeca cerimonial", "type": "regex_negative", "scope": "slide_2", "pattern": "obrigado pela reuniao|vamos apresentar"},
+        {"id": "2.4", "text": "Gap Selling explicito: solo (current) → solo com teto (custo) → brand consolidada (future)", "type": "manual"},
+        {"id": "2.5", "text": "Slide 6 Raskin com Old World (solo) vs New World (brand)", "type": "regex_positive", "pattern": "Old World|New World|Velho mundo|Novo mundo"},
+        {"id": "2.6", "text": "Payback base ≤ 12 meses", "type": "manual"},
+        {"id": "2.7", "text": "Sensitivity 3 cenarios visiveis", "type": "manual"},
+        {"id": "2.8", "text": "Slide 11 menciona '3 franquias ativas, retencao 18m+, ticket +40%'", "type": "regex_positive", "pattern": "3 franquias|retencao.*18|ticket.*40"},
+        {"id": "2.9", "text": "Slide 14 (se presente) SEM badmouth de franquias concorrentes", "type": "regex_negative", "scope": "slide_14", "pattern": "Sorridents.*(ruim|caro)|OdontoCompany.*(ruim|caro)|franquia.*(generica|inferior)"},
+        {"id": "2.10", "text": "Endereca objecao autonomia clinica no apendice FAQ ou slide 17", "type": "regex_positive", "pattern": "autonomia|decisoes clinicas"},
+        {"id": "2.11", "text": "CTA = agendar call com COO ou equivalente especifico", "type": "manual"},
+        {"id": "2.12", "text": "Compliance tier 🟡 CFO 196/2019 OU publicidade odontologica", "type": "regex_positive", "pattern": "CFO|publicidade odontologica"},
+        {"id": "2.13", "text": "Schema §10.2 valido", "type": "manual"},
+        {"id": "2.14", "text": "Modo = padrao", "type": "regex_positive", "scope": "meta", "pattern": "Modo: padrao"},
+        {"id": "2.15", "text": "Royalty fee mencionado como cost-of-revenue (NAO subtraido no payback do franqueado)", "type": "manual"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "carnaval-360-plano-corporativo-agencia",
+      "prompt": "Vender plano corporativo Carnaval 360 pra agencia multi-cliente — R$500k/ano. Diretor de cliente da agencia decide (atende 6+ marcas, ticket R$2-5M/ano por cliente). Dor = entregar experiencias diferenciadas multi-marca, KPI mudou de GRP pra NPS+LTV. Case: Marca de bebida X ativou no Carnaval 360 2024, NPS 9.2, UGC +47%, brand consideration +18pp. Risco: agencia ja tem fornecedores 'preferenciais'.",
+      "expected_output": "STORYBOARD 15 slides modo padrao com: (1) slide 2 insight sobre ativacao virou ciencia / patrocinio passivo virou prejuizo; (2) Gap Selling patrocinio passivo (current) → ROI commoditizando (custo) → ativacao participativa (future); (3) slide 6 Old World (logo na arena, GRP) vs New World (CO-CRIACAO, NPS+LTV); (4) slide 11 case marca de bebida 2024 com NPS 9.2 + UGC +47% + brand consideration +18pp; (5) ROI calculado PARA AGENCIA (nao marca cliente final) com payback ≤8m; (6) slide 14 (se presente) SEM badmouth de produtoras/agencias/outros eventos; (7) sem compliance tag obrigatoria.",
+      "files": [],
+      "assertions": [
+        {"id": "3.1", "text": "Slide 1 capa com Big Idea", "type": "regex_negative", "pattern": "Apresentacao Carnaval|obrigado"},
+        {"id": "3.2", "text": "Slide 2 = insight provocador com dado + reframe", "type": "manual"},
+        {"id": "3.3", "text": "Slide 2 NAO comeca cerimonial", "type": "regex_negative", "scope": "slide_2", "pattern": "obrigado pela reuniao|vamos apresentar"},
+        {"id": "3.4", "text": "Gap Selling patrocinio → ROI commoditizando → ativacao", "type": "manual"},
+        {"id": "3.5", "text": "Slide 6 Raskin Old World (logo+GRP) vs New World (NPS+LTV)", "type": "regex_positive", "pattern": "Old World|New World|GRP|NPS"},
+        {"id": "3.6", "text": "Slide 11 menciona case marca de bebida 2024 com NPS 9.2 + UGC +47% + brand consideration +18pp", "type": "regex_positive", "pattern": "NPS.*9.2|UGC.*47|consideration.*18"},
+        {"id": "3.7", "text": "Slides 12-13 ROI/Payback PARA AGENCIA (nao marca cliente final)", "type": "manual"},
+        {"id": "3.8", "text": "Cenario base mostra payback ≤ 8 meses no ano fiscal", "type": "manual"},
+        {"id": "3.9", "text": "Sensitivity 3 cenarios = clientes/ano que ativam (4/6/9)", "type": "manual"},
+        {"id": "3.10", "text": "Slide 14 (se presente) SEM badmouth de produtoras/agencias/eventos concorrentes", "type": "regex_negative", "scope": "slide_14", "pattern": "(produtora|agencia|evento).*(ruim|caro|fraco|generico)"},
+        {"id": "3.11", "text": "CTA especifico para diretor da agencia (workshop / piloto / ativacao demo)", "type": "manual"},
+        {"id": "3.12", "text": "Carnaval 360 sem compliance_tags — tier 🔴 vazio ou apenas ✅", "type": "manual"},
+        {"id": "3.13", "text": "Schema §10.2 valido", "type": "manual"},
+        {"id": "3.14", "text": "Modo = padrao", "type": "regex_positive", "scope": "meta", "pattern": "Modo: padrao"},
+        {"id": "3.15", "text": "Speaker notes mencionam que 'marca de bebida X' deve ser substituida se NDA impedir", "type": "regex_positive", "pattern": "NDA|anonim|aprovacao do cliente"}
+      ]
+    }
+  ],
+  "dod_coverage": {
+    "frontmatter_intent_action_effort_high_nb1_nb3": ["1.13", "2.14", "3.14"],
+    "three_eval_cases_passing": ["1", "2", "3"],
+    "two_modes_padrao_demo_presentation": ["1.9", "2.14", "3.14"],
+    "insight_provocador_slide_2_no_obrigado": ["1.2", "1.3", "2.2", "2.3", "3.2", "3.3"],
+    "comparativo_responsavel_no_badmouth": ["1.8", "2.9", "3.10"],
+    "roi_payback_explicito_todos_3_cases": ["1.6", "1.7", "2.6", "2.7", "3.7", "3.8", "3.9"],
+    "auto_detection_brands": ["1.11", "2.12", "3.12"],
+    "schema_section_10_2_valido": ["1.12", "2.13", "3.13"]
+  },
+  "how_to_run_manually": "Em janela limpa do Claude Code, invocar /deck-sales com o prompt de cada case. Aguardar STORYBOARD em $DECKS_DIR/2026-05/STORYBOARD-{slug}-{HHmm}.md. Aplicar assertions: 🟢 Pass / 🟡 Partial / 🔴 Fail. Iterar SKILL.md ou references ate ≥80% pass."
+}

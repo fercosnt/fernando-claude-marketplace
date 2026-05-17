@@ -1,0 +1,26 @@
+{
+  "skill_name": "deck-internal",
+  "evals": [
+    {
+      "id": 1,
+      "name": "pitch-leadership-politica-viagens-beauty-smile",
+      "prompt": "Preciso pitchar pro CEO da Beauty Smile uma nova politica de viagens corporativas com gating de ROI minimo 3x. Tenho dados de 4 viagens em 2024: Wellness Mexico (R$32k investido, R$135k retorno, ROI 4.2x), ICOI Boston (R$28k, R$107k, 3.8x), AAOMS Chicago (R$45k, R$229k, 5.1x) e Carnaval Rio (R$60k, networking soft sem ROI atribuivel). Quero pedir aprovacao da politica + budget pool R$80k para Q3. CEO pode achar burocratico. Reuniao 1:1 de 10 min na sexta. Bora?",
+      "expected_output": "STORYBOARD modo pitch-to-leadership com 9 slides (capa relacional, BLUF slide 2 com 5 elementos, Status Quo Raskin, solucao, business case com payback liderado, friccao mitigada enderecando objecao burocracia, ask especifico R$80k, proximos passos, Q&A backup) + anexo 6-pager Amazon-style em arquivo separado .6pager.md. Marca Beauty Smile auto-detectada. Frontmatter Meta com Framework principal = Pyramid Minto + Raskin, Modo = pitch-to-leadership, max_ctas: 1, Anexo 6-pager: sim. Whitelist deck-image-prompts aplicada (slides 1, 3, 4, 6 com prompts; slides 5/7/8/9 com skip).",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "concept-reveal-sala-vip-carnaval-360-d3-pipeline",
+      "prompt": "Preciso apresentar pro board do Carnaval 360 o conceito da Sala VIP com IA hospedeira chamada Eva. O objetivo e eles aprovarem o conceito + liberarem R$1.5M para execucao em 90 dias. A skill-cenografia ja gerou os renders, mood-boards, layouts e prompts Nano Banana Pro na pasta /Users/fernando/Cursor Repo/Eventos/cenografia/sala-vip-carnaval360-2026/. Projecao: 200 VIPs/noite x 6 noites x R$2.5k ingresso = R$3M receita, ROI esperado 2x ano 1. Board pode achar IA hospedeira gimmick. Apresentacao presencial 15-20min.",
+      "expected_output": "STORYBOARD modo concept-reveal com 8 slides Sparkline Duarte (capa mood, Big Idea sensorial slide 2, what is generico slide 3, REVEAL slide 4 com walk-through 1a pessoa, detalhes sensoriais slides 5-6, ask R$1.5M slide 7, proximos passos). PATHS ABSOLUTOS dos renders cenografia nos campos Visual: dos slides 4, 5, 6. Prompts COPIADOS VERBATIM do prompts/nano-banana-pro-prompts.json (NAO regerados). Frontmatter Meta com Artefatos cenografia: /Users/fernando/Cursor Repo/Eventos/cenografia/sala-vip-carnaval360-2026/, Framework principal = Sparkline Duarte, Modo = concept-reveal. Marca Carnaval 360 auto-detectada. NAO duplica trabalho cenografia.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "all-hands-q1-beauty-smile-mudanca-organizacional",
+      "prompt": "Preciso preparar o all-hands Q1 2026 da Beauty Smile (40 pessoas, hibrido presencial+remoto, 60min). Vou anunciar nova estrutura organizacional: criamos unidade dedicada Beauty Clinic Solutions para B2B clinico (87% growth Q4 2025). Vou realocar 8 pessoas para a nova unidade, sem demissoes. Time esta ansioso sobre mudancas. Q4 fechou com crescimento 38%, receita B2B subiu de R$2.1M para R$3.9M, B2C estavel. O all-hands precisa alinhar o time, NAO pedir decisao.",
+      "expected_output": "STORYBOARD modo all-hands com 11 slides aplicando Sinek Why-How-What (WHY=slide 2 visao Beauty Smile, HOW=slides 6-7 com Kotter visibilizado urgencia+coalizao+visao+empoderamento, WHAT=slide 9 prioridades Q1) + Raskin Strategic Narrative. Slide 3 com leitura HONESTA do estado (positivos + friccoes). Slide 5 celebracoes Q4 com multiplos apresentadores. Slide 7 enderaca ansiedade do time EXPLICITAMENTE com anuncio de 'sem demissoes' + nomes da realocacao para B2B. Slide 10 Q&A com 5+ perguntas anonimas pre-coletadas; primeira pergunta obrigatoriamente de remoto. Slide 11 com acoes concretas por horizonte (semana / 2 semanas / 1 trimestre). Frontmatter Meta com Framework principal = Sinek + Raskin + Kotter, Modo = all-hands, max_ctas: 2 (override SHARED.md), Mudanca organizacional: sim. Arco emocional canonico respeitado, proporcao 30% factual / 70% engajamento.",
+      "files": []
+    }
+  ]
+}

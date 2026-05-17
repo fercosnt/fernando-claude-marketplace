@@ -1,0 +1,60 @@
+{
+  "skill_name": "deck-scientific",
+  "evals": [
+    {
+      "id": 1,
+      "name": "ciosp-oral-7min-eryag-periimplantite",
+      "prompt": "/deck-scientific Preciso de um oral de 7 minutos pro CIOSP 2026 sobre eficacia Er:YAG vs convencional em periimplantite. E uma meta-analise de 8 RCTs (n=480) que conduzimos. Outcome primario: reducao profundidade bolsa periimplantar (-1.8 mm, IC95% -2.3 a -1.3, p<0.001, GRADE moderate). Outcomes secundarios: sangramento e ganho clinico. Sou consultor pago Fotona Inc. e recebi financiamento de pesquisa Fotona. Audiencia mista (periodontistas + implantodontistas + industria).",
+      "expected_output": "STORYBOARD-{slug}.md (NAO POSTER) com 8 slides IMRAD destilado, COI declarado slide 1 (consultor Fotona + financiamento), PRISMA citado no slide Methods, GRADE moderate explicito no outcome primario, IC95% + effect size + p-value + n no slide Results, max_ctas=3 declarado na Meta (read paper / replicate / contact author), action titles em todos os slides, override D5 aplicado (slides tipo `dados` tem prompt de imagem para forest plot e small multiples), Storyboard de Imagens preenchido com flag `--include-dados`, Checklist de Revisao anexada, bloco Compliance 3 tiers (🔴/🟡/✅) preenchido, Big Idea aparece no slide 8 como take-home.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "iadr-poster-a0-lightwalker-clareamento",
+      "prompt": "/deck-scientific Vou apresentar poster no IADR 2026, painel A0. Tema: dosimetria LightWalker Fotona para clareamento dental sustentado. Case series com 50 pacientes seguidos por 6 meses. Outcome primario: clareamento sustentado (delta E >= 3.7) aos 6 meses — 92% dos casos. Secundario: satisfacao do paciente. Sou consultor Fotona com financiamento. Audiencia: researchers IADR (basic + clinical research).",
+      "expected_output": "Arquivo POSTER-{slug}.md (D8 — NAO STORYBOARD), schema bate com assets/templates/poster-skeleton.md, key finding centralizado em fonte gigante ('Er:YAG sustenta clareamento por 6 meses em 92% dos casos (n=50)'), 6 elementos Better Poster Morrison (cabecalho/centro/esquerdo/inferior esquerdo/direito/inferior direito/rodape), Methods cita STROBE (ou CARE) com n=50 case series, 2 figuras Tufte no painel direito (curva delta E 6 meses + tabela densa), COI Fotona explicito no cabecalho e rodape, QR code para paper completo no rodape, max_ctas=3 (read paper QR / replicate via OSF / contact author ORCID), deck-image-prompts NAO invocada (poster usa figuras do paper), bloco Compliance 3 tiers preenchido, Big Idea aparece como key finding centro.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "icoi-keynote-45min-futuro-reabilitacao",
+      "prompt": "/deck-scientific Vou dar uma keynote de 45 min no ICOI 2026 sobre o futuro da reabilitacao implantossuportada. Quero apresentar 3 estudos do nosso grupo (1 RCT, 1 cohort prospectivo 5 anos, e 1 case series). Outcome primario do conjunto: sobrevida do implante em 5 anos (>=98%). Secundarios: tempo total de tratamento, satisfacao, complicacoes. COI multiplo: consultor 2 industrias + autor 2 livros + grants institucionais. Audiencia: implantodontistas seniores + lideres de opiniao + industria. Big Idea: 'Reabilitacao digital reduz tempo total em 40% mantendo sucesso >=98% em 5 anos'.",
+      "expected_output": "STORYBOARD-{slug}.md com 35 slides estruturados em 3 atos + Q&A bloco. Ato 1 (10 min, 10 slides) com COI multiplo declarado slide 1, agenda visual Doumont tree slide 2, panorama do campo + gap + Big Idea como gancho. Ato 2 (20 min, 18 slides) com 3 estudos do grupo, cada um com 1 slide Methods (CONSORT para RCT, STROBE para cohort, CARE/STROBE para case series) + 2-3 slides Results com graficos Tufte (override D5 aplicado — `dados` na whitelist), GRADE level explicito por outcome de cada estudo. Ato 3 (10 min, 7 slides) com sintese + implicacoes + 3 CTAs. Q&A bloco com 4-6 perguntas antecipadas + respostas curadas (apendice). max_ctas=3 declarado, Big Idea aparece no slide 10 (transicao Ato 1->2) e na sintese Ato 3, bloco Compliance 3 tiers preenchido, Storyboard de Imagens com flag `--include-dados` para slides `dados`, Checklist de Revisao anexada.",
+      "files": []
+    }
+  ],
+  "assertions_summary": {
+    "common_all_cases": [
+      "Action titles em todos os slides (nao titulos descritivos)",
+      "max_ctas: 3 declarado na Meta (override scientific D14)",
+      "COI declarado slide 1 (oral/keynote) ou cabecalho+rodape (poster)",
+      "Reporting guideline conforme X2 (CONSORT/STROBE/PRISMA/CARE)",
+      "GRADE level explicito no outcome primario",
+      "p-value contextualizado (IC95% + effect size + n)",
+      "Big Idea (U5) aparece como take-home / key finding",
+      "Bloco Compliance 3 tiers (🔴/🟡/✅) preenchido"
+    ],
+    "case_1_specific": [
+      "Output = STORYBOARD-{slug}.md (NAO POSTER)",
+      "8 slides IMRAD destilado",
+      "PRISMA citado (X2 = systematic review)",
+      "GRADE moderate explicito",
+      "Override D5: slides `dados` (forest plot + small multiples) com prompt de imagem"
+    ],
+    "case_2_specific": [
+      "Output = POSTER-{slug}.md (D8, NAO STORYBOARD)",
+      "Schema bate com poster-skeleton.md (6 elementos Better Poster)",
+      "Key finding centro com numero chave",
+      "STROBE (ou CARE) citado",
+      "QR code para paper completo no rodape",
+      "deck-image-prompts NAO invocada"
+    ],
+    "case_3_specific": [
+      "35 slides em 3 atos + Q&A bloco",
+      "CONSORT + STROBE + CARE citados conforme tipo de cada estudo",
+      "GRADE level por outcome (nao so primario)",
+      "Q&A bloco com 4-6 perguntas + respostas curadas",
+      "Override D5: slides `dados` com prompt de imagem"
+    ]
+  }
+}
