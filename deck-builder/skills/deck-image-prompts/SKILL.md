@@ -80,25 +80,74 @@ Pular essas perguntas no modo encadeado — a skill que chama ja passou os dados
 6. **Aplicar guardrails** (proxima secao) e disclaimers de contexto (clinico → TCLE, anvisa-laser → sem promessa de "cura").
 7. **Devolver bloco Markdown** no formato do output (proxima secao) pronto pra colar no STORYBOARD.
 
-## Formato de output
+## Formato de output (v1.1 — reformatado para clareza visual + handoff designer)
 
-Por slide whitelisted, devolver bloco `**Prompt de imagem:**` no formato:
+Por slide whitelisted, devolver bloco `**Imagens sugeridas:**` no formato abaixo. **Mudança v1.1:** cada variação fica em bloco markdown separado (não inline com `>`) com campos labeled (Engine / Aspect ratio / Estilo / Composição / Prompt / Negative / Mood ref). Quantidade declarada explicitamente no header.
 
 ```markdown
-**Prompt de imagem:**
-> **Higgsfield Soul** (cinematic, 16:9): {prompt em ingles, 30-60 palavras}
->   negative: stock-photo aesthetic, AI-look, generic faces, watermarks, plastic skin
-> **Imagen 4** (editorial, 16:9): {prompt em ingles}
->   constraints (embutido — Imagen 4 nao tem negative): no text overlays, no watermarks, no stock photo aesthetic
-> **Nano Banana Pro** (mockup-aware, 16:9): {prompt estruturado SUBJECT/COMPOSITION/CAMERA/LIGHTING/STYLE}
->   CONSTRAINTS: prohibit text overlay, prohibit artificial poses, prohibit cliche tech imagery
+**Imagens sugeridas:**
+
+> **Quantidade:** 1 imagem hero (3 variações para o designer escolher) | OU: N imagens distintas (uma para cada componente do slide)
+
+**Variação A — Higgsfield Soul**
+- Aspect ratio: 16:9
+- Estilo: cinematic editorial
+- Composição: rule-of-thirds, subject 1/3 esquerda, espaço negativo direita, lente 35mm
+- Prompt: {prompt em ingles, 30-60 palavras com SUBJECT + ENVIRONMENT + LIGHTING + MOOD + brand color hex se aplicavel}
+- Negative: stock-photo aesthetic, AI-look, generic faces, watermarks, plastic skin
+- Mood ref (opcional): {link, painel mood ou descricao de mood ja conhecida}
+
+**Variação B — Imagen 4**
+- Aspect ratio: 16:9
+- Estilo: editorial documental
+- Composição: center, espaço negativo superior, lente 50mm
+- Prompt: {prompt em ingles — incluir restricoes como positivo porque Imagen 4 nao tem negative nativo}
+- Constraints (embutido — Imagen 4 nao tem negative): no text overlays, no watermarks, no stock photo aesthetic, no harsh fluorescent
+- Mood ref (opcional): —
+
+**Variação C — Nano Banana Pro** (recomendado quando há `design_system_skill` instalado)
+- Aspect ratio: 16:9
+- Estilo: mockup brand-aware
+- Composição: full-bleed com overlay sutil para brand tokens (SUBJECT / COMPOSITION / CAMERA / LIGHTING / STYLE estruturado)
+- Prompt: {prompt estruturado SUBJECT/COMPOSITION/CAMERA/LIGHTING/STYLE com brand tokens injetados se aplicavel}
+- CONSTRAINTS: prohibit text overlay, prohibit artificial poses, prohibit cliche tech imagery
+- Mood ref (opcional): {tokens de design_system_skill se carregado — paleta hex, fontes, mood}
 ```
 
-**Regras invioláveis do output:**
-- **Sempre 3 versoes** (a menos que usuario peça menos via flag) com engines diferentes.
-- **Negative/constraints em TODAS as 3 versoes**, mesmo quando a engine nao tem campo nativo (reescrever como positivo ou listar como `constraints` embutidos).
-- **Aspect ratio sempre explicito** no header de cada versao.
-- **Slides em skip:** linha unica `**Prompt de imagem:** —` + comentario `<!-- skip — tipo {tipo} fora da whitelist (D5) -->`.
+**Regras invioláveis do output (v1.1):**
+- **Header `Quantidade:` obrigatório** — declara explicitamente se são 3 variações da mesma imagem (default) OU N imagens distintas (raro, só quando slide pede composição multi-imagem).
+- **Cada variação em bloco markdown separado** com `**Variação A/B/C — {Engine}**` como header — facilita o designer copiar pra ferramenta dele sem misturar config com prompt.
+- **6 campos por variação:** Aspect ratio / Estilo / Composição / Prompt / Negative (ou Constraints) / Mood ref (pode ser "—").
+- **Sempre 3 variações** (a menos que usuario peça menos via flag) com engines diferentes.
+- **Negative/Constraints em TODAS as 3 versões**, mesmo quando a engine não tem campo nativo (reescrever como positivo ou listar como `constraints` embutidos).
+- **Aspect ratio sempre explícito** em cada variação.
+- **Composição com direção concreta** (rule-of-thirds, center, split-50, full-bleed, etc.) — NÃO genérico ("editorial restraint" sozinho não é composição).
+- **Slides em skip:** linha única `**Imagens sugeridas:** — (slide sem imagem hero por whitelist D5)` + comentário HTML `<!-- skip — tipo {tipo} fora da whitelist (D5) -->`.
+
+### Migração do formato v1.0 → v1.1
+
+Formato v1.0 (deprecated mas ainda aceito pelo lint):
+```markdown
+**Prompt de imagem:**
+> Higgsfield (cinematic, 16:9): {prompt}
+>   negative: {...}
+```
+
+Formato v1.1 (recomendado — mais legível, melhor handoff):
+```markdown
+**Imagens sugeridas:**
+
+> **Quantidade:** 1 imagem hero (3 variações)
+
+**Variação A — Higgsfield Soul**
+- Aspect ratio: 16:9
+- Estilo: cinematic editorial
+- Composição: rule-of-thirds
+- Prompt: {prompt}
+- Negative: {...}
+```
+
+Skills verticais v1.1 emitem o formato novo. Skill standalone aceita flag `--legacy-format` pra ainda emitir v1.0 se o usuário quiser.
 
 ## Guardrails
 

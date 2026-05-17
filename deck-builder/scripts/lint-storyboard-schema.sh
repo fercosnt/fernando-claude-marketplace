@@ -4,6 +4,13 @@
 # QA-3: valida STORYBOARD.md contra schema §10.2 (storyboard-schema.md).
 # Stack: shell + grep (zero deps Python).
 #
+# v1.1 changelog:
+#   - Aceita campos com OU sem bold (Tipo: e **Tipo:** ambos passam)
+#   - Novo campo obrigatorio em Meta: "Modo de entrega:"
+#   - Novo check (warning): bloco "Conteudo do slide" em slides
+#   - Novo check (warning): bloco "Layout sugerido" em slides
+#   - Novo check (warning): dados R$/% sem [VERIFICAR] flag nem footnote
+#
 # Uso:
 #   ./lint-storyboard-schema.sh <storyboard.md> [<storyboard2.md> ...]
 #
@@ -26,13 +33,14 @@ else
   C_PASS=""; C_FAIL=""; C_WARN=""; C_DIM=""; C_RST=""
 fi
 
-# ----- campos obrigatorios em ## Meta -----
+# ----- campos obrigatorios em ## Meta (v1.1 adiciona "Modo de entrega:") -----
 META_REQUIRED_FIELDS=(
   "Skill geradora:"
   "Objetivo .nico:"
   "Audi.ncia:"
   "Dura..o:"
   "Formato:"
+  "Modo de entrega:"
   "Big Idea:"
   "Marca:"
   "Framework principal:"
@@ -73,25 +81,28 @@ lint_file() {
   else
     pass "Bloco '## Meta' presente"
 
-    # ----- check 1.1: 12 campos obrigatorios em Meta -----
+    # ----- check 1.1: 13 campos obrigatorios em Meta (v1.1) -----
+    # regex aceita: "- Campo:" OU "- **Campo:**" (bold opcional)
     local missing=0
     local field
     for field in "${META_REQUIRED_FIELDS[@]}"; do
-      # busca dentro dos primeiros 60 linhas (onde Meta vive)
-      if ! head -n 60 "$f" | grep -qE "^- ${field}"; then
+      # busca dentro dos primeiros 80 linhas (Meta com bold ocupa mais espaço)
+      if ! head -n 80 "$f" | grep -qE "^- (\*\*)?${field}(\*\*)?"; then
         fail "Meta sem campo: '${field}'"
         missing=$((missing + 1))
       fi
     done
     if [[ $missing -eq 0 ]]; then
-      pass "Meta completa (12 campos)"
+      pass "Meta completa (${#META_REQUIRED_FIELDS[@]} campos)"
     fi
   fi
 
   # ----- check 2: tipos canonicos presentes -----
-  # extrai todos os "Tipo: <X>" e verifica se cada um esta na whitelist
+  # regex aceita "Tipo: X" OU "**Tipo:** X"
   local types_found
-  types_found=$(grep -E '^Tipo:[[:space:]]+' "$f" | sed -E 's/^Tipo:[[:space:]]+//; s/[[:space:]]+$//' | sort -u)
+  types_found=$(grep -E '^(\*\*)?Tipo:(\*\*)?[[:space:]]+' "$f" \
+    | sed -E 's/^\*\*Tipo:\*\*[[:space:]]+//; s/^Tipo:[[:space:]]+//; s/[[:space:]]+$//' \
+    | sort -u)
 
   if [[ -z "$types_found" ]]; then
     fail "Nenhum 'Tipo:' encontrado (storyboard sem slides estruturados)"
@@ -121,9 +132,10 @@ lint_file() {
   fi
 
   # ----- check 3: slide 1 obrigatorio Capa -----
+  # awk procura "Tipo: capa" OU "**Tipo:** capa"
   if grep -qE '^## Slide 1' "$f"; then
-    # busca tipo "capa" nas 5 linhas apos "Slide 1"
-    if awk '/^## Slide 1/{flag=1; next} flag && /^Tipo:/{print; exit}' "$f" | grep -qiE 'Tipo:[[:space:]]+capa'; then
+    if awk '/^## Slide 1/{flag=1; next} flag && /^(\*\*)?Tipo:(\*\*)?/{print; exit}' "$f" \
+        | grep -qiE 'Tipo:(\*\*)?[[:space:]]+capa'; then
       pass "Slide 1 = capa"
     else
       fail "Slide 1 nao declara 'Tipo: capa'"
@@ -163,12 +175,58 @@ lint_file() {
   fi
 
   # ----- check 6: action titles (warning, nao fail) -----
+  # regex aceita "Action title:" OU "**Action title:**"
   local action_titles
-  action_titles=$(grep -cE '^Action title:' "$f" || true)
+  action_titles=$(grep -cE '^(\*\*)?Action title:(\*\*)?' "$f" || true)
   if [[ "$action_titles" -ge 1 ]]; then
     pass "$action_titles 'Action title:' declarados"
   else
     warn "Nenhum 'Action title:' encontrado (slides podem ter titulos descritivos — anti-padrao)"
+  fi
+
+  # ----- check 7 (v1.1): bloco "Conteudo do slide" em slides -----
+  local content_blocks
+  content_blocks=$(grep -cE '^(\*\*)?Conte.do do slide' "$f" || true)
+  local slide_count
+  slide_count=$(grep -cE '^## Slide [0-9]+' "$f" || true)
+  if [[ "$slide_count" -ge 1 ]]; then
+    if [[ "$content_blocks" -ge 1 ]]; then
+      if [[ "$content_blocks" -ge "$slide_count" ]]; then
+        pass "Bloco 'Conteudo do slide' em todos os $slide_count slides (v1.1)"
+      else
+        warn "Bloco 'Conteudo do slide' em $content_blocks de $slide_count slides (v1.1 — esperado em todos)"
+      fi
+    else
+      warn "Nenhum bloco 'Conteudo do slide' encontrado (v1.1 — slides ficam minimalistas demais para deck enviado-para-leitura)"
+    fi
+  fi
+
+  # ----- check 8 (v1.1): bloco "Layout sugerido" em slides -----
+  local layout_blocks
+  layout_blocks=$(grep -cE '^(\*\*)?Layout sugerido' "$f" || true)
+  if [[ "$slide_count" -ge 1 ]]; then
+    if [[ "$layout_blocks" -ge 1 ]]; then
+      if [[ "$layout_blocks" -ge "$slide_count" ]]; then
+        pass "Bloco 'Layout sugerido' em todos os $slide_count slides (v1.1)"
+      else
+        warn "Bloco 'Layout sugerido' em $layout_blocks de $slide_count slides (v1.1 — handoff designer fica incompleto)"
+      fi
+    else
+      warn "Nenhum bloco 'Layout sugerido' encontrado (v1.1 — designer/Gamma recebe deck sem instrucoes visuais)"
+    fi
+  fi
+
+  # ----- check 9 (v1.1): [VERIFICAR] flag em dados fabricados -----
+  # heuristica: linhas com R$Xk, X%, n=X, "RCT YYYY" SEM [VERIFICAR] proximo nem footnote
+  # NOTA: warning soft — humano avalia. Detecta padrao mais comum de over-claiming.
+  local suspect_data verified_flags
+  # conta linhas com padroes de dado suspeito (R$NNk, NN%, n=NN, RCT YYYY)
+  suspect_data=$(grep -cE '(R\$[0-9]+(k|M|mi|bi)|[0-9]+\.[0-9]+%|[0-9]+%|n=[0-9]+|RCT [A-Z][a-z]+ 20[12][0-9]|NPS [0-9]+|GRADE (high|moderate|low|very low))' "$f" || true)
+  verified_flags=$(grep -cE '\[VERIFICAR' "$f" || true)
+  if [[ "$suspect_data" -ge 5 ]] && [[ "$verified_flags" -lt 1 ]]; then
+    warn "Possiveis dados fabricados (n=$suspect_data linhas com R\$/%/n=/RCT/NPS/GRADE) sem nenhum [VERIFICAR] flag — v1.1 recomenda marcar todos os dados nao-conferidos com [VERIFICAR: descricao]"
+  elif [[ "$verified_flags" -ge 1 ]]; then
+    pass "$verified_flags marcacoes [VERIFICAR] encontradas (v1.1 — dados sinalizados para auditoria)"
   fi
 
   # ----- veredicto -----
@@ -184,18 +242,27 @@ lint_file() {
 # ----- main -----
 if [[ $# -eq 0 ]]; then
   cat <<EOF
-lint-storyboard-schema.sh — valida STORYBOARD.md (schema §10.2)
+lint-storyboard-schema.sh — valida STORYBOARD.md (schema §10.2 v1.1)
 
 Uso:
   $0 <storyboard.md> [<storyboard2.md> ...]
 
-Validacoes:
-  - Bloco ## Meta com 12 campos obrigatorios
+Validacoes (FAIL):
+  - Bloco ## Meta com 13 campos obrigatorios (v1.1 adiciona "Modo de entrega:")
   - Slide 1 = capa
   - Tipos de slide na whitelist canonica
   - Bloco ## Compliance & Disclaimers com 3 tiers (🔴 🟡 ✅)
-  - Checklist de Revisao (warning se ausente)
-  - Action titles (warning se ausente)
+
+Validacoes (WARN — v1.1):
+  - Bloco "Conteudo do slide" em cada slide (handoff visual)
+  - Bloco "Layout sugerido" em cada slide (handoff designer)
+  - [VERIFICAR] flag em dados fabricados (R\$, %, n=, RCT, NPS, GRADE)
+  - Checklist de Revisao
+  - Action titles
+
+Formatos aceitos:
+  - Texto puro: "Tipo: capa"
+  - Bold opcional: "**Tipo:** capa"
 
 Exit codes:
   0 = todos PASS
