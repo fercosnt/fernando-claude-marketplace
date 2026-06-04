@@ -6,12 +6,9 @@
     "name": "Fernando Costa",
     "email": "fernandinho.costa.neto@gmail.com"
   },
-  "license": "MIT",
   "homepage": "https://github.com/fercosnt/fernando-claude-marketplace/tree/main/deck-builder",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fercosnt/fernando-claude-marketplace"
-  },
+  "repository": "https://github.com/fercosnt/fernando-claude-marketplace",
+  "license": "MIT",
   "keywords": [
     "deck",
     "slides",
@@ -24,67 +21,5 @@
     "scientific",
     "portugues",
     "brasil"
-  ],
-  "metadata": {
-    "entrypoint": "deck-orchestrator",
-    "trigger_phrases": [
-      "/deck",
-      "preciso fazer um deck",
-      "preparar apresentacao",
-      "criar storyboard"
-    ],
-    "skills_count": 11,
-    "skills": [
-      "deck-orchestrator",
-      "deck-fundraising",
-      "deck-sales",
-      "deck-clinical",
-      "deck-equipment",
-      "deck-teaching",
-      "deck-proposal",
-      "deck-scientific",
-      "deck-internal",
-      "deck-image-prompts",
-      "deck-reviewer"
-    ],
-    "depends_on": {
-      "external_skills": [
-        "/copy",
-        "skill-cenografia",
-        "idea-to-brief"
-      ],
-      "optional": [
-        "beauty-smile-design-system",
-        "laser-physics",
-        "culture-lab"
-      ]
-    },
-    "env_vars": {
-      "DECKS_DIR": {
-        "default": "~/Documents/decks/",
-        "description": "Path raiz para output de STORYBOARDs (D4)"
-      }
-    },
-    "config_files": {
-      "~/.config/deck-builder/brands.yaml": "templates/brands.yaml.example"
-    },
-    "nb_ids": {
-      "NB1_core": "7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da",
-      "NB2_densas": "1635d16b-773c-480d-89c2-79c717f4b2e1",
-      "NB3_comerciais": "5a0aaabb-78c1-4d03-a400-e9ce1973737b"
-    },
-    "locked_decisions": [
-      "D3 pipeline cenografia -> deck-internal concept-reveal",
-      "D4 $DECKS_DIR env var default ~/Documents/decks/",
-      "D5 whitelist image-prompts por tipo de slide",
-      "D6 brands.yaml extensivel 3 marcas pre-povoadas",
-      "D7 compliance 3 tiers sem hard-block",
-      "D8 poster-skeleton.md schema proprio (deck-scientific poster)",
-      "D10 routing-first 90%",
-      "D11 NotebookLM nao e pre-requisito",
-      "D12 NUNCA auto-delega /idea-to-brief",
-      "D13 distribuicao dupla marketplace + Cowork Desktop nativo",
-      "D14 max_ctas override (teaching:4, scientific:3, demais:1)"
-    ]
-  }
+  ]
 }
