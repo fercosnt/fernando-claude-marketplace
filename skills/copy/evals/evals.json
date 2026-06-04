@@ -1,0 +1,134 @@
+{
+  "skill_name": "copy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Preciso de um carrossel pro Instagram sobre os 5 erros mais comuns de quem ta comecando a postar conteudo profissional. Meu publico sao empreendedores que sabem que precisam postar mas nao sabem como. Formato educativo, tom descontraido mas com autoridade.",
+      "expected_output": "Skill deve primeiro apresentar 2-3 angulos criativos diferentes (com hook rascunhado para cada) e perguntar qual o usuario prefere, ANTES de gerar a copy completa. Depois de gerar, deve oferecer opcoes de refinamento.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "ideation_before_generation",
+          "description": "Skill apresenta 2-3 angulos/abordagens criativas ANTES de gerar a copy completa, cada um com nome curto, framework sugerido e exemplo de hook",
+          "type": "llm_judge"
+        },
+        {
+          "name": "asks_for_choice",
+          "description": "Skill explicitamente pede que o usuario escolha um angulo ou misture elementos antes de prosseguir",
+          "type": "llm_judge"
+        },
+        {
+          "name": "explains_reasoning",
+          "description": "Cada angulo vem com justificativa estrategica — por que aquela abordagem funciona para aquele publico/objetivo",
+          "type": "llm_judge"
+        },
+        {
+          "name": "uses_framework",
+          "description": "Copy segue um framework reconhecivel (AIDA, SCQA ou similar) com progressao logica entre slides",
+          "type": "llm_judge"
+        },
+        {
+          "name": "hook_quality",
+          "description": "Hook do slide 1 ativa pelo menos 3 dos 4Us (Util, Urgente, Unico, Ultra-especifico)",
+          "type": "llm_judge"
+        },
+        {
+          "name": "single_cta",
+          "description": "Existe apenas UM CTA no carrossel inteiro (nao multiplos)",
+          "type": "llm_judge"
+        },
+        {
+          "name": "no_cliches",
+          "description": "Nenhum cliche de IA presente (desbloqueie potencial, transforme sua vida, jornada de transformacao, etc)",
+          "type": "llm_judge"
+        },
+        {
+          "name": "offers_refinement",
+          "description": "Apos entregar a copy, skill oferece opcoes concretas de refinamento (tom, hook, CTA, etc.) em vez de simplesmente encerrar",
+          "type": "llm_judge"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Quero fazer um reel sobre como a maioria dos freelancers cobra errado e perde dinheiro. Meu publico sao designers e social media managers. Quero algo provocativo.",
+      "expected_output": "Skill deve conduzir conversa estrategica curta para entender melhor (nivel Schwartz, plataforma), apresentar angulos criativos com hooks rascunhados, e so gerar apos usuario escolher. Copy deve ter 3 camadas complementares e oferta de refinamento.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "strategic_conversation",
+          "description": "Skill faz perguntas estrategicas relevantes (nao formulario mecanico) para entender contexto, como nivel de consciencia do publico ou referencia de tom",
+          "type": "llm_judge"
+        },
+        {
+          "name": "ideation_with_hooks",
+          "description": "Apresenta 2-3 angulos criativos distintos, cada um com rascunho de hook e justificativa estrategica",
+          "type": "llm_judge"
+        },
+        {
+          "name": "waits_for_approval",
+          "description": "Skill NAO gera roteiro completo antes do usuario escolher um angulo — para e espera input",
+          "type": "llm_judge"
+        },
+        {
+          "name": "in_media_res",
+          "description": "Reel comeca in media res — sem 'Oi gente', sem apresentacao, primeira frase e hook ou promessa",
+          "type": "llm_judge"
+        },
+        {
+          "name": "three_layers",
+          "description": "Roteiro tem as 3 camadas de copy (verbal/falado + visual/texto na tela + legenda) e elas se complementam sem repetir",
+          "type": "llm_judge"
+        },
+        {
+          "name": "no_cliches",
+          "description": "Nenhum cliche de IA presente e tom e provocativo/natural como pedido",
+          "type": "llm_judge"
+        },
+        {
+          "name": "offers_refinement",
+          "description": "Apos entregar, oferece opcoes concretas de ajuste (tom, hook, CTA) e convida o usuario a pedir mudancas",
+          "type": "llm_judge"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/copy duvida — Qual a diferenca entre PAS e AIDA? Quando usar cada um? Meu nicho e estetica e harmonizacao facial.",
+      "expected_output": "Skill deve explicar os dois frameworks de forma clara e acessivel (sem jargao pesado), com exemplos concretos do nicho do usuario (estetica), comparacao pratica e sugestao de proximo passo.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "clear_explanation",
+          "description": "Explica PAS e AIDA de forma clara e acessivel, sem assumir que o usuario conhece jargao de copywriting",
+          "type": "llm_judge"
+        },
+        {
+          "name": "contextual_examples",
+          "description": "Usa exemplos concretos do nicho do usuario (estetica/harmonizacao facial), nao exemplos genericos",
+          "type": "llm_judge"
+        },
+        {
+          "name": "practical_comparison",
+          "description": "Compara quando usar cada um de forma pratica — nao apenas definicoes, mas cenarios de uso reais",
+          "type": "llm_judge"
+        },
+        {
+          "name": "suggests_next_step",
+          "description": "Oferece proximo passo pratico: gerar exemplo, analisar post existente, ou explorar outro conceito",
+          "type": "llm_judge"
+        },
+        {
+          "name": "teaches_not_just_answers",
+          "description": "Resposta ensina o conceito por tras (por que funciona) em vez de apenas dar a resposta seca",
+          "type": "llm_judge"
+        },
+        {
+          "name": "no_copy_generated",
+          "description": "NAO gera copy completa — foca em ensinar e orientar. Pode dar micro-exemplos mas nao entra em modo geracao",
+          "type": "llm_judge"
+        }
+      ]
+    }
+  ]
+}

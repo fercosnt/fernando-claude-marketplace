@@ -1,0 +1,67 @@
+{
+  "skill_name": "ghl-sdr-chatbot-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "beauty-smile-full-flow",
+      "prompt": "Configure um chatbot SDR para a Beauty Smile no WhatsApp. Temos os frameworks no Notion (ICP, Metodo 3D, matriz de objecoes). O pipeline atual tem: Novo Lead, Em Qualificacao, Qualificado, Agendado, Atendido. Os scripts da SDR atual estao aqui: [saudacao: 'Oi! Tudo bem? Vi que voce se interessou pelo nosso tratamento. Como posso te ajudar?', qualificacao: 'O que te motivou a buscar esse tratamento?', urgencia: 'Voce tem algum evento proximo?']. Quero que o bot qualifique e passe para humano agendar.",
+      "expected_output": "Skill detecta modo Beauty Smile. Busca frameworks no Notion via MCP. Mapeia pipeline e custom fields existentes via GHL-MCP. Analisa scripts da SDR e extrai arvore decisoria. Cria custom fields e tags faltantes. Gera context-document preenchido. Compila prompt-briefing e delega ao prompt-engineer. Configura workflows de handoff (qualificado, desqualificado, inativo). Produz setup-checklist completo com passos manuais identificados.",
+      "assertions": [
+        "Detectou contexto Beauty Smile automaticamente",
+        "Buscou frameworks no Notion",
+        "Usou GHL-MCP para mapear estado atual",
+        "Delegou prompt ao prompt-engineer",
+        "Configurou handoff workflow",
+        "Produziu todos os 3 templates preenchidos"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "generic-niche-guided",
+      "prompt": "Quero montar um chatbot de vendas no GHL para minha academia de crossfit. Nunca configurei o Conversation AI.",
+      "expected_output": "Skill entra em modo guiado. Faz perguntas sobre: servicos oferecidos, tom de voz, scripts atuais (se tem), horarios, pipeline existente. NAO tenta buscar no Notion. Mapeia GHL via MCP. Guia passo a passo: setup Conversation AI, custom fields, tags, pipeline, prompt briefing. Usa qualification-patterns genericos (BANT). Produz todos os templates preenchidos.",
+      "assertions": [
+        "Entrou em modo guiado com perguntas",
+        "NAO tentou buscar frameworks Beauty Smile",
+        "Usou BANT como framework de qualificacao",
+        "Produziu context-document, setup-checklist e prompt-briefing"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "context-dump-with-scripts",
+      "prompt": "Aqui estao meus scripts de SDR atuais:\n- Abertura: 'Oi [nome]! Vi que voce se interessou por [tratamento]. Posso te ajudar!'\n- Qualificacao: 'O que te motivou?', 'Ja fez algo parecido antes?', 'Tem urgencia?'\n- Objecao preco: 'Entendo sua preocupacao. Nossos valores sao personalizados. Posso agendar uma avaliacao gratuita?'\n- Handoff: 'Vou te conectar com nossa consultora [nome].'\n\nMeu nicho e estetica facial, canal WhatsApp, tom profissional mas acolhedor. Ja tenho pipeline com 5 stages e 12 custom fields no GHL. Configure o chatbot.",
+      "expected_output": "Skill detecta modo context dump. Analisa scripts fornecidos e extrai arvore decisoria sem perguntar mais. Le configuracao existente do GHL via MCP. Identifica gaps (campos/tags faltantes). Cria apenas o que falta. Prossegue direto para Fase 2 e 3 rapidamente.",
+      "assertions": [
+        "Detectou context dump mode",
+        "Extraiu arvore decisoria dos scripts",
+        "Leu GHL existente via MCP",
+        "NAO fez perguntas redundantes"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "skip-to-phase-2",
+      "prompt": "Ja fiz o discovery do meu chatbot SDR (contexto esta no arquivo context-document.md na pasta da skill). Preciso so do setup tecnico no GHL e gerar o prompt.",
+      "expected_output": "Skill le o context-document existente. Pula Fase 1 inteira. Executa Fase 2 (setup tecnico via GHL-MCP) e Fase 3 (prompt briefing + handoff). NAO re-pergunta informacoes do discovery.",
+      "assertions": [
+        "Leu context-document existente",
+        "Pulou Fase 1",
+        "Executou Fases 2 e 3",
+        "NAO fez perguntas de discovery"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "graceful-without-ghl-mcp",
+      "prompt": "Configure o chatbot SDR para minha clinica de fisioterapia. Nao tenho o GHL-MCP conectado.",
+      "expected_output": "Skill detecta ausencia do GHL-MCP. NAO falha. Produz todos os templates e instrucoes manualmente. Documenta passos exatos para configurar na UI do GHL. Todos os campos, tags e workflows sao descritos textualmente para o usuario criar manualmente.",
+      "assertions": [
+        "Detectou GHL-MCP ausente",
+        "NAO falhou ou parou",
+        "Produziu instrucoes manuais detalhadas",
+        "Templates preenchidos com placeholders claros"
+      ]
+    }
+  ]
+}

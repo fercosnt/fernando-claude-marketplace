@@ -1,0 +1,23 @@
+{
+  "skill_name": "claude-md-generator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Quero criar o CLAUDE.md para um novo projeto. É um dashboard multi-tenant para gestão financeira de clínicas parceiras da Beauty Smile. Stack padrão (Next.js + Supabase). Tem upload de planilhas XLSX, cálculo de split financeiro 60/40, controle de pagamentos com parcelas de cartão, e inadimplência. Multi-tenancy por clinica_id com RLS. Automação com n8n. Deploy na Vercel.",
+      "expected_output": "CLAUDE.md com 50-80 linhas seguindo a estrutura obrigatória (nome+stack, regras invioláveis no topo, comandos, arquitetura, code style, gotchas, checklist no final). Deve usar positive framing, bullet points, e incluir gotchas específicos (formato BR monetário, última linha totalizadora, 4 clients Supabase). Deve também gerar .claude/rules/ e .claude/settings.json.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Meu CLAUDE.md está com 350 linhas e o Claude está ignorando metade das instruções. Me ajuda a melhorar? O arquivo está em ./CLAUDE.md",
+      "expected_output": "Diagnóstico com score, identificação de problemas (tamanho excessivo, possíveis anti-patterns como kitchen sink, snippets inline, regras de linter). Relatório formatado com problemas + soluções. Proposta de refatoração: CLAUDE.md reduzido para <80 linhas + conteúdo movido para .claude/rules/ por tópico. Deve pedir aprovação antes de aplicar mudanças.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Preciso configurar o Claude Code para um MCP server que estou criando. É um server que conecta ao GoHighLevel CRM, tem 269 tools organizados em 19 categorias. TypeScript, usa @modelcontextprotocol/sdk. Tem modo stdio e HTTP.",
+      "expected_output": "CLAUDE.md conciso para MCP server (não usar template padrão Next.js+Supabase). Deve incluir: comandos build/dev/test, arquitetura src/tools + src/clients + src/types, regra de registrar tools nos dois servers, JSDoc conventions. Deve reconhecer que é um projeto diferente do stack padrão e adaptar o template.",
+      "files": []
+    }
+  ]
+}

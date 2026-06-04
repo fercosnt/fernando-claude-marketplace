@@ -1,0 +1,26 @@
+#!/bin/bash
+# Wrapper que roda extract.py usando o venv dedicado da skill.
+#
+# Uso:
+#   extract deck.pdf
+#   extract --batch ~/Downloads/decks/ --max-cost 0.20 --quiet
+#   extract --help
+#
+# Instalacao opcional (adiciona ao PATH):
+#   ln -sf ~/.claude/skills/presentation-text-extractor/bin/extract /usr/local/bin/extract
+
+SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VENV_PYTHON="$SKILL_DIR/.venv/bin/python"
+
+if [ ! -x "$VENV_PYTHON" ]; then
+  echo "[error] venv nao encontrado em $SKILL_DIR/.venv/" >&2
+  echo "[error] Rode o setup: cd $SKILL_DIR && python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt" >&2
+  exit 1
+fi
+
+if [ -z "$ANTHROPIC_API_KEY" ] && [ -f "$HOME/.zshrc" ]; then
+  ANTHROPIC_API_KEY="$(grep -E '^export ANTHROPIC_API_KEY=' "$HOME/.zshrc" | tail -1 | sed -E 's/^export ANTHROPIC_API_KEY=//; s/^["'\'']//; s/["'\'']$//')"
+  export ANTHROPIC_API_KEY
+fi
+
+exec "$VENV_PYTHON" "$SKILL_DIR/scripts/extract.py" "$@"

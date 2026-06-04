@@ -1,0 +1,50 @@
+{
+  "skill_name": "presentation-text-extractor",
+  "evals": [
+    {
+      "id": 1,
+      "name": "single-pdf-text-based-pt-br",
+      "prompt": "Extrai esse PDF de slides pra markdown: ~/Downloads/aula-fotona-erbium.pdf",
+      "expected_output": "Arquivo .md ao lado do PDF original com frontmatter completo (source/sha256/slide_count/lang/extracao_modo/paginas_multimodal/custo_real_usd), headers '## Slide N — titulo' para cada slide, texto em portugues, sem placeholders [INFERIDO]. Idioma detectado: pt-BR.",
+      "files": [],
+      "assertions": [
+        "Output file existe e tem extensao .md",
+        "Output file esta na mesma pasta do PDF input",
+        "Frontmatter contem campos obrigatorios: source, source_sha256, slide_count, lang, extracted_at, custo_real_usd, generator",
+        "Frontmatter campo lang detectou pt-BR (PDF e em portugues)",
+        "Cada slide tem header no formato '## Slide N — titulo'",
+        "Custo real < $0.10 (PDF de texto deve usar pouco Claude vision)",
+        "Skill imprime tabela do passo 2 (Plano) em stderr antes de executar"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "batch-mode-mixed-decks",
+      "prompt": "Roda extracao em batch nessa pasta de decks de congresso: ~/Downloads/congresso-2026/. Custo maximo 0.20 por arquivo. Modo quiet.",
+      "expected_output": "1 .md gerado por PDF na mesma pasta. Logs em stderr mostram '[BATCH] X/Y concluidos'. Nenhum subprocess crasha. Custo total <= $0.20 * numero_pdfs.",
+      "files": [],
+      "assertions": [
+        "Comando inclui --batch <DIR> --workers 4 --max-cost 0.20 --quiet",
+        "1 arquivo .md gerado por PDF input",
+        "Todos os .md gerados estao na mesma pasta dos PDFs originais (nao em _extracted/)",
+        "stderr contem '[BATCH] N/N concluidos.'",
+        "Cada .md tem campo custo_real_usd <= 0.20 no frontmatter",
+        "Exit code 0 quando todos arquivos OK, exit 4 quando algum falha"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "laser-physics-formula-detection",
+      "prompt": "Extrai esse deck cientifico com formulas de dosimetria laser: ~/Downloads/lightwalker-dosimetria.pdf",
+      "expected_output": "Markdown preserva LaTeX inline ($...$) ou block ($$...$$) para formulas. Frontmatter paginas_claude_sonnet contem os slides com fórmulas (auto-upgrade Haiku --> Sonnet). Termos tecnicos preservados: Er:YAG, Nd:YAG, fluencia em J/cm², irradiancia.",
+      "files": [],
+      "assertions": [
+        "Output .md contem pelo menos uma ocorrencia de LaTeX ($...$ ou $$...$$)",
+        "Frontmatter paginas_claude_sonnet NAO esta vazio (heuristica detectou formula)",
+        "Texto preserva 'Er:YAG', 'Nd:YAG', 'fluencia', 'J/cm²' sem distorcer",
+        "Slides com formula usaram claude-sonnet-4-6 (nao Haiku)",
+        "Custo total <= $0.15 (deck cientifico = mais Sonnet, mas ainda controlado)"
+      ]
+    }
+  ]
+}

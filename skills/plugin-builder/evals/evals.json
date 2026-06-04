@@ -1,0 +1,23 @@
+{
+  "skill_name": "plugin-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Quero criar um plugin simples que tenha uma skill para ensinar boas praticas de code review no meu time. So precisa da skill, nada mais.",
+      "expected_output": "Should scaffold a minimal plugin with .claude-plugin/plugin.json + skills/code-review-practices/SKILL.md. Should NOT add hooks, commands, agents, or MCP. plugin.json should have correct structure. SKILL.md should have name + description frontmatter only.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Minha skill de meeting-notes esta em ~/.claude/skills/meeting-notes/ e funciona bem no Claude Code. Quero transformar em um plugin para distribuir pro meu time no Cowork. O que preciso fazer?",
+      "expected_output": "Should explain the porting workflow: create plugin structure, adapt SKILL.md frontmatter, simplify language for non-devs, add commands as shortcuts, package as .plugin. Should reference cowork-guide.md. Should mention sandbox limitations. Should NOT use technical jargon when describing Cowork-facing changes.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Criei um plugin mas a skill nao esta sendo ativada quando eu peco coisas relacionadas. O que pode estar errado?",
+      "expected_output": "Should provide systematic debugging: check frontmatter (name + description only), verify description has specific trigger phrases, confirm SKILL.md is in skills/ at root (not inside .claude-plugin/), check YAML syntax, suggest restart/reload-plugins. Should reference the debug workflow from SKILL.md.",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "skill_name": "deep-research",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Pesquisa completa sobre como criar skills para Claude Code — melhores praticas, patterns, repos de referencia, videos tutoriais",
+      "expected_output": "Documento compilado com fontes reais sobre skills: patterns de SKILL.md, repos (Orchestra, K-Dense, ARIS), docs Anthropic, videos relevantes, comparativos de abordagens",
+      "mode": "deep_research",
+      "domain": "claude_code_skills"
+    },
+    {
+      "id": 2,
+      "prompt": "Resumo rapido sobre RLS patterns no Supabase — como implementar row level security corretamente",
+      "expected_output": "Documento conciso 1-2 paginas com patterns de RLS: docs oficiais Supabase, repos com exemplos, gotchas comuns, best practices",
+      "mode": "quick_scan",
+      "domain": "supabase"
+    },
+    {
+      "id": 3,
+      "prompt": "Pesquisa sobre automacao de workflows GHL com n8n — como integrar GoHighLevel com n8n para automacao de CRM",
+      "expected_output": "Documento multi-dominio cobrindo: API GHL + nodes n8n + workflows patterns + repos/templates + videos tutoriais, com fontes especializadas de ambos dominios",
+      "mode": "deep_research",
+      "domain": "ghl+n8n"
+    },
+    {
+      "id": 4,
+      "prompt": "Atualizar pesquisa sobre GHL workflows — quero ver o que saiu de novo desde a ultima pesquisa",
+      "expected_output": "Detecta pesquisa existente em pesquisas/ghl-workflows/, parseia metadata (data, fontes), dispara subagentes delta filtrados por data, apresenta diff (novo/atualizado/deprecado), faz merge no documento existente com tags e secao de historico",
+      "mode": "update",
+      "domain": "ghl",
+      "existing_research": "pesquisas/ghl-workflows/PESQUISA-ghl-workflows.md"
+    },
+    {
+      "id": 5,
+      "prompt": "Pesquisar sobre Paperclip AI — preciso entender como funciona esse framework de orquestracao",
+      "expected_output": "Detecta pesquisa existente em pesquisas/paperclip-ai/ e PERGUNTA ao usuario se quer atualizar ou pesquisar do zero. Se atualizar: delta research com sync do NotebookLM existente (notebook linkado no header). Se novo: pesquisa completa ignorando a anterior",
+      "mode": "update_detection",
+      "domain": "ai_tools",
+      "existing_research": "pesquisas/paperclip-ai/PESQUISA-paperclip-ai.md"
+    },
+    {
+      "id": 6,
+      "prompt": "Refresh na pesquisa do Paperclip AI — atualizar o notebook no NotebookLM tambem, deletar fontes que ficaram velhas",
+      "expected_output": "Modo Update ativado explicitamente. Parseia pesquisa existente + NotebookLM link. Subagentes delta buscam conteudo novo. Fontes deprecadas removidas do NotebookLM. Novas fontes adicionadas ao notebook. Documento atualizado com tags e historico de updates",
+      "mode": "update",
+      "domain": "ai_tools",
+      "existing_research": "pesquisas/paperclip-ai/PESQUISA-paperclip-ai.md",
+      "notebooklm_sync": true
+    }
+  ]
+}

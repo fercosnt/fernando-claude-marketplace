@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "notebooks": {
+    "pesquisa": {
+      "id": "cb5704d8-123a-4f60-b692-b1bb45bdca0d",
+      "description": "35+ fontes de pesquisa sobre copy para redes sociais",
+      "use_when": "Precisa de dados, estatisticas ou tendencias atualizadas"
+    },
+    "formacao_copy": {
+      "id": "89aaef0b-0577-4a42-b576-a8f49f1d9b3d",
+      "description": "Curso Formacao Copywriter Andre Cia — CopyBoarding, Schwartz, CPPB, PASTOR, 42 passos carta de vendas",
+      "use_when": "Precisa de detalhes profundos de frameworks avancados que excedem o reference local"
+    },
+    "ia_copy": {
+      "id": "fb5f80d7-b67f-4a6c-926b-fd7edf21d149",
+      "description": "Curso Metodo CIA 2.0 — tecnicas de IA para copy, voice cloning, programacao de prompts por formato",
+      "use_when": "Precisa de tecnicas especificas de geracao de copy com IA ou templates do Metodo CIA"
+    }
+  }
+}

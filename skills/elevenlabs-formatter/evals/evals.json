@@ -1,0 +1,35 @@
+{
+  "skill_name": "elevenlabs-formatter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Formata esse script de video para eu usar no ElevenLabs. E um video educativo sobre IA para o YouTube, tom profissional mas acessivel:\n\nEm 2024, o mercado de IA movimentou US$ 184 bilhoes. A OpenAI, com o ChatGPT, atingiu 200 milhoes de usuarios ativos. O Google respondeu com o Gemini 2.0, e a Meta abriu o codigo do Llama 3 com 405B de parametros. Ate o final de 2025, 75% das empresas Fortune 500 ja usavam IA generativa em producao. O futuro nao e mais futuro — e agora.",
+      "expected_output": "Texto normalizado (numeros por extenso), com audio tags v3 para tom educativo, pontuacao estrategica para pacing, siglas tratadas, e configuracao de voz recomendada",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Tenho esse dialogo de podcast entre 2 pessoas, preciso formatar pra ElevenLabs. Quero que soe natural, com risadas e pausas onde faz sentido:\n\nHost: Cara, voce viu o que aconteceu com a Tesla ontem? As acoes cairam 12% em um dia!\nGuest: Sim! O Elon postou no X as 3:30 da manha e o mercado pirou. 48 horas depois ja tinha recuperado 8%.\nHost: Hahaha classico. Mas falando serio, R$ 500 mil em TSLA no comeco de 2024 viraram R$ 1.2 milhao.\nGuest: E isso sem contar os dividendos. O ROI foi de 140%.",
+      "expected_output": "Dialogo formatado com speakers distintos, risadas como audio tags, numeros/porcentagens/moedas por extenso, siglas tratadas, pausas naturais entre falas",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "preciso formatar esse texto pra narracao de um video dramatico/storytelling, tipo documentario. vai ser narrado com voz grave e pausada:\n\nEra 15 de marco de 2023. O Silicon Valley Bank tinha acabado de colapsar. US$ 209 bilhoes em ativos — evaporados em 48 horas. 4.000 startups acordaram sem acesso ao dinheiro. O CEO, Greg Becker, tinha vendido $3.6 milhoes em acoes 2 semanas antes. Coincidencia? O FBI nao achou que sim.",
+      "expected_output": "Texto com pacing dramatico (reticencias, travessoes, pausas longas), audio tags v3 para tom sombrio/documental, numeros por extenso, nomes proprios com pronuncia, chunking se necessario",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "formata esse script de Reel do Instagram da Beauty Smile, e um video de ate 60 segundos sobre lentes de contato dental. tom confiante e profissional, voz feminina:\n\nVoce sabia que em apenas 1 sessao voce pode transformar completamente o seu sorriso? As lentes de contato dental da Beauty Smile tem apenas 0.3mm de espessura e duram de 15 a 20 anos. O procedimento e minimamente invasivo — sem desgaste dos dentes naturais. Ja atendemos mais de 3.500 pacientes e temos nota 4.9 no Google. Agende sua avaliacao gratuita pelo link na bio ou ligue (11) 99999-8888.",
+      "expected_output": "Texto otimizado para Reel 60s: numeros por extenso, CTA claro, pacing energetico com pausas estrategicas, pontuacao para enfase, configuracao de voz para tom confiante feminino, audio tags v3 para entusiasmo controlado",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "preciso formatar esse script pra trafego pago da Beauty Smile, e um video de 30s com CTA forte pra conversao. quero que a voz soe urgente mas nao desesperada:\n\nUltimas 15 vagas para o Dia do Sorriso Beauty Smile! 40% de desconto em lentes de contato dental + avaliacao gratis. So ate sexta, dia 15/04. Financiamos em ate 36x sem juros. Mais de 3500 pacientes satisfeitos. Clique no botao abaixo e garanta sua vaga antes que acabe!",
+      "expected_output": "Texto formatado para ad 30s: numeros por extenso, urgencia via pontuacao e CAPS (nao tags exageradas), CTA direto, data normalizada, financiamento escrito claramente, pacing rapido mas legivel",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "skill_name": "social-media-strategist",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Preciso montar o calendário de conteúdo do Instagram para a próxima semana. Sou coach de carreira focado em profissionais de tech que querem mudar de área. Meu público são pessoas de 25-35 anos que trabalham em TI mas querem virar UX designer, PM ou entrar no mercado de dados. Posto atualmente 2-3x por semana mas de forma bem irregular. Tenho Reels, carrosseis e alguns stories. Me ajuda a montar um plano para a semana de 7 a 11 de abril?",
+      "expected_output": "Fase de Alinhamento primeiro: propõe 2-3 temas de semana, apresenta lógica de distribuição, pergunta restrições práticas. Só depois de aprovação gera o calendário completo.",
+      "assertions": [
+        "NÃO entrega o calendário completo direto — primeiro faz Fase de Alinhamento",
+        "Propõe 2-3 temas ou fios condutores para a semana com justificativa",
+        "Apresenta lógica de distribuição de pilares (ex: 3 expertise, 2 prova social, 1 conexão)",
+        "Pergunta sobre restrições práticas (capacidade de produção, conteúdo já gravado, dias indisponíveis)",
+        "Cada proposta tem 2-3 linhas — não é um mini-calendário",
+        "Aguarda resposta do usuário antes de montar a grade completa"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Quero criar uma estratégia de conteúdo para o meu perfil do Instagram. Sou nutricionista especializada em saúde hormonal feminina. Atendo principalmente mulheres de 30-45 anos com TPM severa, menopausa precoce e fadiga crônica. Já tenho 4.200 seguidores mas meu engajamento caiu muito nos últimos 2 meses — meus posts de dica de alimentação não estão performando. Nunca defini pilares ou estratégia formal. Por onde começo?",
+      "expected_output": "Fase de Alinhamento: propõe 2-3 opções de tese central e 2 arquétipos candidatos antes de preencher o brand-context completo.",
+      "assertions": [
+        "Identifica o modo Setup como o adequado para primeira execução",
+        "NÃO preenche o brand-context inteiro direto — primeiro propõe tese e arquétipo",
+        "Propõe 2-3 opções de Tese Central com ângulos diferentes",
+        "Propõe 2 Arquétipos candidatos com impacto prático no tom e estética",
+        "Explica os arquétipos de forma acessível (não apenas nomeia — descreve o impacto)",
+        "Diagnostica possível causa da queda de engajamento",
+        "Aguarda escolha do usuário antes de preencher o restante do brand-context"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Preciso de um briefing para um Reel sobre o tema 'como sair do emprego CLT com segurança'. Sou especialista em finanças pessoais para MEIs e autônomos. Meu público tem muito medo de perder a estabilidade do CLT. Quero um Reel que seja educacional mas também gere muitos compartilhamentos porque as pessoas mandam pra quem elas sabem que quer empreender.",
+      "expected_output": "Fase de Alinhamento: tira dúvidas sobre a pauta e propõe 2 abordagens narrativas com hooks diferentes. Depois de aprovação, gera o briefing completo.",
+      "assertions": [
+        "NÃO entrega o briefing completo direto — primeiro faz Fase de Alinhamento",
+        "Pergunta sobre objetivo principal (alcance vs conversão) ou ângulo já tentado",
+        "Propõe 2 abordagens narrativas diferentes (ex: storytelling pessoal vs framework educativo)",
+        "Cada abordagem tem hook diferente e tom diferente explicado em 2-3 linhas",
+        "Mostra como cada abordagem impacta a métrica-alvo (shares, saves, etc)",
+        "Aguarda escolha do usuário antes de montar o briefing completo"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Analisando meus últimos 30 posts no Instagram: os 3 melhores foram (1) carrossel '5 erros que impedem você de dormir bem' — 847 saves, 203 compartilhamentos; (2) Reel de bastidores da minha consulta — 45k views, 312 compartilhamentos; (3) carrossel com caso de paciente — 634 saves. Os piores foram posts de produto e promoção de consulta. Sou médica do sono. O que esses dados me dizem e o que devo focar nas próximas semanas?",
+      "expected_output": "Fase de Alinhamento: pergunta quais métricas tem disponíveis e apresenta 2 ângulos de análise. Depois de aprovação, entrega análise completa.",
+      "assertions": [
+        "NÃO entrega a análise completa direto — primeiro faz Fase de Alinhamento",
+        "Pergunta se tem acesso a métricas além das mencionadas (alcance, hook rate, saves detalhados)",
+        "Propõe 2 ângulos de análise (ex: por formato vs por pilar)",
+        "Cada ângulo explicado em 2-3 linhas com o que o usuário vai descobrir",
+        "Aguarda escolha do usuário antes de entregar a análise"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Me dá 7 ideias de conteúdo para essa semana. Sou personal trainer especializado em emagrecimento saudável para mulheres acima de 40 anos. Minha tese é que dieta restritiva é o caminho errado e que o foco deve ser em ganho de massa muscular. Meus pilares são: treino funcional (expertise), transformações de alunas (prova social), e minha rotina de pai e atleta (conexão). Plataforma: Instagram.",
+      "expected_output": "Fase de Alinhamento: apresenta 2-3 linhas temáticas da semana e pergunta sobre contexto sazonal. Depois de aprovação, gera as 7 ideias.",
+      "assertions": [
+        "NÃO entrega as 7 ideias direto — primeiro faz Fase de Alinhamento",
+        "Apresenta 2-3 linhas temáticas da semana com justificativa",
+        "Cada linha temática tem 2-3 linhas (não é um mini-output de ideação)",
+        "Justifica pelo menos uma proposta com base no brand-context ou audiência",
+        "Pergunta sobre contexto sazonal (campanha, lançamento, trend, data especial)",
+        "Aguarda resposta do usuário antes de gerar as ideias"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Quero um briefing de carrossel sobre 'os 3 maiores erros de quem está começando a investir'. Sou assessor de investimentos focado em classe média que nunca investiu. Meu público tem medo de perder dinheiro e acha que investir é coisa de rico. Quero um carrossel que gere muitos saves.",
+      "expected_output": "Fase de Alinhamento: pergunta sobre ângulo e propõe 2 abordagens narrativas. Depois de aprovação, gera o briefing completo.",
+      "assertions": [
+        "NÃO entrega o briefing completo direto — primeiro faz Fase de Alinhamento",
+        "Propõe 2 abordagens narrativas para o carrossel (ex: tom empático desmistificador vs tom provocativo quebrando mitos)",
+        "Pergunta algo relevante sobre o ângulo (ex: quer ser didático ou provocativo?)",
+        "Cada abordagem tem impacto na métrica-alvo explicado",
+        "Aguarda escolha do usuário antes de montar o briefing"
+      ]
+    }
+  ]
+}

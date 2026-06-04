@@ -6,3 +6,9 @@ node_modules/
 *.plugin
 *.zip
 .claude/
+# Python build artifacts (skills com scripts)
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/

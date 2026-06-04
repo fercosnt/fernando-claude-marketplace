@@ -1,0 +1,84 @@
+{
+  "skill_name": "laser-physics",
+  "evals": [
+    {
+      "id": 1,
+      "name": "calculo-basico-h02",
+      "mode": "calculo",
+      "prompt": "Calcula tudo aí: H02, MSP, 250 mJ, 15 Hz.",
+      "expected_output": "Skill identifica H02 = Er:YAG d=1mm, MSP = 100µs. Converte unidades, calcula S=0.00785 cm², F=31.8 J/cm², Ppeak=2500 W, Pave=3.75 W, power densities. Mostra fórmulas com substituição. Inclui interpretação clínica (acima do threshold ablação esmalte ~10 J/cm²). Cita LAHA Master Dental.",
+      "assertions": [
+        {"text": "Identifica H02 como Er:YAG com diâmetro 1 mm", "category": "equipment_recognition"},
+        {"text": "Identifica MSP como 100 µs", "category": "mode_recognition"},
+        {"text": "Calcula S = 0.0075-0.00785 cm² (faixa aceitando π=3 ou π=3.1416)", "category": "calculation"},
+        {"text": "Calcula Fluence ≈ 31.8 J/cm² (aceitar 31.0-33.3)", "category": "calculation"},
+        {"text": "Calcula Peak power = 2500 W", "category": "calculation"},
+        {"text": "Calcula Average power = 3.75 W", "category": "calculation"},
+        {"text": "Mostra fórmulas com substituição numérica explícita", "category": "transparency"},
+        {"text": "Inclui interpretação clínica conectando fluence ao threshold de ablação", "category": "clinical_context"},
+        {"text": "Cita fonte (LAHA Master Dental ou material Fotona)", "category": "sourcing"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "dosimetria-pesquisa-bleaching",
+      "mode": "dosimetria-pesquisa",
+      "prompt": "Revisora pediu pra eu reportar fluence/pulso, average power, irradiância, energia por aplicação de 30s e energia cumulativa de 3 irradiações. Eu usei R30A, 5 W average, 25ms pulse, 1 Hz, Nd:YAG, em estudo de bleaching. Como respondo?",
+      "expected_output": "Skill reconstrói os 14 parâmetros: λ=1064nm, d=5mm, S=0.196cm², Pave=5W, ν=1Hz, t=25ms, derivando E=5J, F=25.5 J/cm², Ppeak=200W, I=25.5 W/cm², E_app=150J, n=3, E_cum=450J. Apresenta tabela formato Methods. Sugere justificativa nos 4 pilares com referência a Zach & Cohen 5.5°C. Lista lacunas potenciais (spray, distância, calibração, plume).",
+      "assertions": [
+        {"text": "Reconstrói TODOS os 14 parâmetros do checklist (não apenas os 5 que a revisora pediu)", "category": "completeness"},
+        {"text": "Calcula corretamente E_pulso = 5 J (Pave/ν)", "category": "calculation"},
+        {"text": "Calcula F = 25.5 J/cm² ± margem aceitável", "category": "calculation"},
+        {"text": "Calcula E cumulativa = 450 J", "category": "calculation"},
+        {"text": "Apresenta tabela em formato pronto para Methods de paper", "category": "research_format"},
+        {"text": "Sugere justificativa científica mencionando pelo menos 1 dos 4 pilares (literatura/manufacturer/piloto/threshold)", "category": "scientific_rationale"},
+        {"text": "Menciona threshold térmico relevante (Zach & Cohen 5.5°C ou equivalente)", "category": "thermal_safety"},
+        {"text": "Lista lacunas adicionais que outros revisores podem cobrar (spray water, calibração, distância, etc)", "category": "preemptive_review"},
+        {"text": "Distingue Peak power (200W) de Average power (5W) com fórmulas explícitas", "category": "transparency"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "comparacao-er-vs-nd-aplicacao",
+      "mode": "comparacao",
+      "prompt": "Pra descontaminar bolsa periodontal de 6mm, devo usar Er:YAG ou Nd:YAG? Justifica baseado em física.",
+      "expected_output": "Skill compara cromóforos: Er:YAG absorvido em água (penetração ~1 µm) vs Nd:YAG penetra mm em tecido mole via Hb/melanina. Conclui que Nd:YAG é mais adequado para bolsa profunda por alcançar a base/biofilme em profundidade, enquanto Er:YAG seria mais adequado para curetagem superficial e remoção de cálculo. Cita absorption spectrum e ranges típicos. Reconhece que ambos têm protocolos validados (PIPS Er:YAG, descontaminação Nd:YAG LP) e a escolha depende do objetivo específico.",
+      "assertions": [
+        {"text": "Identifica corretamente os cromóforos primários de cada λ (água vs Hb/melanina)", "category": "physics_accuracy"},
+        {"text": "Compara penetration depths quantitativamente (µm vs mm)", "category": "quantitative_comparison"},
+        {"text": "Conecta a física à aplicação clínica (profundidade da bolsa)", "category": "clinical_translation"},
+        {"text": "Reconhece que ambos têm protocolos válidos dependendo do objetivo (não é resposta dogmática)", "category": "nuance"},
+        {"text": "Menciona pelo menos 1 protocolo específico (PIPS, SWEEPS, Nd:YAG LP descontaminação)", "category": "protocol_awareness"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "validacao-cruzada-display",
+      "mode": "calculo",
+      "prompt": "Display do equipamento mostra: Er:YAG, R16, MSP, E=296 mJ, F=0.8 J/cm², 5 Hz, Pave=1.52W. Confere?",
+      "expected_output": "Skill calcula S = π/4 × (0.7)² = 0.385 cm². Verifica F = 0.296/0.385 = 0.77 J/cm² (~0.8 J/cm² ✓). Verifica Pave = 0.296 × 5 = 1.48 W (~1.52 W ✓). Conclui que valores são consistentes dentro de ~3% (provável arredondamento do display). Calcula Ppeak adicional = 0.296/0.0003 = 987 W. Tudo bate com exemplo R16/PS04 do material LAHA.",
+      "assertions": [
+        {"text": "Identifica R16 com diâmetro 7 mm", "category": "equipment_recognition"},
+        {"text": "Calcula S ≈ 0.37-0.385 cm²", "category": "calculation"},
+        {"text": "Valida fluence (0.77-0.80 J/cm²) vs display (0.8) — declara consistente", "category": "cross_validation"},
+        {"text": "Valida average power (1.48-1.52 W) vs display — declara consistente", "category": "cross_validation"},
+        {"text": "Calcula peak power adicional (~987 W)", "category": "calculation"},
+        {"text": "Reconhece pequenas diferenças como arredondamento, sem alarmismo", "category": "appropriate_tone"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "safety-eyewear-spec",
+      "mode": "safety",
+      "prompt": "Esses óculos servem pra LightWalker? Spec é '1064 DIR L7' e '2940 DI L4'.",
+      "expected_output": "Skill decompõe spec: cobre Nd:YAG 1064nm em modo DIR (continuous + pulsed + Q-switched) com LB7 (transmissão 0.00001%), e Er:YAG 2940nm em modo DI (continuous + pulsed) com LB4 (transmissão 0.01%). Conclui que SIM serve para LightWalker uso típico (Er:YAG MSP/SP/LP em modo I, Nd:YAG SP/LP/QSP em modo DIR). Avisa que para uso intenso de QSP Nd:YAG o LB7 é apropriado mas verificar com fabricante se potência total cabe. Lembra que ÓCULOS DEVE COBRIR AMBAS λ pois LightWalker é dual.",
+      "assertions": [
+        {"text": "Decompõe corretamente os modos D/I/R", "category": "spec_interpretation"},
+        {"text": "Decompõe corretamente os LB ratings (LB7=0.00001%, LB4=0.01%)", "category": "spec_interpretation"},
+        {"text": "Reconhece que LightWalker é dual-λ e que ambas precisam de proteção", "category": "completeness"},
+        {"text": "Conclui que serve com ressalva ou afirmativamente, mostrando o raciocínio", "category": "judgment"},
+        {"text": "Não dá resposta categorica sem verificar potência específica do equipamento do usuário", "category": "appropriate_caveat"}
+      ]
+    }
+  ]
+}

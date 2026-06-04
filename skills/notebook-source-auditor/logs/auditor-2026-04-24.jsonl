@@ -1,0 +1,17 @@
+{"ts": "2026-04-24T02:02:34.437610+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 2, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:03:20.218222+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 1, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:03:20.220256+00:00", "event": "rollback", "notebook_id": "nb-abcdefgh", "restored_from": "_notebook-manifest.backup-20260424-020320.json"}
+{"ts": "2026-04-24T02:04:19.865907+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 2, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:04:26.985831+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 1, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:04:26.987392+00:00", "event": "rollback", "notebook_id": "nb-abcdefgh", "restored_from": "_notebook-manifest.backup-20260424-020426.json"}
+{"ts": "2026-04-24T02:09:31.439315+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 2, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:09:40.680348+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 1, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:09:40.725667+00:00", "event": "rollback", "notebook_id": "nb-abcdefgh", "restored_from": "_notebook-manifest.backup-20260424-020940.json"}
+{"ts": "2026-04-24T02:19:17.151174+00:00", "event": "bootstrap", "notebook_id": "nb-abcdefgh", "created": 2, "skipped_existing": 0, "low_confidence": 0}
+{"ts": "2026-04-24T02:44:43.994005+00:00", "event": "bootstrap", "notebook_id": "5afa3f08-3663-46a7-b46b-413bf8a14fbb", "created": 110, "skipped_existing": 0, "low_confidence": 75}
+{"ts": "2026-04-24T02:45:51.365306+00:00", "event": "fix_captcha", "notebook_id": "5afa3f08-3663-46a7-b46b-413bf8a14fbb", "detected": 1, "converged": true, "exit_code": 0, "backup": "_notebook-manifest.backup-20260424-024544.json"}
+{"ts": "2026-04-24T02:47:55.946512+00:00", "event": "fix_captcha", "notebook_id": "aacac5f8-a03d-4bb2-ad3e-720f8d0840e1", "detected": 1, "converged": true, "exit_code": 0, "backup": "_notebook-manifest.backup-20260424-024636.json"}
+{"ts": "2026-04-24T03:13:38.749148+00:00", "event": "audit", "notebook_id": "6261af12-d392-4901-8b31-fda2c53dbe2e", "mode": "apply", "diff": {"missing": 23, "retryable": 0, "duplicates": 0, "captcha_page_disguised": 0, "orphans": 0, "stale_manifest": 0, "noop": 6}, "exit_code": 0, "backup": "_notebook-manifest.backup-20260424-031153.json"}
+{"ts": "2026-04-24T03:17:00.362004+00:00", "event": "bootstrap", "notebook_id": "6261af12-d392-4901-8b31-fda2c53dbe2e", "created": 44, "skipped_existing": 0, "low_confidence": 23}
+{"ts": "2026-04-24T03:24:03.352999+00:00", "event": "fix_captcha", "notebook_id": "951f5ba4-9535-47b5-bf2e-9d832a3e42ff", "detected": 11, "converged": true, "exit_code": 0, "backup": "_notebook-manifest.backup-20260424-032122.json"}
+{"ts": "2026-04-24T03:25:59.995041+00:00", "event": "fix_captcha", "notebook_id": "52dbb460-f278-4de7-93ca-bc792dd2d1cb", "detected": 109, "converged": true, "exit_code": 0, "backup": "_notebook-manifest.backup-20260424-031120.json"}

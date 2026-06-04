@@ -1,0 +1,1 @@
+{"ts": "2026-04-25T00:57:11.032677+00:00", "event": "audit", "notebook_id": "488d767f-ba7b-4bfc-a7e3-0509004bd954", "mode": "apply", "diff": {"missing": 52, "retryable": 0, "duplicates": 19, "captcha_page_disguised": 0, "orphans": 229, "stale_manifest": 81, "noop": 6}, "exit_code": 0, "backup": "_notebook-manifest.backup-20260425-005027.json"}

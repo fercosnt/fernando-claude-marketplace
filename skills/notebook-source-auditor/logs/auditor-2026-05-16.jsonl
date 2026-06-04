@@ -1,0 +1,3 @@
+{"ts": "2026-05-16T23:56:54.195591+00:00", "event": "bootstrap", "notebook_id": "7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da", "created": 98, "skipped_existing": 150, "low_confidence": 98}
+{"ts": "2026-05-16T23:57:04.322545+00:00", "event": "bootstrap", "notebook_id": "1635d16b-773c-480d-89c2-79c717f4b2e1", "created": 57, "skipped_existing": 155, "low_confidence": 57}
+{"ts": "2026-05-16T23:57:18.603496+00:00", "event": "bootstrap", "notebook_id": "5a0aaabb-78c1-4d03-a400-e9ce1973737b", "created": 22, "skipped_existing": 233, "low_confidence": 22}

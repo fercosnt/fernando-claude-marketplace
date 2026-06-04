@@ -1,0 +1,26 @@
+{
+  "skill_name": "idea-to-brief",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Tenho uma ideia: quero automatizar o acompanhamento de clientes da clinica. Hoje a gente faz tudo manual no WhatsApp e perde follow-up. Quero algo que lembre a equipe de ligar, mandar mensagem, e registre tudo automaticamente.",
+      "expected_output": "Brief estruturado com: problema enquadrado via MITRE (dor real de follow-up manual), pesquisa de CRMs e automacoes de acompanhamento, 3 abordagens (n8n+GHL, app custom, Notion+automacao), analise de plataformas detectando GoHighLevel e n8n no ecossistema do usuario, handoff para skill-prd",
+      "files": [],
+      "notes": "Modo guiado - ideia com contexto de clinica, deve detectar GoHighLevel-MCP e n8n como plataformas relevantes"
+    },
+    {
+      "id": 2,
+      "prompt": "Preciso de uma skill pro Claude Code que gere changelogs automaticamente a partir dos commits do Git. Deve pegar os conventional commits, agrupar por tipo (feat, fix, etc), e gerar um CHANGELOG.md formatado. Quero que funcione com qualquer repo que use conventional commits.\n\nJa vi que existem ferramentas como standard-version e conventional-changelog mas queria algo integrado no Claude Code mesmo, como skill.",
+      "expected_output": "Brief com: pesquisa de ferramentas existentes (standard-version, conventional-changelog, release-please), analise de gaps (nenhuma e skill nativa do Claude), 3 abordagens (skill simples com git log parse, skill com semantic-release integration, skill completa com breaking changes detection), handoff para skill-creator",
+      "files": [],
+      "notes": "Modo context dump - usuario ja tem contexto rico e referencia concorrentes, deve ir direto para pesquisa sem muitas perguntas"
+    },
+    {
+      "id": 3,
+      "prompt": "Quero criar um marketplace de servicos para clinicas odontologicas parceiras. Tipo um hub onde clinicas podem oferecer servicos especializados entre si - uma clinica que faz implantes pode receber pacientes de outra que so faz ortodontia.",
+      "expected_output": "Brief abrangente com: pesquisa de marketplaces B2B em saude, analise de regulacao (CRO, LGPD), problema enquadrado via MITRE (fragmentacao de servicos odontologicos), 3 abordagens variando em complexidade (Notion MVP, Next.js+Supabase, plataforma completa), suposicoes criticas (demanda real entre clinicas, disposicao de compartilhar pacientes), handoff para skill-prd",
+      "files": [],
+      "notes": "Modo guiado - ideia complexa que deve gerar brief comprehensive com pesquisa de regulacao e analise de viabilidade"
+    }
+  ]
+}

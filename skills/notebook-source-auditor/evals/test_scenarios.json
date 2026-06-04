@@ -1,0 +1,137 @@
+{
+  "description": "Fixtures exercising the 5-bucket diff engine. Each scenario provides the inputs (current_sources, expected_sources, manifest) and the expected diff. diff_engine.compute_diff() is a pure function — these fixtures double as regression tests.",
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "clean_notebook",
+      "summary": "Notebook matches expected state exactly. No diffs in any bucket.",
+      "inputs": {
+        "current_sources": [
+          {"id": "src_A", "title": "Paper A", "url": "https://pubmed.ncbi.nlm.nih.gov/111/", "added_at": "2026-03-01T10:00:00Z"},
+          {"id": "src_B", "title": "Paper B", "url": "https://pubmed.ncbi.nlm.nih.gov/222/", "added_at": "2026-03-02T10:00:00Z"}
+        ],
+        "manifest_sources": [
+          {"canonical_key": "pmid:111", "status": "ok", "origin_pesquisa": "p1", "ingest_method": "url_direct", "title": "Paper A"},
+          {"canonical_key": "pmid:222", "status": "ok", "origin_pesquisa": "p1", "ingest_method": "url_direct", "title": "Paper B"}
+        ]
+      },
+      "expected_diff": {
+        "missing_count": 0,
+        "retryable_count": 0,
+        "duplicates_count": 0,
+        "orphans_count": 0,
+        "stale_manifest_count": 0,
+        "noop_count": 2
+      }
+    },
+    {
+      "id": 2,
+      "name": "notebook_with_duplicates",
+      "summary": "Two distinct NBM sources point to the same PMID (user double-added via URL and file upload). Duplicates bucket catches both.",
+      "inputs": {
+        "current_sources": [
+          {"id": "src_A_older", "title": "Paper A", "url": "https://pubmed.ncbi.nlm.nih.gov/111/", "added_at": "2026-03-01T10:00:00Z"},
+          {"id": "src_A_newer", "title": "Paper A (re-uploaded)", "url": "https://pubmed.ncbi.nlm.nih.gov/111/", "added_at": "2026-03-15T10:00:00Z"}
+        ],
+        "manifest_sources": [
+          {"canonical_key": "pmid:111", "status": "ok", "origin_pesquisa": "p1", "ingest_method": "url_direct", "title": "Paper A"}
+        ]
+      },
+      "expected_diff": {
+        "missing_count": 0,
+        "retryable_count": 0,
+        "duplicates_count": 1,
+        "orphans_count": 0,
+        "stale_manifest_count": 0,
+        "noop_count": 0,
+        "duplicates_keep": "src_A_older"
+      }
+    },
+    {
+      "id": 3,
+      "name": "captcha_pending_retryable",
+      "summary": "Manifest has a source with status=captcha_pending and ingest_method=url_direct. NBM does not have it. Should go to retryable bucket.",
+      "inputs": {
+        "current_sources": [
+          {"id": "src_ok", "title": "OK Paper", "url": "https://pubmed.ncbi.nlm.nih.gov/999/", "added_at": "2026-03-01T10:00:00Z"}
+        ],
+        "manifest_sources": [
+          {"canonical_key": "pmid:999", "status": "ok", "origin_pesquisa": "p1", "ingest_method": "url_direct", "title": "OK Paper"},
+          {"canonical_key": "doi:10.1234/abc", "status": "captcha_pending", "origin_pesquisa": "p1", "ingest_method": "url_direct", "attempts": 1, "title": "Stuck paper", "ingest_metadata": {"signal_url": "https://doi.org/10.1234/abc"}}
+        ]
+      },
+      "expected_diff": {
+        "missing_count": 0,
+        "retryable_count": 1,
+        "duplicates_count": 0,
+        "orphans_count": 0,
+        "stale_manifest_count": 0,
+        "noop_count": 1
+      }
+    },
+    {
+      "id": 4,
+      "name": "user_added_orphan",
+      "summary": "User added a source directly via NotebookLM UI. Manifest has no record. Should land in orphans with medium/high derivation confidence (has URL).",
+      "inputs": {
+        "current_sources": [
+          {"id": "src_ok", "title": "Known", "url": "https://pubmed.ncbi.nlm.nih.gov/111/", "added_at": "2026-03-01T10:00:00Z"},
+          {"id": "src_orphan", "title": "User-added", "url": "https://www.example.com/some-article", "added_at": "2026-03-10T10:00:00Z"}
+        ],
+        "manifest_sources": [
+          {"canonical_key": "pmid:111", "status": "ok", "origin_pesquisa": "p1", "ingest_method": "url_direct", "title": "Known"}
+        ]
+      },
+      "expected_diff": {
+        "missing_count": 0,
+        "retryable_count": 0,
+        "duplicates_count": 0,
+        "orphans_count": 1,
+        "stale_manifest_count": 0,
+        "noop_count": 1
+      }
+    },
+    {
+      "id": 5,
+      "name": "legacy_notebook_no_manifest_entry",
+      "summary": "Notebook has sources but manifest has no record for this notebook_id. Auditor should report exit code 3 (bootstrap recommended) at the orchestration layer. Pure diff shows all sources as orphans.",
+      "inputs": {
+        "current_sources": [
+          {"id": "src_1", "title": "Ancient Paper", "url": "https://pubmed.ncbi.nlm.nih.gov/555/", "added_at": "2025-12-01T10:00:00Z"},
+          {"id": "src_2", "title": "Also Ancient", "url": "https://pubmed.ncbi.nlm.nih.gov/666/", "added_at": "2025-12-02T10:00:00Z"}
+        ],
+        "manifest_sources": []
+      },
+      "expected_diff": {
+        "missing_count": 0,
+        "retryable_count": 0,
+        "duplicates_count": 0,
+        "orphans_count": 2,
+        "stale_manifest_count": 0,
+        "noop_count": 0
+      }
+    },
+    {
+      "id": 6,
+      "name": "stale_manifest_orphaned_slug",
+      "summary": "Manifest has a source whose origin_pesquisa is NOT in the passed pesquisas (pesquisa was renamed, moved, or its folder removed). User also deleted it from the NBM UI. Bonus stale_manifest bucket catches it and auto-marks deleted.",
+      "inputs": {
+        "current_sources": [
+          {"id": "src_still_there", "title": "Still Here", "url": "https://pubmed.ncbi.nlm.nih.gov/333/", "added_at": "2026-03-01T10:00:00Z"}
+        ],
+        "manifest_sources": [
+          {"canonical_key": "pmid:333", "status": "ok", "origin_pesquisa": "p1", "ingest_method": "url_direct", "title": "Still Here"},
+          {"canonical_key": "pmid:444", "status": "ok", "origin_pesquisa": "renamed_old_pesquisa", "ingest_method": "url_direct", "title": "Ghost of renamed pesquisa"}
+        ]
+      },
+      "expected_diff": {
+        "missing_count": 0,
+        "retryable_count": 0,
+        "duplicates_count": 0,
+        "orphans_count": 0,
+        "stale_manifest_count": 1,
+        "noop_count": 1
+      }
+    }
+  ]
+}

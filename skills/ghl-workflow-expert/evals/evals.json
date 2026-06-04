@@ -1,0 +1,48 @@
+{
+  "skill_name": "ghl-workflow-expert",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Preciso criar um workflow no GHL pra responder rapido quando entra lead pelo formulario do site. Hoje demora ate 2 horas pra alguem responder e estamos perdendo muita venda. Quero SMS e email, e se o lead responder quero atribuir pro vendedor mais proximo. Me ajuda a montar isso?",
+      "expected_output": "Workflow Speed-to-Contact completo com trigger Form Submitted, wait humano, SMS + email, If/Else por resposta, assign to user, settings corretos",
+      "assertions": [
+        {"text": "Usa trigger Form Submitted ou Contact Created", "type": "contains_concept"},
+        {"text": "Inclui Wait step de 1-4 min antes da primeira mensagem", "type": "contains_concept"},
+        {"text": "Inclui If/Else para verificar se lead respondeu", "type": "contains_concept"},
+        {"text": "Inclui Assign To User quando lead responde", "type": "contains_concept"},
+        {"text": "Configura Stop on Response ou Goal Event", "type": "contains_concept"},
+        {"text": "Menciona Time Window ou horario de envio", "type": "contains_concept"},
+        {"text": "Apresenta design visual ASCII do workflow", "type": "contains_concept"}
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Meu workflow de lembrete de consulta nao ta funcionando direito. O paciente agenda pelo calendario do GHL mas nao recebe nenhum lembrete. Ja verifiquei que o workflow ta publicado e o trigger e 'Appointment Scheduled'. O que pode ser?",
+      "expected_output": "Diagnostico sistematico: verificar filtros do trigger, re-entry, DND, timezone/time window, race conditions, testar com contato diferente",
+      "assertions": [
+        {"text": "Verifica filtros do trigger Appointment", "type": "contains_concept"},
+        {"text": "Verifica configuracao de Re-entry", "type": "contains_concept"},
+        {"text": "Menciona verificar Execution Logs ou Trigger Stats", "type": "contains_concept"},
+        {"text": "Sugere verificar DND do contato", "type": "contains_concept"},
+        {"text": "Menciona testar com contato diferente/real", "type": "contains_concept"},
+        {"text": "Segue abordagem sistematica de diagnostico (nao chuta solucao)", "type": "contains_concept"}
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Tenho um workflow gigante com uns 45 steps que faz tudo: nurture, follow-up, lembrete, review request. Ta impossivel de manter e debugar. Como posso melhorar isso? Estou no plano Growth do workflow pro.",
+      "expected_output": "Auditoria identificando anti-pattern de monolito, recomendacao de dividir em 3-4 workflows modulares conectados por tags, checklist de otimizacao, consideracao de custo premium",
+      "assertions": [
+        {"text": "Identifica anti-pattern de monolito (>20 steps)", "type": "contains_concept"},
+        {"text": "Recomenda dividir em workflows menores", "type": "contains_concept"},
+        {"text": "Sugere usar tags como conectores entre workflows", "type": "contains_concept"},
+        {"text": "Menciona Advanced Builder como opcao para visualizacao", "type": "contains_concept"},
+        {"text": "Considera impacto no plano Growth (30K execucoes)", "type": "contains_concept"},
+        {"text": "Fornece estrategia concreta de divisao (ex: 1 por funcao)", "type": "contains_concept"}
+      ],
+      "files": []
+    }
+  ]
+}

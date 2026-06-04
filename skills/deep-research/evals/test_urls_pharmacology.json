@@ -1,0 +1,31 @@
+{
+  "description": "Classification smoke-test extracted from real 2026-04-22 pharmacology research (86 URLs). Used to validate classify_url.py.",
+  "fixtures": [
+    {"url": "https://pubmed.ncbi.nlm.nih.gov/33567185/", "expected_type": "pubmed", "expected_pmid": "33567185"},
+    {"url": "https://pubmed.ncbi.nlm.nih.gov/31485980/", "expected_type": "pubmed", "expected_pmid": "31485980"},
+    {"url": "https://pubmed.ncbi.nlm.nih.gov/10838651/", "expected_type": "pubmed", "expected_pmid": "10838651"},
+    {"url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7054893/", "expected_type": "pmc", "expected_pmcid": "PMC7054893"},
+    {"url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10613702/", "expected_type": "pmc", "expected_pmcid": "PMC10613702"},
+    {"url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11202033/", "expected_type": "pmc", "expected_pmcid": "PMC11202033"},
+    {"url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6822786/", "expected_type": "pmc", "expected_pmcid": "PMC6822786"},
+    {"url": "https://doi.org/10.1089/thy.2014.0028", "expected_type": "doi", "expected_doi": "10.1089/thy.2014.0028"},
+    {"url": "https://doi.org/10.1056/NEJMoa2114833", "expected_type": "doi", "expected_doi": "10.1056/NEJMoa2114833"},
+    {"url": "https://www.mdpi.com/2072-6643/15/3/1234", "expected_type": "cloudflare_known"},
+    {"url": "https://karger.com/mpp/article/27/3/190/825149", "expected_type": "cloudflare_known"},
+    {"url": "https://www.liebertpub.com/doi/10.1089/thy.2014.0028", "expected_type": "doi", "expected_doi": "10.1089/thy.2014.0028"},
+    {"url": "https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/2785123", "expected_type": "cloudflare_known"},
+    {"url": "https://academic.oup.com/jcem/article/105/4/e1218/5688395", "expected_type": "cloudflare_known"},
+    {"url": "https://www.sciencedirect.com/science/article/pii/S0092867422014970", "expected_type": "cloudflare_known"},
+    {"url": "https://www.fda.gov/drugs/postmarket-drug-safety-information", "expected_type": "gov_or_guideline"},
+    {"url": "https://www.who.int/publications/i/item/WHO-2019-nCoV-Sci_Brief-Natural_immunity-2021.1", "expected_type": "gov_or_guideline"},
+    {"url": "https://www.cdc.gov/vitaminsupplements/index.html", "expected_type": "gov_or_guideline"},
+    {"url": "https://clinicaltrials.gov/study/NCT04483466", "expected_type": "gov_or_guideline"},
+    {"url": "https://peterattiamd.com/outlive/", "expected_type": "blog_or_news"},
+    {"url": "https://peterattiamd.com/glp1-side-effects/", "expected_type": "blog_or_news"},
+    {"url": "https://examine.com/supplements/creatine/", "expected_type": "blog_or_news"},
+    {"url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2206443", "expected_type": "doi", "expected_doi": "10.1056/NEJMoa2206443"},
+    {"url": "https://medium.com/@someauthor/article", "expected_type": "blog_or_news"},
+    {"url": "https://substack.com/writer/post", "expected_type": "blog_or_news"},
+    {"url": "https://somerandom.com/page", "expected_type": "generic_web"}
+  ]
+}
