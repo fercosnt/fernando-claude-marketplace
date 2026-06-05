@@ -19,9 +19,16 @@ Fase 2 (configuracao do bot no GHL), Fase 3 (prompt engineering), e qualquer eta
 | Tipo | Uso | Complexidade |
 |------|-----|--------------|
 | **Guided Form** | Formularios simples, FAQ | Setup em ~3 min, limitado |
-| **Prompt-Based** | Vendas, SDR, qualificacao | Superior para conversao, mais flexivel |
+| **Prompt-Based** | Vendas, SDR, qualificacao simples | Melhor resultado com menos setup; bot improvisa a estrutura |
+| **Flow-Based (V3)** | Qualificacao multi-etapa, multi-agente | Node-based; setup mais trabalhoso, controle total do fluxo |
 
-**Para SDR chatbots, SEMPRE usar Prompt-Based.**
+### Prompt-Based vs Flow Builder V3 — qual escolher
+- **Prompt-Based** (default): qualificacao simples (3-5 perguntas, 1 caminho). Continua sendo a escolha recomendada para a maioria dos SDR bots.
+- **Flow-Based V3**: quando o fluxo tem multiplas etapas/caminhos por intencao, ou exige bots distintos por fase (triagem → closer → agendamento). O fluxo vira nodes em vez de um prompt unico.
+- **Sem migracao automatica:** um bot prompt-based nao "vira" V3 — precisa ser reconstruido. Decidir o paradigma no comeco.
+
+Detalhes do paradigma node-based (nodes, limites, pitfalls, multi-agente): ver `ghl-flow-builder-v3.md`.
+Para acoes autonomas de back-office (enriquecer lead, mover pipeline) via workflow: ver `ghl-ai-agent-action.md`.
 
 ---
 
@@ -191,9 +198,22 @@ Bot Goals → Setup Your Actions → Human Handover
 |--------------|-------------------|-------|
 | Maximum Message Limit | 15-25 mensagens | Evita loops infinitos |
 | Stop Bot action | Ativar | Para quando lead diz "bye" ou agenda |
-| Knowledge Base / Web Crawler | Configurar | Treinar bot com FAQ |
+| Knowledge Base / Web Crawler | Configurar | RAG nativo — ver secao 12.1 |
 | AI Response Info | Ativar | Thumbs down → rewrite → cria FAQ automaticamente |
 | Voice Notes | Off (padrao) | AI responde apenas texto; habilitar manualmente se necessario |
+
+---
+
+## 12.1 Knowledge Base / RAG (reformulada)
+
+O KB do Conversation AI deixou de ser "texto/URL" e virou um RAG mais completo:
+- **Formatos de arquivo**: PDF, DOC, PPT, TXT, CSV, Rich Text (antes so texto e URL)
+- **Re-ranking semantico** apos a busca vetorial — melhora a relevancia do chunk recuperado
+- **"Response Info"** mostra quais chunks o bot usou na resposta
+- **Ate 7 KBs por bot e 15 KBs no total** (antes 1 KB compartilhado)
+- **KB Retrieval Tester**: testa perguntas reais e mostra quais chunks (arquivo + timestamp) seriam recuperados — usar **antes de ir ao ar** para validar o RAG
+
+**Uso SDR:** carregar FAQ de servicos, tabela de precos/faixas, politicas. Validar no Retrieval Tester que perguntas comuns ("quanto custa X?") recuperam o chunk certo.
 
 ---
 
@@ -229,7 +249,10 @@ Bot Goals → Setup Your Actions → Human Handover
 - Update Followup Settings
 
 ### Generations API
-- Para QA e auditoria de respostas do bot
+- Endpoint REST com dados **a nivel de mensagem** (cada geracao do bot)
+- Para **QA, auditoria, analytics e export de BI** — resolve o gap de exportacao/compliance
+- Util para a Nota Tecnica ANPD 1/2026 (output do bot e dado pessoal → precisa ser auditavel/exportavel)
+- Endpoints publicos cobrem **Agents (CRUD), Actions e Generations**
 
 ### Workflow Actions
 - **"Update Conversation AI Bot and Status"**: controle runtime do bot via workflow

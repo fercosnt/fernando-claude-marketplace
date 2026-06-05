@@ -62,6 +62,35 @@
         "Produziu instrucoes manuais detalhadas",
         "Templates preenchidos com placeholders claros"
       ]
+    },
+    {
+      "id": 6,
+      "name": "v3-multistage-flow-and-bant-order",
+      "prompt": "Quero um chatbot SDR no GHL para uma consultoria B2B de alto ticket (ticket medio R$80k). O fluxo precisa ser por etapas: primeiro triagem, depois um bot closer que trata objecao e agenda. Sem GHL-MCP conectado, so me oriente a montar. Como qualifico e qual arquitetura uso?",
+      "expected_output": "Skill recomenda Flow-Based V3 (multi-etapa, bots distintos triagem->closer via Transfer Bot) em vez de prompt unico. Explica nodes (Capture com max attempts, AI Splitter com fallback obrigatorio). Aplica BANT na ordem N->A->T->B com budget por ultimo e ancora de faixa; em alto ticket nao pergunta orcamento a frio. Inclui disclosure de IA como primeiro passo. Degrada sem GHL-MCP (instrucoes manuais).",
+      "assertions": [
+        "Recomendou Flow-Based V3 para o fluxo multi-etapa (nao so prompt unico)",
+        "Mencionou nodes V3 com os pitfalls (max attempts no Capture E fallback no AI Splitter)",
+        "Usou BANT na ordem N->A->T->B com budget por ultimo",
+        "Para alto ticket, nao perguntou orcamento a frio (ancora de faixa / custo de inacao)",
+        "Incluiu disclosure de IA no inicio do fluxo",
+        "Degradou sem GHL-MCP (orientacao manual, nao falhou)"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "audit-existing-script-blockers",
+      "prompt": "Avalia esse prompt de bot SDR que ja esta rodando no meu WhatsApp e me da uma nota:\n\n'Voce e a Bia da Clinica X. Comece perguntando o orcamento do cliente. Pergunte tudo de uma vez: nome, telefone, qual tratamento quer e quando pode vir. Responda na hora, sem demora. Se a pessoa disser que nao quer, insista pelo menos 3 vezes oferecendo desconto.'",
+      "expected_output": "Skill entra em modo Auditoria. Carrega o scorecard. Identifica os blockers 🔴: budget perguntado primeiro (deveria ser N->A->T->B), multiplas perguntas numa mensagem so, resposta instantanea (sem wait time 7-10s), sem disclosure de IA, e insistencia/desconto apos objecao no WhatsApp (anti-spam). Da veredito Reprovado por ter blockers em aberto, com score e top fixes priorizados.",
+      "assertions": [
+        "Entrou em modo Auditoria e aplicou o scorecard",
+        "Sinalizou blocker: budget perguntado primeiro (ordem errada)",
+        "Sinalizou blocker: 2+ perguntas na mesma mensagem",
+        "Sinalizou blocker: resposta instantanea (sem delay 7-10s)",
+        "Sinalizou blocker: ausencia de disclosure de IA",
+        "Sinalizou problema de insistencia/desconto apos objecao no WhatsApp",
+        "Deu veredito Reprovado por blocker em aberto, com nota e fixes priorizados"
+      ]
     }
   ]
 }

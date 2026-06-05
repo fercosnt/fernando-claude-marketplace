@@ -52,6 +52,13 @@ Fase 2 (configuracao de workflows no GHL), Fase 3 (compilacao do briefing), e se
 - "Advanced Bot Configuration": override de Personality e Instructions por interacao
 - Util para micro-interacoes pontuais sem criar bot separado
 
+### AI Agent Action (premium — back-office autonomo)
+- Acao de workflow que executa **multiplas tools** a partir de instrucao em linguagem natural, **sem branches hard-coded**
+- O bot conversa com o lead; a **AI Agent action cuida do CRM** (enriquece lead, move pipeline, preenche campos, nudge de deal parado) sem o lead ver
+- Templates SDR: Form Lead Follow Up, Lead Research & Enrichment, Stale Deal Nudge, Pipeline Tracker
+- **Billing:** standard tools (SMS/email/update field/tag/task/opportunity) sem custo; **premium tools $0.01/exec cada** (Decision Maker, Intent Detection, ClickUp/Airtable/Notion); internal tools (Web Search, KB Search, MCP, API Call) nao contam. **Max 10 tools/agente.**
+- Detalhes de custo e uso: ver `ghl-ai-agent-action.md`. Mecanica profunda de workflow: skill `ghl-workflow-expert`
+
 ---
 
 ## 3. Acoes de CRM no Flow Builder

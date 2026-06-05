@@ -176,6 +176,25 @@ Fonte: Braintrust (https://www.braintrust.dev/articles/ab-testing-llm-prompts), 
 | Financeiro | 70-75% | 75-85% | 10-15% |
 | Educacao | 65-75% | 65-75% | 15-20% |
 
+### Baseline BR — estudo Leadster (chatbot SDR real)
+
+Estudo de **635 conversas** (dez/2025–jan/2026) de um chatbot de qualificacao BR:
+
+| Metrica | Valor | Leitura |
+|---------|-------|---------|
+| Qualificado → reuniao | **79,2%** (57 de 72 leads qualificados) | Conversao pos-qualificacao alta |
+| 1a resposta (mediana) | **0,8 min** (82% < 5 min) | Speed-to-lead na pratica |
+| Mensagens / conversa qualificada | **18,5** | ≈ janela efetiva ~15–20 turnos |
+| Conversas simultaneas sem degradar | 31+ | ≈ 10–15 SDRs humanos |
+| Rapport na 1a resposta | 68,2% vs 25,4% humano | 2,7x |
+
+> **Ressalva de amostra:** a base qualificada e pequena (72 leads → 57 reunioes). Os 79,2% sao robustos para **conversao pos-qualificacao**, mas a amostra limita extrapolacao. Saude/estetica aparecem no estudo sem caso com metrica publicada. Tratar como baseline indicativo, nao como garantia por nicho.
+
+### Leadster vs GHL — complementam, nao competem
+- **Leadster** = captura/qualificacao no **site** (topo de funil; precos BRL: Free 15 leads · Starter R$142 · Pro R$154/mes). Sem CRM nativo — exporta via webhook/Zapier.
+- **GHL** = CRM + nurturing + follow-up + agendamento + WhatsApp Conversation AI nativo (desde jan/2025).
+- **Stack recomendada:** Leadster (captura no site) → GHL (CRM e operacao). Nao e ou-um-ou-outro.
+
 ### Brasil (dados verificados)
 
 | Metrica | Valor Brasil | Fonte |

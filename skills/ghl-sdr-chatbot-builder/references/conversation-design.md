@@ -138,6 +138,41 @@ Nao pular etapas. Se o lead pede agendamento direto, otimo — aceitar. Mas nao 
 
 ---
 
+## 6. Desenho de Fluxo por Nodes (Flow Builder V3)
+
+Quando o bot e Flow-Based (V3), o design muda de "prompt livre" para "fluxo por etapas". Em vez de descrever tudo num prompt e torcer para o bot seguir, voce **desenha cada etapa como um node** com objetivo fechado.
+
+### Prompt livre vs fluxo por nodes
+| | Prompt-Based | Flow Builder V3 |
+|--|--------------|-----------------|
+| Estrutura | O bot improvisa a ordem | A ordem esta desenhada nos nodes |
+| Coleta de campo | Instrucao no prompt | Node Capture com campo destino + max attempts |
+| Roteamento | Bot decide no texto | Node AI Splitter (com branch de fallback) |
+| Risco | Pula etapa, esquece campo | Loop se faltar max attempts / congela se faltar fallback |
+
+### Sequencia de referencia (qualificacao SDR)
+```
+Chat Initiated
+  → Custom Message (disclosure de IA)
+  → AI Message (ice-breaker + necessidade)
+  → Capture (necessidade)   [max attempts: 3]
+  → Capture (autoridade)    [max attempts: 2]
+  → Capture (timeline)      [max attempts: 2]
+  → AI Splitter (qualificado?)  [fallback: re-Capture]
+       ├── SQL → Book Appointment → Transfer Bot (humano)
+       ├── Morno → End Conversation (nurturing)
+       └── No condition met → AI Message → volta ao Splitter
+```
+
+### Regras de design V3
+- **1 Capture = 1 etapa de qualificacao.** Nao tentar coletar 2 campos num node so.
+- Escrever o **criterio de saida dentro do campo "objective"** de cada Capture: *"Se nao responder apos 3 tentativas, encerre esta etapa."*
+- **AI Splitter nunca envia mensagem** — so roteia dados ja coletados. Sempre incluir o branch "No condition met".
+- Ordem das perguntas: **N→A→T→B** (budget por ultimo) — ver qualification-patterns.md §1.
+- Detalhes dos nodes e pitfalls: ver `ghl-flow-builder-v3.md`.
+
+---
+
 ## Fontes
 - Rasa Blog: Chatbot Flow Examples (https://rasa.com/blog/chatbot-flow-examples)
 - Quickchat AI: Chatbot Engagement (https://quickchat.ai/post/improve-chatbot-engagement)

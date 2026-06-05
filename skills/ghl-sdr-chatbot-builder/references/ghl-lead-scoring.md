@@ -49,7 +49,7 @@ When native scoring lacks granularity, use custom fields updated by workflow act
 | Location outside service area | -15 |
 | Asked to stop messages | -30 |
 
-## Thresholds
+## Thresholds (action-based, granular)
 
 | Range | Label | Action |
 |-------|-------|--------|
@@ -57,6 +57,42 @@ When native scoring lacks granularity, use custom fields updated by workflow act
 | 16-35 | Warm | Follow-up in 24-48h |
 | 36-50 | Hot | Prioritize handoff |
 | 51+ | Qualified | Immediate handoff |
+
+The table above scores **micro-actions** (replied, gave name, asked to schedule). Use it when you want fine-grained behavioral scoring inside the bot.
+
+## BANT Scoring (N→A→T→B) — recommended for SDR qualification
+
+For qualification decisions, score the **four BANT dimensions** on a 0–100 scale. Each dimension is worth **25 points**:
+
+| Dimension | Strong (25) | Medium (10–15) | Absent (0) |
+|-----------|-------------|----------------|------------|
+| **Need** | Confirmed pain + consequence | Vague interest | No problem stated |
+| **Authority** | Decision maker | Influencer | Unknown |
+| **Timeline** | Event/deadline | "Sometime" | None |
+| **Budget** | Fits the anchored range | "Need to check" | Below range / refuses |
+
+### BANT thresholds
+
+| Score | Label | Routing |
+|-------|-------|---------|
+| **≥ 75** | Hot | Pass to AE / human handoff now |
+| **50–74** | Warm | Nurture, re-qualify in 7–14 days |
+| **< 50** | Cold | Long nurturing, 30–90 days |
+
+### Booking evidence (why capture all 4)
+
+| Dimensions captured | Booking rate |
+|---------------------|--------------|
+| 4 / 4 | **29%** |
+| 3 / 4 | 14% |
+| ≤ 2 / 4 | < 5% |
+
+**One automated follow-up doubles bookings (+106%)** — always configure at least one. See `qualification-patterns.md` §1 for the 8-question flow (budget anchored, asked last).
+
+### Which model to use
+- **BANT 0–100** → the qualification verdict (Hot/Warm/Cold → handoff decision). Maps to `qualification_status`.
+- **Action-based table** → optional behavioral layer for prioritization within a stage. Maps to `qualification_score`.
+- They are not mutually exclusive — BANT decides handoff; the action table fine-tunes priority.
 
 ## Routing via Conversation AI
 
