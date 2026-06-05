@@ -105,16 +105,17 @@ Fonte: lgpdbrasil.com.br — Chatbot e LGPD
 Atualizacao de novembro 2024 consolidou essa exigencia.
 Fonte: WuSeller
 
-### 4.2 Proibicao de AI General-Purpose (Outubro 2025)
-A Meta proibiu chatbots de IA general-purpose na API do WhatsApp. Apenas **task-oriented automation flows** sao permitidos:
-- Qualificacao de leads (OK — e task-oriented)
-- Agendamento (OK)
-- Suporte/FAQ (OK)
-- Conversa aberta tipo ChatGPT (PROIBIDO)
+### 4.2 Ban de AI General-Purpose — SUSPENSO pelo CADE (jan/2026)
 
-**Implicacao para SDR bot**: desenhar como bot de qualificacao com escopo definido, nao como "assistente que conversa sobre tudo".
+**Correcao importante:** o ban que a Meta anunciou em out/2025 (proibindo chatbots de IA general-purpose de terceiros na API do WhatsApp) foi **SUSPENSO**. Em **13/jan/2026 o CADE ordenou a Meta suspender** essa restricao, por entender que era **conduta exclusionaria** favorecendo a propria Meta AI (questao antitruste). Processos paralelos foram abertos na UE e na Italia.
 
-Fonte: TechCrunch / Respond.io
+**Estado atual:** **bots SDR de terceiros voltaram a operar legalmente no WhatsApp BR** durante a investigacao. A orientacao da Respond.io de out/2025 esta **desatualizada**.
+
+**Mas as boas praticas continuam valendo** (independente do ban):
+- Desenhar o bot como **task-oriented** (qualificacao/agendamento/FAQ) e nao "ChatGPT que fala de tudo" — reduz risco de quality-score e de spam.
+- O opt-in de 3 elementos (§4.1) e as regras anti-spam/quality-score **continuam ativos** e independem do ban.
+
+Fonte: CADE (decisao 13/jan/2026) — substitui a leitura anterior de TechCrunch/Respond.io
 
 ### 4.3 Tipos de Mensagem e Custo
 | Tipo | Quando usar | Custo relativo |
@@ -137,7 +138,21 @@ Fonte: TechCrunch / Respond.io
 
 ---
 
-## 5. FTC e Tendencias Regulatorias Globais
+## 5. EU AI Act, FTC e Tendencias Regulatorias Globais
+
+### EU AI Act — Artigo 50 (em vigor 2/ago/2026)
+Se o bot conversa com **qualquer lead na UE**, o Art. 50 exige disclosure de IA **"clara e distinta" antes/no inicio da primeira interacao** — nao no rodape nem nos T&C.
+- Multa: ate **€7,5M ou 1% do faturamento global**.
+- Exemplo compativel: exibir "Voce esta interagindo com IA" **antes** da primeira mensagem.
+- A Comissao Europeia publicou diretrizes de transparencia (rascunho, mai/2026).
+
+**Implicacao pratica:** o disclosure na primeira mensagem (§3.1) ja atende LGPD **e** EU AI Act — manter isso como passo nao-negociavel do fluxo, V3 incluido (primeiro node = disclosure).
+
+### Novas leis estaduais nos EUA (alcance comercial)
+- **Maine** (set/2025): disclosure de chatbot obrigatoria.
+- **Nebraska** Conversational AI Safety Act (em vigor jul/2027, escopo amplo).
+- **Washington** HB 2225 (em vigor jan/2027).
+- **Maine + New Jersey**: disclosure exigido se o bot "puder enganar". (Maioria das leis estaduais foca companion-chatbots, fora do escopo de vendas — mas elevam a regua.)
 
 ### 5 Don'ts da FTC para AI Chatbots
 1. NAO fazer claims falsos sobre capacidades da IA
@@ -174,8 +189,10 @@ Antes de ativar o bot em producao:
 - [ ] Bot nao pressiona apos objecao direta
 - [ ] Logs de conversa armazenados com seguranca
 - [ ] Horarios de envio configurados (nao madrugada)
-- [ ] WhatsApp: bot e task-oriented, nao general-purpose
+- [ ] WhatsApp: bot e task-oriented (boa pratica; o ban de terceiros esta suspenso pelo CADE desde jan/2026)
 - [ ] WhatsApp: opt-in com 3 elementos presente
+- [ ] Opt-in registrado com timestamp + IP + canal + texto aceito (ANPD NT 1/2026)
+- [ ] Se ha leads na UE: disclosure de IA antes da 1a interacao (EU AI Act Art. 50)
 
 ---
 
@@ -195,7 +212,18 @@ Valido para chatbots SDR quando o lead ja demonstrou interesse (visitou site, pr
 
 Fonte: RD Station (https://www.rdstation.com/blog/marketing/legitimo-interesse/)
 
-### Nota Tecnica ANPD 12/2025 — Decisoes Automatizadas
+### Nota Tecnica ANPD nº 1/2026 — Output de IA = dado pessoal (a mais recente)
+Publicada com MPF + SENACON (caso Grok/X), e o **unico documento normativo de IA da ANPD em 2026**. Pontos centrais para SDR bot:
+- **A saida gerada pela IA E dado pessoal** quando referenciavel a pessoa identificavel.
+- **O ciclo inteiro — input → processamento → output → distribuicao — e "tratamento de dados" sob a LGPD.** Cada mensagem gerada pelo LLM para um lead precisa de **base legal** (consentimento ou interesse legitimo documentado).
+- Regulacao do Art. 20 (decisoes automatizadas) ainda pendente (roadmap 2026–2027).
+- O PL 2338/2023 (Marco Legal da IA) **ainda nao e lei** (aprovado no Senado em dez/2024, aguarda a Camara).
+
+**Implicacao pratica:** tratar toda mensagem do bot como tratamento de dados — disclosure + base legal + opt-out funcionam como salvaguarda. Registrar o opt-in com **timestamp + IP + canal + texto aceito**.
+
+Fonte: ANPD Nota Tecnica nº 1/2026 (MPF/SENACON)
+
+### Nota Tecnica ANPD 12/2025 — Decisoes Automatizadas (contexto anterior)
 A ANPD publicou em maio/2025 orientacao sobre bots de IA:
 - Decisoes automatizadas (qualificacao de lead, recusa) ativam Art. 20 LGPD — direito a revisao humana
 - Bot DEVE informar criterios e procedimentos de forma clara

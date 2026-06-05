@@ -5,30 +5,57 @@ Fase 1B (analise de scripts SDR) e Fase 3A (compilacao do briefing para prompt-e
 
 ---
 
-## 1. Framework BANT Adaptado para Chatbot
+## 1. Framework BANT Reordenado: N → A → T → B
 
-### Budget (Investimento)
-- NAO perguntar valor direto no inicio — gera resistencia
-- Abordagem indireta: "Voce ja pesquisou valores para esse tipo de tratamento/servico?"
-- Se lead demonstra preocupacao com preco → classificar como "sensivel a preco" (nao desqualificar)
-- Em contexto premium (ex: Beauty Smile): qualificar se lead entende o posicionamento premium
+O BANT original (IBM, anos 60) era **Budget-first** porque vendia licenca perpetua com um unico decisor. No SaaS/alto ticket moderno (6–10 stakeholders por compra), perguntar orcamento primeiro **soa invasivo, prematuro e preguicoso** — e derruba a conversa. A ordem que converte em chat e **N→A→T→B**: budget por ultimo, quando o lead ja investiu na conversa.
 
-### Authority (Decisor)
+> **Regra de ouro:** sem dor confirmada (Need), perguntar budget e irrelevante. A cada etapa o lead se compromete um pouco mais; o orcamento entra quando ja faz sentido.
+
+### Need (Necessidade) — PRIMEIRO
+- Pergunta aberta: "O que te motivou a buscar [tratamento/servico]?"
+- Aprofundar a consequencia: "E o que acontece se isso continuar do jeito que esta?"
+- Mapear: dor funcional (problema real) vs dor emocional (como se sente)
+- Evento gatilho: "Tem algum evento proximo que motivou?" (casamento, viagem, reuniao)
+
+### Authority (Decisor) — natural apos a dor
 - "Essa decisao seria so sua ou voce precisa alinhar com alguem?"
 - Se nao e decisor → coletar info e sugerir "convide [pessoa] para a avaliacao"
 - NAO desqualificar por nao ser decisor — influenciadores tambem convertem
 
-### Need (Necessidade)
-- Pergunta aberta: "O que te motivou a buscar [tratamento/servico]?"
-- Mapear: dor funcional (problema real) vs dor emocional (como se sente)
-- Urgencia: "Ha quanto tempo voce esta pensando nisso?"
-- Evento gatilho: "Tem algum evento proximo que motivou?" (casamento, viagem, reuniao)
-
-### Timeline (Urgencia)
-- "Quando voce gostaria de resolver isso?"
-- "Voce tem disponibilidade essa semana para uma avaliacao?"
+### Timeline (Urgencia) — ancora valor antes do preco
+- "Quando voce gostaria de estar com isso resolvido?"
+- "Tem algum prazo ou evento motivando esse momento?"
 - Lead sem urgencia → nurturing (follow-up em 7-14 dias)
 - Lead com evento proximo → fast-track para agendamento
+
+### Budget (Investimento) — POR ULTIMO, com ancora de faixa
+- NUNCA perguntar "qual seu orcamento?" a frio
+- Apresentar **ancora de faixa primeiro**, depois validar: "A maioria dos nossos pacientes investe entre R$X e R$Y nesse tipo de tratamento — faz sentido como referencia pra voce?"
+- Se demonstra preocupacao com preco → classificar como "sensivel a preco" (nao desqualificar)
+- Contexto premium (ex: Beauty Smile): qualificar se o lead entende o posicionamento premium
+- **Alto ticket (>R$50k):** quantificar custo-de-inacao → apresentar a faixa → so entao perguntar se encaixa
+
+### Fluxo de 8 perguntas (1 por mensagem, budget so na #7)
+```
+1. Ice-breaker / nome
+2. Need:      "Qual seu principal desafio com [tema]?"
+3. Need:      "O que acontece se continuar assim?"
+4. Authority: "Voce aprova sozinho ou tem mais alguem na decisao?"
+5. Timeline:  "Quando idealmente voce queria isso funcionando?"
+6. Timeline:  "Tem algum evento ou prazo motivando?"
+7. Budget:    "A maioria investe entre R$X e R$Y — faz sentido como referencia?"
+8. CTA:       "Bora marcar 20 min com [consultor] pra fechar os detalhes?"
+```
+
+### Scoring e evidencia de booking
+- Cada dimensao N/A/T/B vale **~25 pts** (forte) / 10-15 (medio) / 0 (ausente) → ver `ghl-lead-scoring.md`
+- **Hot ≥75 → passa para AE · Warm 50–74 → nurture/re-qualificar 7–14d · Cold <50 → nurturing 30–90d**
+- Evidencia: 4/4 dimensoes capturadas → **29% de booking** · 3/4 → 14% · ≤2/4 → <5%
+- **1 follow-up automatico dobra o booking (+106%)** — sempre configurar pelo menos um
+
+### BANT vs MEDDIC — quem usa o que
+- O **SDR/bot usa BANT** para abrir e qualificar rapido.
+- O **AE migra para MEDDIC** ao trabalhar o deal de alto ticket (BANT nao cobre champion, processo de decisao e metricas). O bot nao precisa de MEDDIC — passa o lead qualificado por BANT para o humano.
 
 ---
 

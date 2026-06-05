@@ -13,6 +13,16 @@ Fonte: GHL AI Prompting 101 (docs oficiais)
 
 ---
 
+## 1.5 Realidade 2026: context rot e custo
+
+Dois ajustes importantes na forma de pensar contexto:
+
+- **Context rot**: o bot **degrada quanto mais longa a conversa fica**, mesmo dentro da janela. Nao basta caber — qualidade cai com o numero de turnos. Assumir **janela efetiva ~15–20 turnos** (dado BR: 18,5 mensagens/conversa qualificada). Qualificar antes disso.
+- **O gargalo de 2026 e custo, nao tamanho de janela**: os modelos hoje tem janelas enormes; o limite pratico passou a ser **custo de tokens por conversa**, nao "quantas mensagens cabem". Otimizar para **menos turnos efetivos + menos tokens**, nao para encher a janela.
+- **Regra de split de 40 palavras**: uma resposta complexa em **2 mensagens de ~40 palavras** funciona melhor no chat do que 1 bloco de 80. Quebra a parede de texto e mantem o ritmo de conversa (vale tambem para humanizacao — ver human-patterns.md).
+
+---
+
 ## 2. Implicacoes Praticas
 
 ### O que o bot "ve" a cada turno
@@ -158,8 +168,9 @@ GHL Advanced Settings → Maximum Message Limit
 O GHL NAO tem documentacao clara sobre persistencia de contexto entre conversas distintas do mesmo contato. Na pratica:
 
 - **Custom fields**: persistem entre sessoes (dados salvos via workflow ficam no contato)
-- **Historico de chat**: a janela de contexto do bot provavelmente reinicia por sessao
-- **Workaround**: salvar dados criticos em custom fields durante a conversa, e referencia-los no prompt via variaveis do GHL
+- **Historico de chat (legacy/Prompt-Based)**: a janela de contexto do bot provavelmente reinicia por sessao
+- **Flow Builder V3**: o bot passou a acessar o **historico anterior do contato** entre sessoes. POREM nao ha spec oficial de como o limite legacy (10 msgs / 800 palavras) mudou no V3, e a comunidade relata comportamento inconsistente em conversas longas. **Nao confiar so no historico** — manter o workaround de custom fields como fonte da verdade.
+- **Workaround (vale para legacy E V3)**: salvar dados criticos em custom fields durante a conversa, e referencia-los no prompt via variaveis do GHL
 
 ### Template de prompt com variaveis
 ```

@@ -24,6 +24,7 @@ Antes de iniciar, identifique o modo de operacao:
 | Usuario fornece scripts, nicho, dados do GHL upfront | **Context Dump** | Extrair info, confirmar, pular para Fase 2 rapidamente |
 | Usuario diz "quero configurar chatbot" sem contexto | **Guiado** | Entrevista completa Fase 1 |
 | Usuario diz "ja fiz o discovery" ou referencia context-document | **Skip to Phase 2** | Ler document existente, executar Fases 2-3 |
+| Usuario pede para "avaliar", "auditar", "dar nota" num bot/script ja pronto | **Auditoria** | Aplicar o scorecard de 53 itens — ver secao "Modo Auditoria" |
 
 ## Fase 1 — Discovery e Contexto
 
@@ -70,15 +71,27 @@ Coletar tambem do usuario:
 Referencia: Ler `references/ghl-conversation-ai.md` para detalhes tecnicos.
 
 ### 2A: Conversation AI Setup
+
+**Antes de tudo, escolher o paradigma do bot** (mudou em 2026 — o GHL nao e mais so "prompt unico"):
+
+| Escolha | Quando usar | Reference |
+|---------|-------------|-----------|
+| **Prompt-Based** (default) | Qualificacao simples (3-5 perguntas, 1 caminho). Melhor resultado com menos setup. Recomendado para a maioria dos SDR bots | `ghl-conversation-ai.md` |
+| **Flow-Based (V3)** | Qualificacao multi-etapa, multiplos caminhos por intencao, ou bots distintos por fase (triagem→closer→agendamento). Fluxo desenhado em nodes | `ghl-flow-builder-v3.md` |
+
+Sem migracao automatica entre os dois — decidir no comeco. Em duvida, comecar Prompt-Based. Confirmar a escolha com o usuario antes de seguir.
+
 Guiar configuracao (manual na UI quando necessario):
 1. Ativar Conversation AI na Agency (Settings → Company Settings)
 2. No Sub-account: AI Agents → Conversation AI → Create Bot
-3. **Tipo**: Prompt-Based (superior para vendas, mais flexivel)
-4. **Modelo**: GPT-4.1 como primario + modelo fallback
+3. **Tipo**: Prompt-Based ou Flow-Based V3 (conforme escolha acima)
+4. **Modelo**: GPT-4.1 como primario + modelo fallback (para SDR via AI Agent action, GPT-5 Mini e custo-eficiente — ver `ghl-ai-agent-action.md`)
 5. **Canal**: WhatsApp ativado nos Supported Channels
 6. **Bot NAO primario** (ativar via Workflow para controle fino)
 7. **Wait Time**: 10-15 segundos (leads no WhatsApp enviam mensagens fatiadas; delay menor gera respostas a fragmentos e desperdia tokens)
 8. **Maximum Message Limit**: 20-25 mensagens (abaixo de 15 o bot nao completa qualificacao complexa; acima de 25 custo de tokens sobe sem ganho de conversao)
+
+Se Flow-Based V3: desenhar os nodes (Capture com max attempts, AI Splitter com fallback) — ver `ghl-flow-builder-v3.md` e o desenho de fluxo em `conversation-design.md` §6.
 
 ### 2B: Custom Fields e Tags
 Via GHL-MCP (`ghl_create_custom_field`, `add_contact_tags`):
@@ -123,13 +136,13 @@ Usando dados das Fases 1 e 2, preencher `assets/templates/prompt-briefing.md`.
 - `references/objection-handling-chat.md` — framework ACVC, banco de objecoes <280 chars
 
 **Conteudo do briefing:**
-- Plataforma e limites (prompt em 3 partes, 2000 chars, contexto 800 palavras)
+- Plataforma e limites (prompt em 3 partes / nodes V3; contexto efetivo ~15-20 turnos)
 - Persona e tom (usar `human-patterns.md` para evitar "tom de IA")
-- Framework de qualificacao (BANT/SPIN adaptado)
+- Framework de qualificacao: **BANT na ordem N→A→T→B** (necessidade primeiro, budget por ultimo com ancora de faixa) — ver `qualification-patterns.md` §1
 - Arvore decisoria extraida dos scripts
 - Campos a preencher e tags a aplicar
-- Guardrails e compliance (LGPD, disclosure, restricoes)
-- Objecoes mapeadas com scripts <280 chars para WhatsApp
+- Guardrails e compliance (LGPD + EU AI Act Art.50 se houver lead UE): **disclosure de IA na primeira mensagem e opt-in antes de coletar PII sao passos nao-negociaveis do fluxo** — ver `guardrails-compliance.md`. (Nota: o ban de bots de terceiros no WhatsApp foi suspenso pelo CADE em jan/2026)
+- Objecoes mapeadas (buyer enablement: prevenir > rebater; top 5 objecoes) com scripts <280 chars para WhatsApp
 - Exemplos few-shot (conversa sucesso + nurturing)
 - Gestao de contexto (como funcionar dentro de 800 palavras)
 
@@ -186,6 +199,18 @@ Referencia: Ler `references/ghl-conversation-ai.md` secao Calendar Integration.
 
 Via GHL-MCP (v2): `get_calendars`, `get_free_slots`, `create_appointment`.
 
+## Modo Auditoria — Avaliar um Script/Bot Existente
+
+Acionar quando o usuario pede para **avaliar, auditar, dar nota ou revisar** um bot/script SDR ja pronto (proprio ou de terceiro), em vez de configurar do zero.
+
+1. **Receber o material**: prompt do bot, transcricao de conversas, ou descricao do fluxo.
+2. **Carregar** `references/script-scorecard.md` (53 itens, 7 dimensoes, 8 blockers 🔴).
+3. **Checar primeiro os 5 erros que condenam** (budget-first / 2+ perguntas por mensagem / AI Splitter sem fallback / sem disclosure de IA / resposta instantanea).
+4. **Pontuar** cada item (✅=1 / ⚠️=0.5 / ❌=0). Aprovado = **score ≥80% E zero 🔴 em aberto**.
+5. **Entregar** o veredito: Aprovado/Reprovado + score %, blockers em aberto, itens a corrigir por dimensao, e top 3 fixes priorizados.
+
+Esse modo nao precisa de GHL-MCP nem Notion — e analise do texto/fluxo fornecido.
+
 ## Consulta NotebookLM em Runtime
 
 Quando encontrar duvida tecnica sobre GHL Conversation AI, workflows ou configuracoes que os references nao respondem:
@@ -227,15 +252,18 @@ Quando encontrar duvida tecnica sobre GHL Conversation AI, workflows ou configur
 | Arquivo | Quando carregar |
 |---------|----------------|
 | `references/ghl-conversation-ai.md` | Fase 2A, 2B, 3C, Fase 4 |
+| `references/ghl-flow-builder-v3.md` | Fase 2A quando bot for Flow-Based V3 (nodes, pitfalls, multi-agente) |
+| `references/ghl-ai-agent-action.md` | Quando usar AI Agent action (back-office autonomo, billing) |
 | `references/ghl-workflows.md` | Fase 2C, 3D |
-| `references/ghl-lead-scoring.md` | Fase 2D |
-| `references/qualification-patterns.md` | Fase 1B, 3A |
-| `references/conversation-design.md` | Fase 1B (design do fluxo), Fase 3A (briefing) |
+| `references/ghl-lead-scoring.md` | Fase 2D (scoring BANT N→A→T→B + thresholds) |
+| `references/qualification-patterns.md` | Fase 1B, 3A (BANT N→A→T→B, fluxo de 8 perguntas) |
+| `references/conversation-design.md` | Fase 1B (design do fluxo), Fase 3A (briefing), §6 (desenho V3) |
 | `references/guardrails-compliance.md` | Fase 3A (restricoes), Fase 3B (prompt) |
 | `references/human-patterns.md` | Fase 3A (tom), Fase 3B (prompt) |
 | `references/context-management.md` | Fase 2B (custom fields), Fase 3A (limites) |
 | `references/objection-handling-chat.md` | Fase 1B (scripts), Fase 3A (objecoes) |
-| `references/metrics-optimization.md` | Pos-lancamento (otimizacao) |
+| `references/metrics-optimization.md` | Pos-lancamento (otimizacao, baseline BR Leadster) |
+| `references/script-scorecard.md` | Modo Auditoria (avaliar bot/script existente) |
 | `assets/templates/context-document.md` | Output Fase 1 |
 | `assets/templates/setup-checklist.md` | Output Fase 2 |
 | `assets/templates/prompt-briefing.md` | Output Fase 3A |
@@ -249,6 +277,7 @@ Quando encontrar duvida tecnica sobre GHL Conversation AI, workflows ou configur
 | Mapear dores, duvidas, desejos | `framework-3d-filler` |
 | Mapear objecoes | `objecoes-filler` |
 | Perguntas de implicacao SPIN | `matriz-implicacao-filler` |
+| Construir workflow agentic / AI Agent action complexa | `ghl-workflow-expert` |
 | Duvida tecnica GHL nao coberta | `notebooklm` |
 | Buscar frameworks no Notion | Notion MCP tools |
 
@@ -267,7 +296,7 @@ Quando encontrar duvida tecnica sobre GHL Conversation AI, workflows ou configur
 
 | Anti-Pattern | Por que e ruim | O que fazer |
 |-------------|---------------|-------------|
-| Usar Guided Form para SDR | Muito simplorio para qualificacao de vendas, sem controle de fluxo | Sempre usar Prompt-Based bot |
+| Usar Guided Form para SDR | Muito simplorio para qualificacao de vendas, sem controle de fluxo | Usar Prompt-Based (simples) ou Flow-Based V3 (multi-etapa) |
 | Colocar tudo no prompt | Overprompting confunde o modelo e aumenta custo de tokens | Prompt enxuto + Knowledge Base para FAQs |
 | Ativar bot como Primary | Conflita com campanhas e workflows existentes | Bot non-primary, ativar via Workflow |
 | Ignorar janela 24h WhatsApp | Follow-ups falham silenciosamente apos 24h sem resposta | Configurar Auto Follow-Up dentro da janela |

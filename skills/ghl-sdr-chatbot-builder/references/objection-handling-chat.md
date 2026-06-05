@@ -23,6 +23,28 @@ Em texto, cada step e 1 mensagem separada. Nao colocar os 4 passos na mesma mens
 
 ---
 
+## 1.5 Paradigma 2026: Buyer Enablement (prevenir > rebater)
+
+A melhor objecao e a que nao acontece. **61% dos compradores B2B preferem nao falar com um vendedor** — o lead chega com posicao formada, e rebater de forma agressiva perde efeito. A jogada de 2026 (Apollo) e **habilitar a compra antes da objecao surgir**:
+- Oferecer **calculadora de ROI, pacote de compliance, timeline** proativamente — antes do lead perguntar o preco.
+- **O maior matador de deal em B2B 2026 nao e preco, e desalinhamento interno:** 74% dos times de compra tem conflito interno. Ajudar o lead a "vender internamente" (resumo compartilhavel, material para o decisor) converte mais que contornar objecao de preco.
+
+### "Persistir ate a 2a objecao" — com ressalva de canal
+Reps/bots que param na 1a objecao fecham **15–20% menos** do que os que vao ate a 2a. **Mas isso depende do canal:**
+- **Webchat / inbound de alta intencao**: ok persistir ate a 2a objecao (1 tentativa de valor extra apos a 1a recusa).
+- **WhatsApp**: continuar recuando apos a objecao clara (§4). Insistir vira mensagem nao-solicitada = spam = risco de block e quality-score. A regra anti-spam vence a regra de persistencia.
+
+### Top 5 objecoes (74% de todo o pushback)
+1. "Nao tenho interesse"
+2. "Caro demais"
+3. "Manda por email"
+4. "Sem orcamento"
+5. "Ja temos solucao"
+
+Cobrir essas 5 no prompt cobre a maioria. Ver banco de respostas abaixo (§3).
+
+---
+
 ## 2. Diferenca Fundamental: Chat vs Telefone
 
 | Aspecto | Telefone | Chat/WhatsApp |
