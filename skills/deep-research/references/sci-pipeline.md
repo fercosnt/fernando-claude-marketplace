@@ -250,8 +250,8 @@ Edite `scripts/sci_fetch/classify_url.py`, adicione host a `_CLOUDFLARE_HOSTS`.
 2. Novo handler em `upload_to_nblm.py` (ex: `_handle_biorxiv()`)
 3. Documentar em `references/sci-pipeline.md` (este arquivo)
 
-### Fallback Playwright (v2)
-Planejado para `cloudflare_known`. Overhead +5-10s por URL. Flag `--scientific-deep`.
+### Fallback Firecrawl para `cloudflare_known` (implementado)
+Flag `--firecrawl-fallback`: antes de mandar a URL `cloudflare_known` para o bucket manual, o `_worker_generic` tenta `firecrawl scrape` (renderiza JS + bypassa Cloudflare) e, se obtem conteudo real (>= 600 bytes, sem cara de bloqueio), sobe como arquivo markdown ao NotebookLM com `fetch_method: firecrawl_scrape` no manifesto. Gated em `FIRECRAWL_API_KEY`; 1 credito/URL; respeita o limite de 2 scrapes paralelos do plano. Detalhes e tiers de fetch: `references/fetch-fallback.md`.
 
 ## Guardrails eticos
 
