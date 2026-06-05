@@ -45,6 +45,10 @@ Use WebSearch para cada query planejada. Avalie os resultados antes de prossegui
 ## Etapa 3: Aprofundar (WebFetch)
 Selecione os 3-6 resultados mais promissores e use WebFetch para ler o conteudo.
 
+**Fallback se o WebFetch voltar bloqueado** — corpo com "Checking your browser" / "Just a moment" / "Access Denied" / reCAPTCHA, ou conteudo util < ~100 chars num site que claramente deveria ter conteudo: se a env var `FIRECRAWL_API_KEY` estiver setada, refaca UMA vez via Bash:
+`firecrawl scrape "<url>" --only-main-content -o <tmpfile>.md`
+Renderiza JS + bypassa Cloudflare e devolve markdown limpo (cite a URL original, nao o tmpfile). Custa 1 credito; o plano so permite 2 scrapes em paralelo, entao escale uma URL de cada vez, nunca em lote. Se ainda voltar bloqueado/vazio ou a key nao existir, anote nos gaps e siga (graceful degradation). Detalhes: `references/fetch-fallback.md`.
+
 DO:
 - Priorizar: docs oficiais > posts de engenheiros em empresas reconhecidas > blogs independentes
 - Priorizar recencia: menos de 6 meses > 6-18 meses > mais antigo (exceto fundamentos atemporais)
@@ -143,6 +147,8 @@ Use WebSearch para cada query. Analise os resultados antes de aprofundar.
 
 ## Etapa 3: Aprofundar (WebFetch em READMEs)
 Para os 4-8 repos mais promissores, use WebFetch no README (URL padrao: `https://github.com/{owner}/{repo}`).
+
+**Fallback se o WebFetch voltar bloqueado/vazio** (paginas JS-heavy, sites de docs do projeto fora do GitHub, ou bot-protection): se `FIRECRAWL_API_KEY` estiver setada, refaca UMA vez com `firecrawl scrape "<url>" --only-main-content -o <tmpfile>.md` (renderiza JS + bypassa Cloudflare; 1 credito; max 2 em paralelo, uma URL de cada vez). Se ainda falhar ou sem key, anote no gap e siga. Detalhes: `references/fetch-fallback.md`.
 
 Extrair de cada repo:
 - Descricao e proposito (do README)
@@ -391,6 +397,8 @@ Para cada framework/lib, faca WebFetch nas paginas mais relevantes:
 - Guia de best practices (se existir)
 - Exemplos de codigo (se existir)
 Extraia: titulos, trechos de texto relevantes, blocos de codigo, versao.
+
+**Fallback para portais de docs JS-heavy (SPA)** — muitos sites de documentacao renderizam via JavaScript e voltam vazios no WebFetch. Se a pagina voltar sem conteudo util e `FIRECRAWL_API_KEY` estiver setada, refaca UMA vez com `firecrawl scrape "<url>" --only-main-content -o <tmpfile>.md` (renderiza JS + bypassa Cloudflare; 1 credito; max 2 scrapes em paralelo, escale uma de cada vez). Preserve os blocos de codigo EXATAMENTE como aparecem. Se ainda falhar ou sem key, registre no gap e siga. Detalhes: `references/fetch-fallback.md`.
 
 ## PASSO 4 — Delegacao (se necessario)
 <delegation_rules>

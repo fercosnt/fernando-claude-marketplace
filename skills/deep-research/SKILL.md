@@ -25,6 +25,7 @@ Voce NAO aplica frameworks de produto (MITRE, OST, Lean UX — isso e trabalho d
 - **yt-dlp** (recomendado, instalado): `brew install yt-dlp` — busca YouTube com metadata estruturada e extracao de transcricoes. Ja instalado no sistema.
 - **skill-seekers** (opcional, avancado): `pip install skill-seekers` — pipeline completo que converte videos em SKILL.md com OCR + AI enhancement. Use `skill-seekers video --url <url> --enhance-level 2` para extrair skills direto de tutoriais.
 - **NotebookLM** (opcional): skill `/notebooklm` — RAG gratuito do Google para offload de analise. Ate 300 fontes por notebook. A skill pergunta ao usuario se quer usar.
+- **Firecrawl CLI** (opcional, pago): `firecrawl scrape` como tier de fallback quando o WebFetch toma bloqueio de Cloudflare ou a pagina e JS-heavy (SPA). Gated em `FIRECRAWL_API_KEY` — sem a key, tudo degrada para WebFetch. Limite de 2 scrapes paralelos. Ver `references/fetch-fallback.md`.
 - Scripts auxiliares em `scripts/`:
   - `yt_search.py` — busca YouTube via yt-dlp, retorna JSON com views, subs, ratio, relevance score
   - `yt_transcript.py` — extrai transcricoes com 3 niveis de fallback (legendas manuais → auto-captions → PENDENTE)
@@ -293,6 +294,7 @@ Retorna JSON resumo com contagens por bucket.
 | `--max-parallel N` | Override de pool sizes (split 30/30/40 NCBI/academic/generic) |
 | `--skip-scoring` | Desativa v3 scoring (Semantic Scholar / OpenAlex / bioRxiv) |
 | `--skip-biorxiv-fallback` | Desativa preprint fallback para DOIs paywalled |
+| `--firecrawl-fallback` | URLs `cloudflare_known` tentam `firecrawl scrape` (JS + bypass Cloudflare) antes do bucket manual. Requer `FIRECRAWL_API_KEY`; 1 credito/URL. Ver `references/fetch-fallback.md` |
 
 ### Pipeline v3 (scoring academico)
 
@@ -615,9 +617,9 @@ O subagente 3 faz fallback para WebSearch com queries YouTube e retorna apenas m
 
 ---
 
-## Otimizacao de Subagentes (Claude Code / Opus 4.7)
+## Otimizacao de Subagentes (Claude Code / Opus 4.8)
 
-Claude Code (v2.1.111+) expoe recursos novos que valem para pesquisas longas. Skill roda em Opus 4.7 (declarado via `effort: xhigh` no frontmatter), mas os subagentes devem usar Sonnet.
+Claude Code (v2.1.111+) expoe recursos novos que valem para pesquisas longas. Skill roda em Opus 4.8 (declarado via `effort: xhigh` no frontmatter), mas os subagentes devem usar Sonnet.
 
 ### Aliases de modelo disponiveis
 
@@ -626,7 +628,7 @@ Claude Code (v2.1.111+) expoe recursos novos que valem para pesquisas longas. Sk
 | `sonnet` | `claude-sonnet-4-6` | **Default** — pesquisa e coleta normal |
 | `sonnet[1m]` | Sonnet com 1M de contexto explicito | Fontes muito longas (docs inteiros, transcricoes 2h+, codebases) |
 | `haiku` | `claude-haiku-4-5` | Tarefas triviais: dedup de URLs, classificar tier por sinal simples |
-| `opus` | `claude-opus-4-7` | Evitar em subagentes de pesquisa (custo alto, ganho marginal) |
+| `opus` | `claude-opus-4-8` | Evitar em subagentes de pesquisa (custo alto, ganho marginal) |
 | `opusplan` | Opus plan + Sonnet execute | Nao usar aqui — pattern e para coding com plan mode |
 
 ### Env var `CLAUDE_CODE_SUBAGENT_MODEL`
@@ -638,9 +640,9 @@ Se o usuario exportou essa env var, ela governa o modelo default de subagentes g
 
 Se a env var nao estiver setada, mantenha `model: "sonnet"` explicito nos Agent calls — e o comportamento validado da skill.
 
-### Tokenizer novo (Opus 4.7)
+### Tokenizer (Opus 4.7+)
 
-O tokenizer do 4.7 consome 1.0×–1.35× mais tokens que o 4.6 para o mesmo texto. Consequencias praticas para pesquisa:
+O tokenizer do 4.7 (herdado pelo 4.8 sem mudancas) consome 1.0×–1.35× mais tokens que o 4.6 para o mesmo texto. Consequencias praticas para pesquisa:
 - Documentos compilados de 10k palavras podem passar de ~12k para ~16k tokens
 - Transcricoes YouTube longas ocupam mais contexto do que antes
 - **Quando compilar PESQUISA-*.md muito grande (>15 paginas)**: considere splitar em secoes ou usar `sonnet[1m]` no subagente compilador
@@ -660,6 +662,7 @@ Carregue sob demanda — nao leia tudo de uma vez:
 | `references/subagent-prompts.md` | Fase 2-3 — ao compor e disparar subagentes (inclui secao "Delta Variants" para modo Update) |
 | `references/source-routing.md` | Fase 1 — ao detectar dominio e rotear fontes |
 | `references/sci-pipeline.md` | Fase 4.5 — detalhes do pipeline cientifico, cenarios por tipo e debugging |
+| `references/fetch-fallback.md` | Fase 2-3 e 4.5 — tier de escalacao Firecrawl quando WebFetch toma bloqueio de Cloudflare/JS; gate, custo, limite de concorrencia |
 | `references/cache-and-rate-limits.md` | Fase 4.5 v2 — layout do cache, TTL por kind, buckets por API, troubleshooting de 429, CLI de stats/clear |
 | `references/academic-scoring.md` | Fase 4.5 v3 — 3 APIs academicas, formula do scorer, interpretacao de tiers, quando usar `--skip-scoring` |
 | `references/notebook-manifest.md` | Qualquer fase que escreva no NotebookLM — schema, canonical_key, ingest_method |
@@ -673,7 +676,7 @@ Carregue sob demanda — nao leia tudo de uma vez:
 |------|--------|
 | `--scientific` | Forca ativacao da Fase 4.5 (scientific pipeline) mesmo com < 3 URLs cientificas |
 | `--skip-sci-pipeline` | Desativa Fase 4.5, volta ao fluxo antigo (scraper direto do NotebookLM) |
-| `--scientific-deep` | (v2 futuro) ativa fallback Playwright para sites Cloudflare-known |
+| `--firecrawl-fallback` | Ativa fallback Firecrawl para sites Cloudflare-known na Fase 4.5 (substitui o antigo `--scientific-deep`/Playwright). Requer `FIRECRAWL_API_KEY`. Ver `references/fetch-fallback.md` |
 
 ---
 

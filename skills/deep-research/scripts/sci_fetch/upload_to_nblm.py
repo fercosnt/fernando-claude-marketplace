@@ -27,12 +27,14 @@ Flags:
     --invalidate-cache-before DATE    prune cache entries older than DATE (YYYY-MM-DD) before running
     --serial                          disable pools (v1-like serial loop, useful for debugging)
     --max-parallel N                  override pool sizes; split 30% NCBI / 30% academic / 40% generic
+    --firecrawl-fallback              cloudflare_known URLs try `firecrawl scrape` (needs FIRECRAWL_API_KEY) before manual bucket
 
 Exit code: 0 ok, 1 fatal (bad args, missing tools).
 """
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import queue
@@ -455,10 +457,59 @@ def _worker_academic(
     )
 
 
-def _worker_generic(item: dict, work_dir: Path) -> UploadTask:
+# Below this many bytes the Firecrawl output is almost certainly a block page
+# or an empty shell, not real content — fall through to the manual bucket.
+FIRECRAWL_MIN_BYTES = 600
+
+
+def _firecrawl_scrape(url: str, work_dir: Path) -> Optional[Path]:
+    """Best-effort Cloudflare/JS-bypass fetch via the Firecrawl CLI.
+
+    Returns a markdown file path on success, or None when the fallback can't
+    help (key unset, CLI missing, call failed/timed out, or the output still
+    looks blocked). Gated by the caller on --firecrawl-fallback. Costs 1
+    Firecrawl credit per call, so it only runs for cloudflare_known URLs that
+    the default NotebookLM scraper would otherwise drop into the manual bucket.
+    """
+    if not os.environ.get("FIRECRAWL_API_KEY"):
+        return None
+    digest = hashlib.sha1(url.encode("utf-8")).hexdigest()[:12]
+    out = work_dir / f"firecrawl-{digest}.md"
+    try:
+        proc = subprocess.run(
+            ["firecrawl", "scrape", url, "--only-main-content", "-o", str(out)],
+            capture_output=True, text=True, timeout=120,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0 or not out.exists():
+        return None
+    text = out.read_text(encoding="utf-8", errors="ignore")
+    if len(text.encode("utf-8")) < FIRECRAWL_MIN_BYTES or CAPTCHA_TITLE_RE.search(text[:2000]):
+        out.unlink(missing_ok=True)
+        return None
+    return out
+
+
+def _worker_generic(
+    item: dict,
+    work_dir: Path,
+    *,
+    enable_firecrawl_fallback: bool = False,
+) -> UploadTask:
     url, cls, url_norm = item["url"], item["cls"], item["url_norm"]
     canonical = f"url:{url_norm}"
     if cls["type"] == "cloudflare_known":
+        # Optional tier-2 escalation: Firecrawl renders JS + bypasses Cloudflare,
+        # turning a guaranteed manual-bucket URL into an auto-uploaded source.
+        if enable_firecrawl_fallback:
+            fp = _firecrawl_scrape(url, work_dir)
+            if fp:
+                return UploadTask(
+                    url=url, cls=cls, file_path=fp, canonical=canonical,
+                    ingest_method="pdf_upload", url_norm=url_norm,
+                    metadata_meta={"fetch_method": "firecrawl_scrape"},
+                )
         return UploadTask(
             url=url, cls=cls, file_path=None, canonical=canonical,
             ingest_method="url_direct", url_norm=url_norm,
@@ -722,6 +773,7 @@ def _process_parallel(
     *,
     enable_scoring: bool = True,
     enable_biorxiv_fallback: bool = True,
+    enable_firecrawl_fallback: bool = False,
     skip_dupe_canonicals: Optional[set[str]] = None,
 ) -> dict:
     buckets: dict[str, list[dict]] = {
@@ -768,7 +820,12 @@ def _process_parallel(
                     enable_biorxiv_fallback=enable_biorxiv_fallback,
                 ) for it in academic_items
             ]
-            futures += [generic_pool.submit(_worker_generic, it, work_dir) for it in generic_items]
+            futures += [
+                generic_pool.submit(
+                    _worker_generic, it, work_dir,
+                    enable_firecrawl_fallback=enable_firecrawl_fallback,
+                ) for it in generic_items
+            ]
 
             for fut in as_completed(futures):
                 try:
@@ -816,6 +873,7 @@ def _process_serial(
     *,
     enable_scoring: bool = True,
     enable_biorxiv_fallback: bool = True,
+    enable_firecrawl_fallback: bool = False,
     skip_dupe_canonicals: Optional[set[str]] = None,
 ) -> dict:
     """v1-like serial fallback (--serial flag). Uses the same worker functions
@@ -847,7 +905,10 @@ def _process_serial(
                     enable_biorxiv_fallback=enable_biorxiv_fallback,
                 )
             else:
-                task = _worker_generic(it, work_dir)
+                task = _worker_generic(
+                    it, work_dir,
+                    enable_firecrawl_fallback=enable_firecrawl_fallback,
+                )
         except Exception as e:
             download_errors.append(f"{it['url']}: {e}")
             continue
@@ -895,6 +956,7 @@ def process(
     max_parallel: int | None = None,
     enable_scoring: bool = True,
     enable_biorxiv_fallback: bool = True,
+    enable_firecrawl_fallback: bool = False,
     skip_dupe: bool = False,
     skip_dupe_canonicals: Optional[set[str]] = None,
 ) -> dict:
@@ -918,6 +980,7 @@ def process(
             skip_upload, use_cache, manifest_path,
             enable_scoring=enable_scoring,
             enable_biorxiv_fallback=enable_biorxiv_fallback,
+            enable_firecrawl_fallback=enable_firecrawl_fallback,
             skip_dupe_canonicals=effective_skip_set,
         )
     return _process_parallel(
@@ -925,6 +988,7 @@ def process(
         skip_upload, use_cache, _pool_sizes(max_parallel), manifest_path,
         enable_scoring=enable_scoring,
         enable_biorxiv_fallback=enable_biorxiv_fallback,
+        enable_firecrawl_fallback=enable_firecrawl_fallback,
         skip_dupe_canonicals=effective_skip_set,
     )
 
@@ -979,6 +1043,13 @@ def _main() -> int:
         "--skip-biorxiv-fallback",
         action="store_true",
         help="disable bioRxiv/medRxiv preprint fallback for paywalled DOIs",
+    )
+    parser.add_argument(
+        "--firecrawl-fallback",
+        action="store_true",
+        help="for cloudflare_known URLs, try `firecrawl scrape` (JS render + "
+             "Cloudflare bypass) before dropping them into the manual bucket. "
+             "Requires FIRECRAWL_API_KEY; costs 1 Firecrawl credit per URL.",
     )
 
     parser.add_argument(
@@ -1044,6 +1115,7 @@ def _main() -> int:
         max_parallel=args.max_parallel,
         enable_scoring=not args.skip_scoring,
         enable_biorxiv_fallback=not args.skip_biorxiv_fallback,
+        enable_firecrawl_fallback=args.firecrawl_fallback,
         skip_dupe=args.skip_dupe,
     )
     if args.from_auditor:
