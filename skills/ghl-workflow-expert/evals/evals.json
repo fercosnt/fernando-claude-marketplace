@@ -43,6 +43,35 @@
         {"text": "Fornece estrategia concreta de divisao (ex: 1 por funcao)", "type": "contains_concept"}
       ],
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Vi um video sobre os novos AI Agents dentro dos workflows do GHL e quero usar. Meu caso: chega lead pelo Facebook, as mensagens dele variam muito (uns perguntam preco, uns querem agendar, uns so mandam 'oi'). Queria que algo lesse a intencao, respondesse de acordo, movesse o lead no pipeline e agendasse se desse. Como monto isso com AI Agent?",
+      "expected_output": "Confirma que AI Agent se justifica (intencao em linguagem natural + acoes dependentes de contexto), escolhe AI Agent inline, fornece prompt C-T-T-C com constraints anti-excesso-de-confianca e handoff, menciona limite de 10 tools e padrao JSON->If/Else, alerta pitfalls e custo/break-even",
+      "assertions": [
+        {"text": "Avalia se AI Agent se justifica antes de construir (decision tree / nao sai construindo as cegas)", "type": "contains_concept"},
+        {"text": "Recomenda AI Agent inline (vs Invoke Agent Studio / Node) para este caso single-step", "type": "contains_concept"},
+        {"text": "Usa framework C-T-T-C (Context/Task/Tone/Constraints) para o prompt", "type": "contains_concept"},
+        {"text": "Inclui constraints obrigatorias anti-excesso-de-confianca e/ou handoff humano", "type": "contains_concept"},
+        {"text": "Menciona limite de 10 tools por agente", "type": "contains_concept"},
+        {"text": "Sugere pipeline routing como regras if/then no prompt e/ou JSON output -> If/Else", "type": "contains_concept"},
+        {"text": "Alerta sobre custo (~$0.01/exec + tokens) ou break-even AI Employee $97", "type": "contains_concept"},
+        {"text": "Menciona ao menos um pitfall real (high-ticket, handoff, custom values nao criados)", "type": "contains_concept"}
+      ],
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Quero montar um AI Agent no workflow pra quando o contato receber a tag 'cliente-novo' ele mandar automaticamente o email de boas-vindas. Pode me ajudar a configurar o agente?",
+      "expected_output": "Aplica o guardrail anti-overuse: reconhece que e condicao binaria (tem tag -> manda email), recomenda If/Else simples em vez de AI Agent, explica que AI Agent aqui so adiciona latencia e custo de tokens sem ganho, oferece o desenho If/Else correto",
+      "assertions": [
+        {"text": "Reconhece que e uma condicao binaria/deterministica (tag presente -> acao fixa)", "type": "contains_concept"},
+        {"text": "Recomenda NAO usar AI Agent neste caso (anti-overuse), prefere If/Else ou trigger direto", "type": "contains_concept"},
+        {"text": "Explica o overhead do AI Agent (custo por execucao + tokens + latencia) sem ganho", "type": "contains_concept"},
+        {"text": "Oferece a alternativa deterministica correta (trigger Tag Added -> Send Email, com wait se aplicavel)", "type": "contains_concept"},
+        {"text": "Nao sai configurando o agente as cegas so porque o usuario pediu", "type": "contains_concept"}
+      ],
+      "files": []
     }
   ]
 }
