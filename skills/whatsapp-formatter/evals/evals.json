@@ -1,0 +1,46 @@
+{
+  "skill_name": "whatsapp-formatter",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Converte isso pra mandar no WhatsApp:\n\n## Atualizacao do projeto\n\nO **prazo** mudou. Veja os detalhes no [documento](https://docs.exemplo.com/proj).\n\n- Entrega da fase 1: ~~sexta~~ segunda\n- Reuniao de alinhamento as 15h\n\nQualquer duvida me chamem.",
+      "expected_output": "Mensagem WhatsApp em bloco de codigo, sem nenhum Markdown cru: negrito vira *prazo* (asterisco simples), heading ## vira negrito/caixa alta, link [documento](url) vira 'documento: https://...', ~~sexta~~ vira ~sexta~, bullets com hifen mantidos.",
+      "files": [],
+      "assertions": [
+        {"text": "Nao contem '**' em lugar nenhum", "type": "regex_absent", "pattern": "\\*\\*"},
+        {"text": "Nao contem '##' nem '#' de heading no inicio de linha", "type": "regex_absent", "pattern": "(?m)^#"},
+        {"text": "Nao contem link markdown '[texto](url)'", "type": "regex_absent", "pattern": "\\[[^\\]]+\\]\\([^\\)]+\\)"},
+        {"text": "Nao contem tachado duplo '~~'", "type": "regex_absent", "pattern": "~~"},
+        {"text": "A URL aparece crua (clicavel) no texto", "type": "contains", "value": "https://docs.exemplo.com/proj"},
+        {"text": "Usa negrito nativo do WhatsApp (asterisco simples em 'prazo')", "type": "regex_present", "pattern": "\\*prazo\\*"},
+        {"text": "Saida entregue dentro de um bloco de codigo", "type": "qualitative"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Escreve uma mensagem pra mandar no grupo da equipe avisando que a reuniao semanal foi remarcada de quinta pra sexta as 10h, na sala 3, e que todo mundo precisa confirmar presenca ate quinta de manha. Deixa formatado pro WhatsApp.",
+      "expected_output": "Mensagem nova, escrita do zero, formatada pro WhatsApp: pseudo-titulo em negrito, blocos separados por linha em branco, emoji-rotulo opcional (data/local), '>' no prazo de confirmacao, CTA. Entregue em bloco de codigo. Sem Markdown cru.",
+      "files": [],
+      "assertions": [
+        {"text": "Nao contem Markdown cru (**, ##, [](), ~~)", "type": "regex_absent", "pattern": "\\*\\*|(?m)^#|\\[[^\\]]+\\]\\([^\\)]+\\)|~~"},
+        {"text": "Tem pelo menos um trecho em negrito nativo (*...*)", "type": "regex_present", "pattern": "\\*[^*\\n]+\\*"},
+        {"text": "Menciona sexta as 10h e sala 3", "type": "qualitative"},
+        {"text": "Inclui o prazo de confirmacao (ate quinta)", "type": "qualitative"},
+        {"text": "Estrutura escaneavel: pseudo-titulo + linha em branco entre blocos", "type": "qualitative"},
+        {"text": "Saida em bloco de codigo, sem oferecer variacoes nao pedidas", "type": "qualitative"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Formata essa mensagem pro WhatsApp, sem mudar o conteudo:\n\nfala joao, beleza? consegui resolver aquele problema do pagamento. era so um cadastro errado no sistema. ja ta tudo certo agora, pode seguir com o pedido normalmente. abraco",
+      "expected_output": "Mesma mensagem (conteudo intacto), so com formatacao leve e legivel pro WhatsApp. Mensagem curta/pessoal: NAO deve ganhar pseudo-titulo, bullets ou emoji-rotulo de formulario. No maximo negrito em 1 trecho-chave. Entregue em bloco de codigo. Sem Markdown cru.",
+      "files": [],
+      "assertions": [
+        {"text": "Nao contem Markdown cru (**, ##, [](), ~~)", "type": "regex_absent", "pattern": "\\*\\*|(?m)^#|\\[[^\\]]+\\]\\([^\\)]+\\)|~~"},
+        {"text": "Preserva o conteudo original (nao reescreve a mensagem)", "type": "qualitative"},
+        {"text": "Nao adiciona estrutura artificial (pseudo-titulo/bullets/emoji-rotulo) a uma mensagem pessoal curta", "type": "qualitative"},
+        {"text": "Saida em bloco de codigo", "type": "qualitative"}
+      ]
+    }
+  ]
+}
