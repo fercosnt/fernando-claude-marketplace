@@ -17,6 +17,12 @@ e **como** ler o resultado sem entregar numero errado. Todas as tools sao soment
    janela usou na resposta.
 3. Varias unidades sem filtro = resultado agregado. Se o usuario citou uma clinica pelo nome,
    resolva o id antes, nao some tudo.
+4. Se as tools do Clinicorp nao existirem ou `clinicorp_clinicas` falhar por credencial,
+   nao tente adivinhar numero nem usar outra fonte: aponte o comando `/clinicorp-setup`,
+   que conduz a configuracao do acesso.
+5. Retorno vazio nao e erro. Periodo sem movimento, unidade errada e filtro de status restritivo
+   demais produzem lista vazia — diga qual das tres hipoteses e a provavel em vez de responder
+   "nao encontrei nada".
 
 ## Roteamento pergunta -> tool
 
@@ -38,9 +44,6 @@ e **como** ler o resultado sem entregar numero errado. Todas as tools sao soment
 | "Batemos a meta?" | `clinicorp_metas` | Meta de venda, realizado e projecao; meta de falta so via `clinicorp_get` (operational/list_misses_goals) |
 | "Quais profissionais atendem na unidade?" | `clinicorp_profissionais` | Resolve nomes antes de filtrar por profissional |
 
-Quando a pergunta e de diagnostico ("por que caiu?"), comece pelo `clinicorp_painel` para achar
-qual indicador se moveu e so entao desca para a tool especifica. Evita 5 chamadas as cegas.
-
 ## Tres exemplos completos
 
 **1. Panorama — "como foi julho?"**
@@ -59,6 +62,10 @@ compare para achar **qual** indicador se moveu. Se caiu a conversao, desca para
 para ver o que nao fechou. Se caiu o volume de agendamento, o caminho e `clinicorp_kpis_agenda`
 (primeiras consultas e faltas) e `clinicorp_ocupacao`. Diga na resposta qual indicador explicou
 a queda e qual nao se moveu — descartar hipotese e parte da resposta.
+Resposta: "A queda foi de conversao, nao de movimento: o volume de orcamentos ficou igual
+(96 contra 94 em julho) e a agenda ate encheu mais, mas a conversao caiu de 38% para 29%.
+Os R$ 180 mil rejeitados se concentram em tratamento acima de R$ 15 mil."
+
 
 **3. Caixa — "quanto entrou de dinheiro em agosto?"**
 
