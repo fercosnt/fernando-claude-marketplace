@@ -1,0 +1,23 @@
+{
+  "name": "clinicorp",
+  "version": "0.1.0",
+  "description": "Acesso somente-leitura aos dados do Clinicorp (gestao de clinicas odontologicas) — 19 tools MCP cobrindo agenda, orcamentos, pagamentos, financeiro, ocupacao, metas e painel consolidado, mais uma skill que ensina as convencoes e armadilhas da API.",
+  "author": {
+    "name": "Fernando Costa",
+    "email": "fernandinho.costa.neto@gmail.com"
+  },
+  "homepage": "https://github.com/fercosnt/fernando-claude-marketplace/tree/main/clinicorp",
+  "repository": "https://github.com/fercosnt/fernando-claude-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "clinicorp",
+    "odontologia",
+    "clinica",
+    "mcp",
+    "faturamento",
+    "agenda",
+    "financeiro",
+    "portugues",
+    "brasil"
+  ]
+}

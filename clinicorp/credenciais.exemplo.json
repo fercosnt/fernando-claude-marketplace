@@ -1,0 +1,9 @@
+[
+  {
+    "nome": "Matriz",
+    "subscriber_id": "SEU_SUBSCRIBER_ID",
+    "username": "SEU_USUARIO_API",
+    "token": "SEU_TOKEN_API",
+    "business_id": "OPCIONAL"
+  }
+]
