@@ -36,7 +36,7 @@ Entrypoint do plugin `deck-builder`. Recebe input livre, classifica vertical, de
 - NAO escolhe vertical "no chute" em caso de ambiguidade — pergunta
 - NAO auto-delega `/idea-to-brief` (D12) — sempre AskUserQuestion antes
 - NAO chama APIs pagas
-- NAO gera slides finais (PPTX/Gamma/Figma)
+- NAO gera slides finais sem pedido explicito (D15) — default e STORYBOARD.md. Render e exclusividade de `deck-render-canva`, opt-in e so com MCP do Canva conectado. PPTX/Google Slides/Figma/Gamma seguem proibidos.
 
 ## Fluxo (1-pass)
 

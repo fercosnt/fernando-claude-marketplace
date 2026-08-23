@@ -6,7 +6,7 @@
     "preparar apresentacao",
     "criar storyboard"
   ],
-  "skills_count": 11,
+  "skills_count": 13,
   "skills": [
     "deck-orchestrator",
     "deck-fundraising",
@@ -18,7 +18,9 @@
     "deck-scientific",
     "deck-internal",
     "deck-image-prompts",
-    "deck-reviewer"
+    "deck-reviewer",
+    "deck-review-print",
+    "deck-render-canva"
   ],
   "depends_on": {
     "external_skills": [
@@ -57,6 +59,41 @@
     "D11 NotebookLM nao e pre-requisito",
     "D12 NUNCA auto-delega /idea-to-brief",
     "D13 distribuicao dupla marketplace + Cowork Desktop nativo",
-    "D14 max_ctas override (teaching:4, scientific:3, demais:1)"
-  ]
+    "D14 max_ctas override (teaching:4, scientific:3, demais:1)",
+    "D15 fronteira nº1 emendada — render so por pedido explicito, skills nomeadas (enumerativa)",
+    "D16 render e sempre opt-in via AskUserQuestion; sem MCP do Canva, nem e oferecido",
+    "D17 transcricao de tabela e sempre visual; toda tabela sai [CONFERIR]",
+    "D18 numeracao espelhada em todo artefato derivado de um deck",
+    "D19 sem brand template, sem geracao livre — reporta e pula",
+    "D20 o plugin entrega base, a designer entrega peca",
+    "D21 nenhum artefato de handoff sai sem a instrucao de como usa-lo",
+    "D22 speaker notes sao campo compartilhado, delimitado por marcador",
+    "D23 camada de anotacao e view, nao copia — 900 chars, 4 rotulos fixos",
+    "D24 o TAC mede tinta, nao classifica slide — classificacao e tabular/densidade/leitura visual",
+    "D25 deck-review-apply e modo do deck-review-print, nao skill propria",
+    "D26 briefing e editavel; limpeza arquiva no DECKLINK antes de remover"
+  ],
+  "contract_status": {
+    "target_version": "2.0.0",
+    "bloco_c_contratos": "implementado",
+    "bloco_a_deck_review_print": "implementado (skill + contrato + scripts + template + evals)",
+    "bloco_b_deck_render_canva": "modo `anotar` implementado e validado; modo `render` bloqueado — sem brand template na conta (escopo ou plano do Canva)",
+    "bloco_d_camada_anotacao": "implementado — hipotese validada em campo 2026-08-23 (a redatora nao abriu o markdown)"
+  },
+  "system_deps": {
+    "check": "scripts/check-print-deps.sh",
+    "nucleo": [
+      "chromium|google-chrome (headless)",
+      "python:Pillow",
+      "python:numpy"
+    ],
+    "rota_pdf": [
+      "pdftoppm (poppler-utils)"
+    ],
+    "rota_pptx": [
+      "libreoffice (headless)",
+      "python:python-pptx"
+    ],
+    "nota": "ausencia de dep exclusiva de uma rota desabilita APENAS aquela rota (RNF-09)"
+  }
 }

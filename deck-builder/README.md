@@ -31,9 +31,35 @@ $EDITOR ~/.config/deck-builder/brands.yaml
 
 > **Cowork Desktop:** o mesmo `/plugin install deck-builder@fernando-claude-marketplace` funciona nativamente (D13 — confirmado com legal-analyzer publicado anteriormente).
 
+### Máquina nova? Leia o [INSTALL.md](INSTALL.md)
+
+As **11 skills de storyboard não precisam de nada** — são markdown puro e funcionam assim que o plugin é instalado.
+
+A **`deck-review-print`** (v2.0.0, dossiê de revisão) é a única que precisa de binários de sistema:
+
+```bash
+cd <raiz-do-repo>          # todos os caminhos abaixo sao relativos a ela
+
+# 1) binarios de sistema
+brew install poppler && brew install --cask chromium      # macOS
+# sudo apt install -y poppler-utils chromium              # Debian/Ubuntu
+# winget install oschwartz10612.Poppler                   # Windows (Edge ja serve de motor)
+
+# 2) venv do projeto + pacotes Python
+python3 -m venv .venv
+./.venv/bin/python -m pip install -r deck-builder/scripts/requirements-print.txt
+
+# 3) conferir (no Windows: Git Bash ou WSL, nao PowerShell)
+./deck-builder/scripts/check-print-deps.sh
+```
+
+> **Por que venv e não `pip install` direto:** o Python do Homebrew bloqueia instalação system-wide (PEP 668), e em máquina com pyenv/mise/asdf o `pip` do PATH não é o pip do `python3` do PATH. O venv resolve os dois de uma vez — e o `check-print-deps.sh` encontra `<repo>/.venv` sozinho, sem precisar ativar.
+
+Detalhe por dependência, rotas opcionais (`.pptx`) e troubleshooting: **[INSTALL.md](INSTALL.md)**.
+
 ---
 
-## As 11 skills
+## As 12 skills
 
 | Skill | Onda | Função |
 |-------|------|--------|
@@ -48,6 +74,7 @@ $EDITOR ~/.config/deck-builder/brands.yaml
 | `deck-internal` | 2 | 4 modos (pitch-to-leadership BLUF Amazon 6-pager / strategy SCR / **concept-reveal pipeline com skill-cenografia** / all-hands Sinek+Kotter). |
 | `deck-image-prompts` | 1 | Gera prompts de imagem (MJ v7 / Imagen 4 / Nano Banana Pro / Higgsfield / DALL-E / Ideogram) para slides na whitelist D5. |
 | `deck-reviewer` | 1 | 3 críticos adversariais (clareza / persuasão via /copy / SUCCESs Heath). Severidades 🔴🟡🟢 sem score numérico. |
+| `deck-review-print` | **v2.0.0** | Única skill que **consome** um deck em vez de produzir. Canva/PPTX/PDF → `DOSSIE-*.pdf` A4 legível, numerado e anotável, com ~30× menos tinta. 3 modos (revisão / handout / apresentador). **Exige dependências de sistema — ver [INSTALL.md](INSTALL.md).** |
 
 ---
 

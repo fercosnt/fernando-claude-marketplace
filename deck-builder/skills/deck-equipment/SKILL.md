@@ -189,11 +189,25 @@ Risco juridico real: badmouth pode gerar acao por concorrencia desleal (Lei 9.27
 
 ## Fronteiras (§10.8)
 
-- NAO gera slides finais (PPTX/Gamma) — apenas STORYBOARD.md
+- NAO gera slides finais sem pedido explicito (D15) — default e STORYBOARD.md. Render e exclusividade de `deck-render-canva`, opt-in e so com MCP do Canva conectado. PPTX/Google Slides/Figma/Gamma seguem proibidos.
 - NAO faz design visual — `deck-image-prompts` faz prompts
 - NAO inventa preco, registro Anvisa, ou claim clinico — usuario fornece ou skill marca 🟡
 - NAO faz comparativo badmouth — risco juridico
 - NAO recomenda compra/nao-compra autonomamente — entrega ferramenta para o decisor
+
+## Handoff: render no Canva (v2.0.0 — opt-in, D16)
+
+Ao entregar o `STORYBOARD.md`, **se e somente se** o MCP do Canva estiver conectado, ofereca via `AskUserQuestion`:
+
+> "Gero a base deste deck no Canva a partir do storyboard?"
+> - Sim → `deck-render-canva`
+> - Nao → encerra normalmente
+
+Invioláveis:
+- **Nunca** chama `deck-render-canva` automaticamente (D16).
+- MCP do Canva desconectado → **nao oferece**. Sem aviso e sem opcao quebrada (D15).
+- Recusa encerra o fluxo normalmente — nao insiste, nao repergunta.
+- Sem brand template para a marca, o render reporta e pula. Nunca cai para geracao livre (D19).
 
 ## Cross-references
 

@@ -19,6 +19,8 @@
 | "render", "layout 3D", "stand", "booth", "camarote", "set design", "mood board espaço" | delega `skill-cenografia` (NÃO é deck) |
 | "carrossel", "Instagram", "reel", "TikTok", "post" | delega `/copy` |
 | "cultura", "onboarding", "valores Beauty Smile" | delega agente `culture-lab` |
+| "imprimir deck", "revisão da presidência", "dossiê", "handout", "cópia de apresentador", "anotar no papel", "revisar impresso" | `deck-review-print` (v2.0.0) |
+| "montar no Canva", "gerar o deck", "virar slide", "render", "base para a designer" **+ storyboard existente** | `deck-render-canva` (v2.0.0) — opt-in, exige MCP do Canva (D15/D16) |
 | Input vago: 0 keywords + após U1 ainda sem contexto | orchestrator **SUGERE** `/idea-to-brief` via AskUserQuestion (D12 — nunca auto-delega) |
 
 ## Algoritmo (D10 — routing-first 90%)
@@ -40,6 +42,19 @@
   - "(a) Tentar refinar aqui" → segue para U1-U3
   - "(b) Rodar /idea-to-brief primeiro" → orchestrator encerra com instrução
   - "(c) Cancelar" → orchestrator encerra
+
+## Rotas internas de ciclo (v2.0.0)
+
+2 rotas que **não** geram STORYBOARD.md — consomem ou derivam de um deck que já existe:
+
+| Trigger | Skill | Input | Output |
+|---------|-------|-------|--------|
+| Imprimir/revisar deck no papel | `deck-review-print` | URL do Canva, `.pptx` ou `.pdf` | `DOSSIE-{slug}-{HHmm}.pdf` |
+| Storyboard → base no Canva | `deck-render-canva` | `STORYBOARD.md` v1.1 | design no Canva + `DECKLINK-{slug}-{HHmm}.md` |
+
+**Degradação obrigatória.** `deck-render-canva` exige o MCP do Canva conectado. Sem ele, a rota não é oferecida — nem pelo orchestrator, nem como handoff no fim das verticais. As 8 verticais **nunca** passam a exigir Canva (fronteiras §DoD).
+
+**`deck-review-print` não depende do Canva** para as rotas `.pptx` e `.pdf`. Só a ingestão via URL de design exige o conector.
 
 ## Rotas externas (não-deck)
 

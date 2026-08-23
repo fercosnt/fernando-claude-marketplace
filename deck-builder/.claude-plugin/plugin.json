@@ -1,7 +1,7 @@
 {
   "name": "deck-builder",
-  "version": "1.2.0",
-  "description": "Plugin para criar STORYBOARD.md de apresentacoes em 8 verticais (fundraising/sales/clinical/equipment/teaching/proposal/scientific/internal) + 2 auxiliares (image-prompts/reviewer) + 1 orquestrador (deck-orchestrator). Entry: /deck.",
+  "version": "2.0.0",
+  "description": "Plugin para criar STORYBOARD.md de apresentacoes em 8 verticais + auxiliares, converter deck pronto em dossie A4 de revisao (deck-review-print) e anotar deck no Canva com briefing de montagem (deck-render-canva). Entry: /deck.",
   "author": {
     "name": "Fernando Costa",
     "email": "fernandinho.costa.neto@gmail.com"
@@ -20,6 +20,10 @@
     "teaching",
     "scientific",
     "portugues",
-    "brasil"
+    "brasil",
+    "dossie",
+    "revisao",
+    "canva",
+    "anotacao"
   ]
 }

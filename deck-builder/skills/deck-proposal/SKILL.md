@@ -281,7 +281,7 @@ Checklist final em [assets/checklists/proposal-checklist.md](assets/checklists/p
 
 ## Limites
 
-- NAO renderiza slides finais (PPTX/Gamma/Figma) — so STORYBOARD.md.
+- NAO gera slides finais sem pedido explicito (D15) — default e STORYBOARD.md. Render e exclusividade de `deck-render-canva`, opt-in e so com MCP do Canva conectado. PPTX/Google Slides/Figma/Gamma seguem proibidos.
 - NAO faz term sheet/MoU/SPA juridicos finais — entrega versao comercial visual; juridico final e de escritorio.
 - NAO valida CADE caso a caso — gera disclaimer literal quando criterios atingidos; assessoria CADE e externa.
 - NAO precifica baseado em dados reais do cliente — usa benchmarks de mercado + numero ancora do P3.
@@ -289,6 +289,20 @@ Checklist final em [assets/checklists/proposal-checklist.md](assets/checklists/p
 - NAO faz post de redes sociais (delega `/copy`).
 - NAO projeta cenografia/espaco fisico (delega `skill-cenografia` — D3).
 - Cita NB1 + NB3 com max 5 hits cada; falha de NB nao bloqueia.
+
+## Handoff: render no Canva (v2.0.0 — opt-in, D16)
+
+Ao entregar o `STORYBOARD.md`, **se e somente se** o MCP do Canva estiver conectado, ofereca via `AskUserQuestion`:
+
+> "Gero a base deste deck no Canva a partir do storyboard?"
+> - Sim → `deck-render-canva`
+> - Nao → encerra normalmente
+
+Invioláveis:
+- **Nunca** chama `deck-render-canva` automaticamente (D16).
+- MCP do Canva desconectado → **nao oferece**. Sem aviso e sem opcao quebrada (D15).
+- Recusa encerra o fluxo normalmente — nao insiste, nao repergunta.
+- Sem brand template para a marca, o render reporta e pula. Nunca cai para geracao livre (D19).
 
 ## Referencias
 

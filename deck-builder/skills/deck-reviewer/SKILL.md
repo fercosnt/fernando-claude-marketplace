@@ -32,7 +32,7 @@ Skill auxiliar do plugin `deck-builder`. Revisa um STORYBOARD-{slug}-{HHmm}.md g
 
 - NAO reescreve o STORYBOARD original (gera arquivo paralelo `.review.md`)
 - NAO emite score numerico 1-10 (D9 — risco "LLM rating theater")
-- NAO gera slides finais (PPTX/Gamma/Figma) — so o review markdown
+- NAO gera slides finais sem pedido explicito (D15) — so o review markdown. Render e exclusividade de `deck-render-canva` (D15/D16).
 - NAO substitui revisao humana especializada (compliance juridica/clinica ainda precisa de profissional)
 - NAO chama APIs pagas
 

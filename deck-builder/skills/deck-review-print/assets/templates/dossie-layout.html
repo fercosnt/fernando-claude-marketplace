@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>DOSSIE-{{slug}}</title>
+<!--
+  Template A4 do dossie de revisao — deck-review-print (v2.0.0)
+  Contrato: shared/print-dossie-schema.md
+
+  Placeholders a substituir na composicao:
+    {{slug}} {{titulo}} {{marca}} {{data}} {{total_slides}} {{modo}}
+    {{cor_marca}}  — hex da marca via brands.yaml; cinza neutro no fallback
+    {{#entradas}} ... {{/entradas}}  — uma por slide do ORIGINAL (D18)
+
+  Classes de modo no <body>: modo-revisao | modo-handout | modo-apresentador
+  Render: chrome --headless --no-pdf-header-footer --print-to-pdf=... file://...
+-->
+<style>
+  @page { size: A4 portrait; margin: 14mm 13mm 12mm 13mm; }
+
+  /* Cinza neutro e o DEFAULT declarado, nao um comentario: se {{cor_marca}}
+     nao for substituido (brands.yaml ausente ou malformado), a regra abaixo
+     e invalida e o template degrada no cinza em vez de quebrar. */
+  :root { --cor-marca: #6b7280; }
+  :root { --cor-marca: {{cor_marca}}; }
+
+  :root {
+    --fio: #c8c8c8;
+    --pauta: #d8d8d8;
+    --tinta: #000;
+    --secundario: #4a4a4a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { font-size: 10pt; }
+  body {
+    margin: 0;
+    background: #fff;                 /* razao de existir do dossie */
+    color: var(--tinta);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9.5pt;                 /* RNF-02: corpo >= 9pt */
+    line-height: 1.34;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ---------- cabecalho, so na primeira folha ---------- */
+  .capa-dossie {
+    border-bottom: 2px solid var(--cor-marca);
+    padding-bottom: 4mm; margin-bottom: 6mm;
+  }
+  .capa-dossie h1 { font-size: 15pt; margin: 0 0 1mm; letter-spacing: -0.2pt; }
+  .capa-dossie .meta { font-size: 8pt; color: var(--secundario); }
+  .capa-dossie .meta strong { color: var(--tinta); }
+
+  /* ---------- 2 entradas por folha (modo revisao/apresentador) ---------- */
+  .entrada {
+    height: 128mm;                    /* 2 por folha A4 util */
+    display: flex; flex-direction: column;
+    padding-bottom: 4mm; margin-bottom: 4mm;
+    border-bottom: 1px solid var(--fio);
+    break-inside: avoid; page-break-inside: avoid;
+  }
+  .entrada:nth-of-type(2n) { border-bottom: none; margin-bottom: 0; }
+  .entrada:nth-of-type(2n)::after { content: ""; display: block; break-after: page; page-break-after: always; }
+  .entrada:last-of-type { border-bottom: none; }
+  .entrada:last-of-type::after { content: none; break-after: auto; page-break-after: auto; }
+
+  /* modo handout: 2 por folha com mais respiro, sem pauta */
+  .modo-handout .entrada { height: 124mm; }
+  .modo-handout .pauta, .modo-handout .rotulo-tipo, .modo-handout .conferir { display: none; }
+
+  /* ---------- cabecalho da entrada ---------- */
+  .cab { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 2mm; }
+  .num {
+    font-size: 14pt; font-weight: 700; color: var(--cor-marca);
+    min-width: 11mm; font-variant-numeric: tabular-nums;
+  }
+  .action-title { font-size: 11pt; font-weight: 700; line-height: 1.2; flex: 1; }
+  .rotulo-tipo {
+    margin-left: auto; font-size: 7pt; letter-spacing: .3pt; text-transform: uppercase;
+    color: var(--secundario); border: 1px solid var(--fio);
+    padding: 0.4mm 1.6mm; border-radius: 1mm; white-space: nowrap;
+  }
+
+  /* ---------- corpo: miniatura + texto ---------- */
+  .corpo { display: flex; gap: 4mm; flex: 1; min-height: 0; }
+  .mini { width: 62mm; flex: none; }   /* contrato: <= 62mm */
+  .mini img { width: 100%; height: auto; border: 1px solid var(--fio); display: block; }
+  .mini figcaption { font-size: 7pt; color: var(--secundario); margin-top: 1mm; }
+  .texto { flex: 1; min-width: 0; }
+  .texto ul { margin: 0 0 2mm; padding-left: 4.5mm; }
+  .texto li { margin-bottom: 1.1mm; }
+  .mensagem-chave { font-size: 8.5pt; color: var(--secundario); font-style: italic; margin-bottom: 1.5mm; }
+
+  /* ---------- slide tipo foto: moldura tracejada, zero pixel da imagem ---------- */
+  .moldura-foto {
+    border: 1.2px dashed var(--fio); border-radius: 1.5mm;
+    padding: 7mm 5mm; text-align: center; color: var(--secundario);
+    font-size: 9pt; margin-bottom: 2mm;
+  }
+
+  /* ---------- tabela redesenhada ---------- */
+  table { border-collapse: collapse; width: 100%; font-size: 8pt; margin-bottom: 2mm; }
+  th, td { border: .5px solid var(--fio); padding: 1.1mm 1.6mm; text-align: left; }
+  th { font-weight: 700; border-bottom: 1px solid var(--tinta); }
+  td.num-col { text-align: right; font-variant-numeric: tabular-nums; }
+  table.compacta { font-size: 7.5pt; }        /* RNF-02: nunca abaixo de 7pt */
+  table.muito-compacta { font-size: 7pt; }
+
+  .conferir {
+    display: inline-block; font-size: 7pt; font-weight: 700; letter-spacing: .3pt;
+    border: 1px solid var(--tinta); padding: 0.3mm 1.4mm; margin-bottom: 1.5mm;
+  }
+  .ilegivel { font-size: 8pt; font-style: italic; color: var(--secundario); }
+
+  /* ---------- speaker notes (modo apresentador) ---------- */
+  .notas { display: none; }
+  .modo-apresentador .notas {
+    display: block; font-size: 8pt; color: var(--secundario);
+    border-left: 2px solid var(--fio); padding-left: 2.5mm; margin: 1.5mm 0;
+  }
+
+  /* ---------- pauta de anotacao ---------- */
+  .pauta { margin-top: auto; padding-top: 2mm; }
+  .pauta .linha { border-bottom: .5px solid var(--pauta); height: 6.2mm; }
+
+  /* ---------- resumo final ---------- */
+  .resumo { break-before: page; page-break-before: always; }
+  .resumo h2 { font-size: 12pt; border-bottom: 2px solid var(--cor-marca); padding-bottom: 2mm; }
+  .resumo .aviso-tac { font-size: 8pt; color: var(--secundario); font-style: italic; }
+</style>
+</head>
+
+<body class="modo-{{modo}}">
+
+<header class="capa-dossie">
+  <h1>{{titulo}}</h1>
+  <p class="meta">
+    Dossie de revisao · modo <strong>{{modo}}</strong> ·
+    {{total_slides}} slides · marca {{marca}} · gerado em {{data}}<br>
+    A numeracao espelha o deck original — cite o numero do slide ao anotar.
+  </p>
+</header>
+
+<!-- {{#entradas}} — repetir por slide do ORIGINAL, inclusive os omitidos visualmente (D18) -->
+
+<!-- EXEMPLO: tipo conteudo -->
+<article class="entrada">
+  <div class="cab">
+    <span class="num">02</span>
+    <h2 class="action-title">{{action_title}}</h2>
+    <span class="rotulo-tipo">conteudo</span>
+  </div>
+  <div class="corpo">
+    <figure class="mini">
+      <img src="{{miniatura_path}}" alt="Miniatura do slide 02">
+      <figcaption>slide 02 no original</figcaption>
+    </figure>
+    <div class="texto">
+      <p class="mensagem-chave">{{mensagem_chave}}</p>
+      <ul>
+        <li>{{bullet}}</li>
+      </ul>
+      <div class="notas">{{speaker_notes_filtradas}}</div>
+    </div>
+  </div>
+  <div class="pauta">
+    <div class="linha"></div><div class="linha"></div><div class="linha"></div>
+  </div>
+</article>
+
+<!-- EXEMPLO: tipo foto — nenhum pixel da imagem -->
+<article class="entrada">
+  <div class="cab">
+    <span class="num">10</span>
+    <h2 class="action-title">{{action_title}}</h2>
+    <span class="rotulo-tipo">foto</span>
+  </div>
+  <div class="corpo">
+    <div class="texto">
+      <div class="moldura-foto">{{descricao_da_imagem}}</div>
+      <ul><li>{{bullet_se_houver}}</li></ul>
+    </div>
+  </div>
+  <div class="pauta">
+    <div class="linha"></div><div class="linha"></div>
+    <div class="linha"></div><div class="linha"></div>
+  </div>
+</article>
+
+<!-- EXEMPLO: tipo tabela — sempre com [CONFERIR] e miniatura ao lado (D17) -->
+<article class="entrada">
+  <div class="cab">
+    <span class="num">12</span>
+    <h2 class="action-title">{{action_title}}</h2>
+    <span class="rotulo-tipo">tabela</span>
+  </div>
+  <div class="corpo">
+    <figure class="mini">
+      <img src="{{miniatura_path}}" alt="Miniatura do slide 12">
+      <figcaption>conferir contra este slide</figcaption>
+    </figure>
+    <div class="texto">
+      <span class="conferir">[CONFERIR]</span>
+      <table>
+        <thead><tr><th>{{col}}</th><th>{{col}}</th></tr></thead>
+        <tbody><tr><td>{{cel}}</td><td class="num-col">{{cel}}</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="pauta">
+    <div class="linha"></div><div class="linha"></div>
+  </div>
+</article>
+
+<!-- {{/entradas}} -->
+
+<section class="resumo">
+  <h2>Resumo da execucao</h2>
+  <p><strong>{{n_paginas}} paginas</strong> · TAC medio <strong>{{tac_medio}}%</strong>
+     · original: {{tac_original}}% x {{n_slides}} folhas · reducao aproximada <strong>{{fator}}x</strong></p>
+  <p class="aviso-tac">
+    TAC via conversao CMYK ingenua do Pillow, sem perfil ICC. Proxy comparativo,
+    nao estimativa de consumo real de impressora.
+  </p>
+  <h3>Tabelas que exigem conferencia</h3>
+  <ul>{{#tabelas_conferir}}<li>Slide {{num}} — {{descricao}}</li>{{/tabelas_conferir}}</ul>
+  {{#houve_ilegivel}}<h3>Trechos ilegiveis</h3>
+  <ul>{{#ilegiveis}}<li>Slide {{num}}, linha {{linha}}</li>{{/ilegiveis}}</ul>{{/houve_ilegivel}}
+</section>
+
+</body>
+</html>

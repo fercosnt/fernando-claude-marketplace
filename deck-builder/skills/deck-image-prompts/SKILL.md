@@ -211,6 +211,7 @@ Skeletons por engine prontos em [assets/templates/prompt-skeleton-por-engine.md]
 
 ## Limites
 
+- NAO gera slides finais sem pedido explicito (D15) — default e STORYBOARD.md. Render e exclusividade de `deck-render-canva`, opt-in e so com MCP do Canva conectado. PPTX/Google Slides/Figma/Gamma seguem proibidos.
 - NAO renderiza a imagem — so escreve o prompt.
 - NAO valida output visual — funcao do `deck-reviewer`.
 - NAO chama API paga.
