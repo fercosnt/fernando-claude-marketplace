@@ -1,0 +1,16 @@
+{
+  "escrita": false,
+  "clinicas": [
+    {
+      "nome": "Matriz",
+      "username": "SEU_USUARIO_API",
+      "token": "SEU_TOKEN_API"
+    },
+    {
+      "nome": "Segunda Unidade",
+      "username": "SEU_USUARIO_API",
+      "token": "SEU_TOKEN_API",
+      "subscriber_id": "OPCIONAL — descoberto sozinho se omitido"
+    }
+  ]
+}

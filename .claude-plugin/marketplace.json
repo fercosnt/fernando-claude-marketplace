@@ -35,6 +35,16 @@
         "name": "Fernando Costa"
       },
       "tags": ["deck", "slides", "storyboard", "presentation", "fundraising", "sales", "clinical", "teaching", "scientific", "portugues", "brasil"]
+    },
+    {
+      "name": "clinicorp",
+      "description": "Acesso aos dados do Clinicorp — 32 tools MCP: leitura (agenda, orcamentos, pagamentos, financeiro, ocupacao, metas, painel) e escrita opcional desligada por padrao (agendar, confirmar, cancelar, paciente, lead no CRM). Skill com as armadilhas da API e comando /clinicorp-setup. Credenciais por pessoa em ~/.clinicorp-mcp.json, nenhuma no repositorio.",
+      "version": "0.2.0",
+      "source": "./clinicorp",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": ["clinicorp", "odontologia", "clinica", "mcp", "faturamento", "agenda", "financeiro", "portugues", "brasil"]
     }
   ]
 }

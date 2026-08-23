@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "clinicorp": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/servers/clinicorp-mcp.js"]
+    }
+  }
+}
