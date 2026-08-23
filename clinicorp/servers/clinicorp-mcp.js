@@ -21423,24 +21423,31 @@ import { readFileSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 var DEFAULT_FILE = join(homedir(), ".clinicorp-mcp.json");
+var escritaNaConfig = false;
+function escritaLiberadaNaConfig() {
+  return escritaNaConfig;
+}
+var PLACEHOLDER = /^(cole_aqui|seu_|nome_da_clinica|\.\.\.|x+)$/i;
+function vazio(v) {
+  return !v || !v.trim() || PLACEHOLDER.test(v.trim());
+}
 function normalize(raw, index) {
   const nome = raw.nome ?? raw.name;
   const subscriberId = raw.subscriber_id ?? raw.subscriberId;
   const username = raw.username;
   const token = raw.token;
   const faltando = [];
-  if (!nome) faltando.push("nome");
-  if (!subscriberId) faltando.push("subscriber_id");
-  if (!username) faltando.push("username");
-  if (!token) faltando.push("token");
+  if (vazio(nome)) faltando.push("nome");
+  if (vazio(username)) faltando.push("username");
+  if (vazio(token)) faltando.push("token");
   if (faltando.length > 0) {
     throw new Error(
-      `Clinica #${index + 1} da configuracao esta incompleta \u2014 faltando: ${faltando.join(", ")}`
+      `Clinica #${index + 1} (${nome ?? "sem nome"}) esta incompleta \u2014 falta preencher: ${faltando.join(", ")}. O subscriber_id e opcional: se voce nao souber, deixe fora que o servidor descobre sozinho.`
     );
   }
   return {
     nome,
-    subscriberId: String(subscriberId),
+    subscriberId: vazio(subscriberId ? String(subscriberId) : void 0) ? void 0 : String(subscriberId),
     username,
     token,
     businessId: raw.business_id ?? raw.businessId
@@ -21452,6 +21459,9 @@ function parseList(json, origem) {
     parsed = JSON.parse(json);
   } catch (e) {
     throw new Error(`Configuracao invalida em ${origem}: JSON malformado \u2014 ${e.message}`);
+  }
+  if (!Array.isArray(parsed) && parsed && typeof parsed === "object") {
+    escritaNaConfig = parsed.escrita === true;
   }
   const lista = Array.isArray(parsed) ? parsed : Array.isArray(parsed.clinicas) ? parsed.clinicas : null;
   if (!lista) {
@@ -21613,6 +21623,34 @@ function extrairMensagem(corpo) {
     return corpo ? corpo.slice(0, 300) : null;
   }
 }
+var cacheSubscriber = /* @__PURE__ */ new Map();
+async function subscriberDe(clinic) {
+  if (clinic.subscriberId) return clinic.subscriberId;
+  if (cacheSubscriber.has(clinic.nome)) return cacheSubscriber.get(clinic.nome);
+  let achados = [];
+  try {
+    achados = toArray(await apiGet(clinic, "group/list_subscribers"));
+  } catch {
+    cacheSubscriber.set(clinic.nome, void 0);
+    return void 0;
+  }
+  const ids = achados.map((a) => a.SubscriberBussinessUID ?? a.Namespace).filter((v) => typeof v === "string" && v.length > 0);
+  if (ids.length > 1) {
+    throw new Error(
+      `A conta "${clinic.nome}" e de grupo/franquia e tem ${ids.length} assinantes: ${ids.join(", ")}. Escolha um e preencha "subscriber_id" no arquivo de credenciais.`
+    );
+  }
+  const escolhido = ids[0];
+  cacheSubscriber.set(clinic.nome, escolhido);
+  return escolhido;
+}
+var cacheLista = /* @__PURE__ */ new Map();
+async function listaCacheada(chave, buscar) {
+  if (cacheLista.has(chave)) return cacheLista.get(chave);
+  const valor = await buscar();
+  cacheLista.set(chave, valor);
+  return valor;
+}
 function toArray(payload) {
   if (Array.isArray(payload)) return payload;
   if (payload && typeof payload === "object") {
@@ -21661,7 +21699,7 @@ async function listarPeriodo(clinic, path, from, to, extra = {}) {
   const todos = [];
   for (const j of janelas(from, to)) {
     const payload = await apiGet(clinic, path, {
-      subscriber_id: clinic.subscriberId,
+      subscriber_id: await subscriberDe(clinic),
       from: j.from,
       to: j.to,
       ...extra
@@ -21673,11 +21711,630 @@ async function listarPeriodo(clinic, path, from, to, extra = {}) {
 async function agregado(clinic, path, from, to, extra = {}) {
   validarPeriodo(from, to);
   return apiGet(clinic, path, {
-    subscriber_id: clinic.subscriberId,
+    subscriber_id: await subscriberDe(clinic),
     from,
     to,
     ...extra
   });
+}
+
+// src/escrita.ts
+function escritaLiberada() {
+  return String(process.env.CLINICORP_ESCRITA ?? "").toUpperCase() === "X" || escritaLiberadaNaConfig();
+}
+function exigirEscrita(operacao) {
+  if (!escritaLiberada()) {
+    throw new Error(
+      `"${operacao}" altera dados reais no Clinicorp e a escrita esta DESLIGADA neste servidor. Para ligar, troque o arquivo ~/.clinicorp-mcp.json para a forma { "escrita": true, "clinicas": [ ...as clinicas de hoje... ] } e reinicie o cliente. Enquanto isso, so leitura e permitida.`
+    );
+  }
+}
+async function apiPost(clinic, path, body) {
+  const clean = path.replace(/^\/+/, "");
+  let res;
+  try {
+    res = await fetch(`${BASE_URL}/${clean}`, {
+      method: "POST",
+      headers: {
+        Authorization: authHeader(clinic),
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(TIMEOUT_MS)
+    });
+  } catch (e) {
+    throw new Error(
+      `Clinicorp POST ${clean} \u2014 falha de rede: ${e.message}. NAO repita a chamada sem antes conferir no Clinicorp se o registro foi criado: a requisicao pode ter chegado antes de a conexao cair.`
+    );
+  }
+  const corpo = await res.text().catch(() => "");
+  let dados = null;
+  if (corpo.trim()) {
+    try {
+      dados = JSON.parse(corpo);
+    } catch {
+      dados = corpo;
+    }
+  }
+  if (!res.ok) {
+    throw new Error(
+      `Clinicorp POST ${clean}: ${res.status} \u2014 ${extrairMensagem(corpo) ?? res.statusText}`
+    );
+  }
+  if (dados && typeof dados === "object" && !Array.isArray(dados)) {
+    const o = dados;
+    if (o.Error) {
+      throw new Error(
+        `Clinicorp POST ${clean}: a API recusou dentro de um 200 \u2014 ${descreverMensagem(o.Message)}`
+      );
+    }
+  }
+  return dados;
+}
+async function apiGetEscrita(clinic, path, params) {
+  const clean = path.replace(/^\/+/, "");
+  const qs = new URLSearchParams(limpar(params)).toString();
+  const res = await fetch(`${BASE_URL}/${clean}?${qs}`, {
+    headers: { Authorization: authHeader(clinic), Accept: "application/json" },
+    signal: AbortSignal.timeout(TIMEOUT_MS)
+  });
+  const corpo = await res.text().catch(() => "");
+  if (!res.ok) {
+    throw new Error(`Clinicorp ${clean}: ${res.status} \u2014 ${extrairMensagem(corpo) ?? res.statusText}`);
+  }
+  try {
+    return corpo.trim() ? JSON.parse(corpo) : [];
+  } catch {
+    return corpo;
+  }
+}
+
+// src/tools-escrita.ts
+var pClinica = external_exports.string().optional().describe("Nome da clinica configurada. Opcional se houver so uma.");
+function registrarEscrita(server2, d) {
+  const { pegarClinica: pegarClinica2, texto: texto2, erro: erro2 } = d;
+  server2.registerTool(
+    "clinicorp_status_agendamento",
+    {
+      title: "Status de agendamento disponiveis",
+      description: "GET /appointment/status_list \u2014 lista os status e seus ids. Necessario antes de clinicorp_alterar_status. Case sempre pelo campo 'tipo' (CONFIRMED, MISSED...), nunca pela descricao, que a clinica edita livremente.",
+      inputSchema: { clinica: pClinica }
+    },
+    async ({ clinica }) => {
+      try {
+        const c = pegarClinica2(clinica);
+        const dados = toArray(
+          await apiGet(c, "appointment/status_list", { subscriber_id: await subscriberDe(c) })
+        );
+        return texto2({
+          clinica: c.nome,
+          status: dados.map((s) => ({
+            id: s.id,
+            tipo: s.Type,
+            descricao: s.Description,
+            ativo: String(s.Active ?? "").toUpperCase() === "X"
+          }))
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_campanhas",
+    {
+      title: "Campanhas ativas do CRM",
+      description: "GET /crm/list_active_campaigns \u2014 nomes das campanhas. Rode antes de clinicorp_adicionar_lead: a campanha e casada pelo NOME exato, e nome errado nao gera erro claro.",
+      inputSchema: { clinica: pClinica }
+    },
+    async ({ clinica }) => {
+      try {
+        const c = pegarClinica2(clinica);
+        const dados = toArray(
+          await apiGet(c, "crm/list_active_campaigns", { subscriber_id: await subscriberDe(c) })
+        );
+        return texto2({ clinica: c.nome, campanhas: dados });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_alterar_status",
+    {
+      title: "ESCRITA \u2014 alterar status de agendamentos",
+      description: "Altera o status de um ou varios agendamentos (confirmado, faltou, atendido). Pegue os ids de status em clinicorp_status_agendamento. Base da rotina de confirmacao. ALTERA DADOS: confirme com a pessoa antes de chamar, e nunca repita a chamada automaticamente.",
+      inputSchema: {
+        clinica: pClinica,
+        agendamento_ids: external_exports.array(external_exports.union([external_exports.number().int(), external_exports.string()])).min(1).max(200).describe("Ids dos agendamentos a alterar"),
+        status_id: external_exports.union([external_exports.number().int(), external_exports.string()]).describe("id do status (ver clinicorp_status_agendamento)")
+      }
+    },
+    async ({ clinica, agendamento_ids, status_id }) => {
+      try {
+        exigirEscrita("clinicorp_alterar_status");
+        const c = pegarClinica2(clinica);
+        const r = await apiGetEscrita(c, "appointment/change_status", {
+          id: agendamento_ids.join(","),
+          status_id
+        });
+        const lista = toArray(r);
+        return texto2({
+          clinica: c.nome,
+          alterados: lista.length,
+          resultado: lista.map((a) => ({
+            id: a.id,
+            paciente: a.PatientName,
+            data: a.Date,
+            // a API grafa "StatusDescrition"
+            status: a.StatusDescrition ?? a.StatusDescription
+          }))
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_confirmar_agendamento",
+    {
+      title: "ESCRITA \u2014 confirmar agendamento",
+      description: "POST /appointment/confirm_appointment \u2014 registra a confirmacao do paciente. ALTERA DADOS.",
+      inputSchema: { clinica: pClinica, agendamento_id: external_exports.union([external_exports.number().int(), external_exports.string()]) }
+    },
+    async ({ clinica, agendamento_id }) => {
+      try {
+        exigirEscrita("clinicorp_confirmar_agendamento");
+        const c = pegarClinica2(clinica);
+        const r = await apiPost(c, "appointment/confirm_appointment", {
+          subscriber_id: await subscriberDe(c),
+          id: agendamento_id
+        });
+        const item = toArray(r)[0] ?? {};
+        return texto2({
+          clinica: c.nome,
+          confirmado: String(item.PatientConfirm ?? "").toUpperCase() === "X",
+          paciente: item.PatientName,
+          data: item.Date,
+          status: item.StatusDescription
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_cancelar_agendamento",
+    {
+      title: "ESCRITA \u2014 cancelar agendamento",
+      description: "POST /appointment/cancel_appointment \u2014 cancela o agendamento. ALTERA DADOS e nao tem desfazer pela API. Sempre confirme paciente, data e horario com a pessoa antes de chamar.",
+      inputSchema: { clinica: pClinica, agendamento_id: external_exports.union([external_exports.number().int(), external_exports.string()]) }
+    },
+    async ({ clinica, agendamento_id }) => {
+      try {
+        exigirEscrita("clinicorp_cancelar_agendamento");
+        const c = pegarClinica2(clinica);
+        const r = await apiPost(c, "appointment/cancel_appointment", {
+          subscriber_id: await subscriberDe(c),
+          id: agendamento_id
+        });
+        const item = toArray(r)[0] ?? {};
+        return texto2({
+          clinica: c.nome,
+          cancelado: String(item.Deleted ?? "").toUpperCase() === "X",
+          paciente: item.PatientName,
+          bruto: item
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_criar_agendamento",
+    {
+      title: "ESCRITA \u2014 criar agendamento na agenda",
+      description: "POST /appointment/create_appointment_by_api \u2014 cria o agendamento DIRETO na agenda, ja valendo, sem passar por aprovacao. Para automacao (bot, formulario), prefira clinicorp_solicitar_agendamento, que entra na fila de aprovacao da clinica. Confira horario livre antes (clinicorp_agenda). ALTERA DADOS.",
+      inputSchema: {
+        clinica: pClinica,
+        paciente_id: external_exports.number().int().describe("id do paciente ja cadastrado"),
+        paciente_nome: external_exports.string(),
+        data: external_exports.string().describe("Data do agendamento em ISO 8601 UTC. Ex.: 2026-09-12T03:00:00.000Z = 12/09 00:00 em BRT"),
+        hora_inicio: external_exports.string().describe("HH:MM"),
+        hora_fim: external_exports.string().describe("HH:MM"),
+        unidade_id: external_exports.number().int().describe("id da clinica (Clinic_BusinessId)"),
+        profissional_id: external_exports.number().int().describe("id do profissional (Dentist_PersonId)"),
+        procedimentos: external_exports.string().optional().describe("Procedimentos separados por virgula"),
+        celular: external_exports.string().optional(),
+        email: external_exports.string().optional(),
+        recurso_id: external_exports.number().int().optional().describe("id da cadeira, se agendar por cadeira"),
+        recurso_tipo: external_exports.string().optional().describe('Tipo do recurso. Ex.: "CHAIR"'),
+        categoria: external_exports.string().optional().describe("Descricao da categoria"),
+        categoria_cor: external_exports.string().optional().describe("Cor da categoria em hex")
+      }
+    },
+    async (a) => {
+      try {
+        exigirEscrita("clinicorp_criar_agendamento");
+        const c = pegarClinica2(a.clinica);
+        if (!/^\d{4}-\d{2}-\d{2}T/.test(a.data)) {
+          throw new Error(
+            `"data" precisa ser ISO 8601 com hora e fuso (ex.: 2026-09-12T03:00:00.000Z). Recebido: "${a.data}"`
+          );
+        }
+        const r = await apiPost(c, "appointment/create_appointment_by_api", {
+          Patient_PersonId: a.paciente_id,
+          PatientName: a.paciente_nome,
+          MobilePhone: a.celular,
+          Email: a.email,
+          fromTime: a.hora_inicio,
+          toTime: a.hora_fim,
+          date: a.data,
+          Clinic_BusinessId: a.unidade_id,
+          Dentist_PersonId: a.profissional_id,
+          ScheduleToId: a.recurso_id,
+          ScheduleToType: a.recurso_tipo,
+          Procedures: a.procedimentos,
+          CategoryColor: a.categoria_cor,
+          CategoryDescription: a.categoria
+        });
+        const item = toArray(r)[0] ?? {};
+        return texto2({ clinica: c.nome, status: item.Status ?? "?", agendamento_id: item.id ?? null });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_solicitar_agendamento",
+    {
+      title: "ESCRITA \u2014 criar solicitacao de agendamento (fila de aprovacao)",
+      description: "POST /appointment/create_online_scheduling \u2014 entra como PEDIDO para a clinica aprovar, nao como agendamento confirmado. E a opcao segura para bot, site e formulario. Precisa do code_link (codigo do link publico de agendamento).",
+      inputSchema: {
+        clinica: pClinica,
+        code_link: external_exports.number().int().describe("Codigo do link publico de agendamento"),
+        paciente_nome: external_exports.string(),
+        motivo: external_exports.string().describe("Razao da consulta"),
+        celular: external_exports.string(),
+        data: external_exports.string().describe("Data desejada em ISO 8601 UTC"),
+        hora_inicio: external_exports.string().describe("HH:MM"),
+        hora_fim: external_exports.string().describe("HH:MM"),
+        unidade_id: external_exports.number().int(),
+        profissional_id: external_exports.number().int(),
+        email: external_exports.string().optional(),
+        cpf_3_primeiros: external_exports.string().max(3).optional().describe("APENAS os 3 primeiros digitos do CPF \u2014 a API so aceita isso aqui"),
+        observacoes: external_exports.string().optional(),
+        ja_e_paciente: external_exports.boolean().default(false),
+        origem: external_exports.string().default("CLOUDIA").describe("Origem da solicitacao")
+      }
+    },
+    async (a) => {
+      try {
+        exigirEscrita("clinicorp_solicitar_agendamento");
+        const c = pegarClinica2(a.clinica);
+        if (a.cpf_3_primeiros && a.cpf_3_primeiros.length > 3) {
+          throw new Error("cpf_3_primeiros aceita no maximo 3 digitos \u2014 a API nao quer o CPF inteiro aqui.");
+        }
+        const r = await apiPost(c, "appointment/create_online_scheduling", {
+          CodeLink: a.code_link,
+          PatientName: a.paciente_nome,
+          SchedulingReason: a.motivo,
+          MobilePhone: a.celular,
+          Email: a.email,
+          OtherDocumentId: a.cpf_3_primeiros,
+          NotesPatient: a.observacoes,
+          fromTime: a.hora_inicio,
+          toTime: a.hora_fim,
+          IsOnlineScheduling: true,
+          date: a.data,
+          Type: a.origem,
+          Dentist_PersonId: a.profissional_id,
+          Clinic_BusinessId: a.unidade_id,
+          AlreadyPatient: a.ja_e_paciente
+        });
+        const item = toArray(r)[0] ?? {};
+        return texto2({
+          clinica: c.nome,
+          status: item.Status ?? "?",
+          solicitacao_id: item.id ?? null,
+          observacao: "Entrou na fila de aprovacao da clinica \u2014 ainda nao e um agendamento confirmado."
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_criar_paciente",
+    {
+      title: "ESCRITA \u2014 cadastrar paciente",
+      description: "POST /patient/create \u2014 cria paciente. Busca por CPF antes para nao duplicar: se ja existir, devolve o existente e NAO cria. O POST nao e idempotente, entao nunca repita a chamada as cegas. ALTERA DADOS.",
+      inputSchema: {
+        clinica: pClinica,
+        nome: external_exports.string(),
+        cpf: external_exports.string().optional().describe("CPF \u2014 usado para nao duplicar. Sem ele a checagem nao acontece."),
+        nascimento: external_exports.string().optional().describe("YYYY-MM-DD"),
+        sexo: external_exports.enum(["M", "F"]).optional(),
+        email: external_exports.string().optional(),
+        celular: external_exports.string().optional(),
+        documento: external_exports.string().optional().describe("RG"),
+        observacoes: external_exports.string().optional(),
+        criar_mesmo_com_duplicata: external_exports.boolean().default(false).describe("Cria mesmo havendo paciente com mesmo nome/CPF. Use so com confirmacao explicita.")
+      }
+    },
+    async (a) => {
+      try {
+        exigirEscrita("clinicorp_criar_paciente");
+        const c = pegarClinica2(a.clinica);
+        const sub = await subscriberDe(c);
+        if (a.cpf && !a.criar_mesmo_com_duplicata) {
+          const achado = await apiGet(c, "patient/get", {
+            subscriber_id: sub,
+            OtherDocumentId: a.cpf
+          });
+          if (achado?.PatientId) {
+            return texto2({
+              clinica: c.nome,
+              criado: false,
+              motivo: "Ja existe paciente com esse CPF \u2014 nada foi criado.",
+              paciente_id: achado.PatientId,
+              nome: achado.Name
+            });
+          }
+        }
+        const r = await apiPost(c, "patient/create", {
+          subscriber_id: sub,
+          Name: a.nome,
+          BirthDate: a.nascimento,
+          Sex: a.sexo,
+          Email: a.email,
+          MobilePhone: a.celular,
+          DocumentId: a.documento,
+          OtherDocumentId: a.cpf,
+          Notes: a.observacoes,
+          IgnoreSameName: a.criar_mesmo_com_duplicata ? "X" : void 0,
+          IgnoreSameDoc: a.criar_mesmo_com_duplicata ? "X" : void 0
+        });
+        return texto2({
+          clinica: c.nome,
+          criado: true,
+          paciente_id: r?.PatientId ?? r?.id ?? null,
+          retorno: r
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_adicionar_lead",
+    {
+      title: "ESCRITA \u2014 inserir lead em campanha do CRM",
+      description: "POST /crm/add_leads \u2014 joga um lead externo (site, Meta Ads, WhatsApp) no funil do Clinicorp. A campanha e casada pelo NOME exato: rode clinicorp_campanhas antes e use o nome de la. A API pode recusar dentro de um 200 \u2014 o servidor ja trata isso como erro. ALTERA DADOS.",
+      inputSchema: {
+        clinica: pClinica,
+        nome: external_exports.string().describe("Nome do lead"),
+        campanha: external_exports.string().describe("Nome EXATO da campanha (ver clinicorp_campanhas)"),
+        email: external_exports.string().optional(),
+        telefone: external_exports.string().optional(),
+        observacoes: external_exports.string().optional(),
+        validar_campanha: external_exports.boolean().default(true).describe("Confere o nome da campanha na lista antes de enviar")
+      }
+    },
+    async (a) => {
+      try {
+        exigirEscrita("clinicorp_adicionar_lead");
+        const c = pegarClinica2(a.clinica);
+        const sub = await subscriberDe(c);
+        if (a.validar_campanha) {
+          const campanhas = toArray(
+            await apiGet(c, "crm/list_active_campaigns", { subscriber_id: sub })
+          );
+          const nomes = campanhas.map((x) => x.Name).filter((n) => typeof n === "string");
+          if (nomes.length > 0 && !nomes.includes(a.campanha)) {
+            throw new Error(
+              `Campanha "${a.campanha}" nao existe na lista de campanhas ativas. Disponiveis: ${nomes.join(", ")}. Nome errado faz o lead sumir sem erro claro.`
+            );
+          }
+        }
+        const r = await apiPost(c, "crm/add_leads", {
+          subscriber_id: sub,
+          Name: a.nome,
+          Email: a.email,
+          Phone: a.telefone,
+          BoardName: a.campanha,
+          Notes: a.observacoes
+        });
+        return texto2({ clinica: c.nome, inserido: true, campanha: a.campanha, retorno: r });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_anexar_arquivo",
+    {
+      title: "ESCRITA \u2014 anexar arquivo ao paciente",
+      description: "POST /file/upload \u2014 anexa foto, documento ou arquivo ao paciente. O upload e POR URL: o arquivo precisa estar acessivel publicamente (ou por URL assinada) no momento da chamada. O processamento e assincrono \u2014 informe webhook_url para saber quando terminou. ALTERA DADOS.",
+      inputSchema: {
+        clinica: pClinica,
+        paciente_id: external_exports.number().int(),
+        paciente_nome: external_exports.string(),
+        url: external_exports.string().describe("URL publica do arquivo a importar"),
+        destino: external_exports.enum(["Person.Profile", "Person.Photo", "Person.Document", "Person.File"]).default("Person.File").describe("Onde anexar: foto de perfil, galeria, documentos ou arquivos gerais"),
+        webhook_url: external_exports.string().optional().describe("URL que recebe o callback com o resultado")
+      }
+    },
+    async (a) => {
+      try {
+        exigirEscrita("clinicorp_anexar_arquivo");
+        const c = pegarClinica2(a.clinica);
+        const r = await apiPost(c, "file/upload", [
+          {
+            ResponseWebhookUrl: a.webhook_url,
+            Url: a.url,
+            LocalFile: a.destino,
+            PatientName: a.paciente_nome,
+            // NAO corrigir: o campo de envio e grafado "PatinetId" no spec.
+            // Escrever "PatientId" faz o vinculo com o paciente falhar em silencio.
+            PatinetId: a.paciente_id
+          }
+        ]);
+        const item = toArray(r)[0] ?? {};
+        return texto2({ clinica: c.nome, status: item.Status ?? "?", destino: a.destino, retorno: item });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_criar_ordem_compra",
+    {
+      title: "ESCRITA \u2014 criar ordem de compra de produtos",
+      description: "POST /products/orders \u2014 registra ordem de compra de insumos para uma clinica. Erro de validacao vem como lista de campos, ja tratada pelo servidor. ALTERA DADOS.",
+      inputSchema: {
+        clinica: pClinica,
+        unidade: external_exports.string().describe("Identificador da clinica no campo 'clinic' da API"),
+        codigo_ordem: external_exports.string().describe("Codigo da ordem no seu sistema"),
+        data_ordem: external_exports.string().describe("YYYY-MM-DD"),
+        produtos: external_exports.array(
+          external_exports.object({
+            codigo: external_exports.string(),
+            nome: external_exports.string(),
+            quantidade: external_exports.number(),
+            preco_unitario: external_exports.number(),
+            descricao: external_exports.string().optional(),
+            unidade_medida: external_exports.string().optional().describe("Ex.: UN, CX, ML"),
+            validade: external_exports.string().optional().describe("YYYY-MM-DD"),
+            lote: external_exports.string().optional(),
+            marca: external_exports.string().optional(),
+            fornecedor: external_exports.string().optional(),
+            local_armazenamento: external_exports.string().optional(),
+            observacoes: external_exports.string().optional()
+          })
+        ).min(1)
+      }
+    },
+    async (a) => {
+      try {
+        exigirEscrita("clinicorp_criar_ordem_compra");
+        const c = pegarClinica2(a.clinica);
+        const r = await apiPost(c, "products/orders", {
+          clinic: a.unidade,
+          orderCode: a.codigo_ordem,
+          orderDate: a.data_ordem,
+          products: a.produtos.map((p) => ({
+            code: p.codigo,
+            name: p.nome,
+            description: p.descricao,
+            quantity: p.quantidade,
+            unitPrice: p.preco_unitario,
+            unitOfMeasurement: p.unidade_medida,
+            expirationDate: p.validade,
+            lot: p.lote,
+            brand: p.marca,
+            supplier: p.fornecedor,
+            storageLocation: p.local_armazenamento,
+            notes: p.observacoes
+          }))
+        });
+        return texto2({ clinica: c.nome, criado: true, itens: a.produtos.length, retorno: r });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+}
+
+// src/tools-extra.ts
+var pClinica2 = external_exports.string().optional().describe("Nome da clinica configurada. Opcional se houver so uma.");
+var num = (v) => Number(v) || 0;
+var flagX = (v) => String(v ?? "").toUpperCase() === "X";
+function registrarExtras(server2, d) {
+  const { pegarClinica: pegarClinica2, texto: texto2, erro: erro2 } = d;
+  server2.registerTool(
+    "clinicorp_parcelamento_medio",
+    {
+      title: "Parcelamento medio",
+      description: "GET /financial/average_installments \u2014 total de pagamentos, total de parcelas e media de parcelas por mes. E o numero que explica a distancia entre venda aprovada e dinheiro em caixa numa clinica que vende parcelado. Exige unidade_id.",
+      inputSchema: {
+        clinica: pClinica2,
+        from: external_exports.string().describe("Data inicial YYYY-MM-DD"),
+        to: external_exports.string().describe("Data final YYYY-MM-DD"),
+        unidade_id: external_exports.number().int().describe("id da unidade \u2014 obrigatorio neste endpoint")
+      }
+    },
+    async ({ clinica, from, to, unidade_id }) => {
+      try {
+        const c = pegarClinica2(clinica);
+        const dados = toArray(
+          await agregado(c, "financial/average_installments", from, to, {
+            business_id: unidade_id,
+            group_by: "month"
+          })
+        );
+        return texto2({
+          clinica: c.nome,
+          periodo: { from, to },
+          meses: dados.map((m) => ({
+            mes: m.month,
+            pagamentos: num(m.TotalPayments),
+            parcelas: num(m.TotalInstallments),
+            parcelamento_medio: num(m.AverageInstallments)
+          }))
+        });
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
+  server2.registerTool(
+    "clinicorp_assinantes",
+    {
+      title: "Assinantes e unidades da conta",
+      description: "GET /group/list_subscribers (+ list_subscribers_clinics) \u2014 descobre o subscriber_id de uma conta de grupo/franquia e, opcionalmente, a grade de funcionamento e a duracao do slot de cada clinica. Use quando nao souber qual subscriber_id preencher na configuracao.",
+      inputSchema: {
+        clinica: pClinica2,
+        incluir_horarios: external_exports.boolean().default(false).describe("Traz tambem grade de funcionamento e duracao do slot")
+      }
+    },
+    async ({ clinica, incluir_horarios }) => {
+      try {
+        const c = pegarClinica2(clinica);
+        const assinantes = toArray(
+          await listaCacheada(`assinantes:${c.nome}`, () => apiGet(c, "group/list_subscribers"))
+        );
+        const saida = {
+          clinica: c.nome,
+          assinantes: assinantes.map((a) => ({
+            // a API grafa "SubscriberBussinessUID"
+            subscriber_id: a.SubscriberBussinessUID ?? null,
+            namespace: a.Namespace ?? null
+          }))
+        };
+        if (incluir_horarios) {
+          const grade = toArray(
+            await listaCacheada(
+              `grade:${c.nome}`,
+              () => apiGet(c, "group/list_subscribers_clinics")
+            )
+          );
+          saida.clinicas = grade.map((g) => ({
+            nome: g.Name,
+            ativa: flagX(g.Active),
+            subscriber_id: g.SubscriberBussinessUID ?? null,
+            slot_minutos: num(g.SlotTime),
+            endereco: g.Address,
+            horarios: g.WorkingDaysHours ?? null
+          }));
+        }
+        return texto2(saida);
+      } catch (e) {
+        return erro2(e);
+      }
+    }
+  );
 }
 
 // src/index.ts
@@ -21703,16 +22360,16 @@ function erro(e) {
   return { isError: true, content: [{ type: "text", text: `Erro: ${e.message}` }] };
 }
 var brl = (n) => (Number(n) || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-var num = (v) => Number(v) || 0;
-var flagX = (v) => String(v ?? "").toUpperCase() === "X";
+var num2 = (v) => Number(v) || 0;
+var flagX2 = (v) => String(v ?? "").toUpperCase() === "X";
 var X = (ligado) => ligado ? "X" : void 0;
 var server = new McpServer(
   { name: "clinicorp", version: "0.1.0" },
   {
-    instructions: "Acesso SOMENTE LEITURA a API do Clinicorp (gestao de clinicas odontologicas). Datas sempre YYYY-MM-DD. Use clinicorp_clinicas para descobrir os nomes aceitos em 'clinica' e clinicorp_unidades para descobrir os ids de unidade. Para uma visao geral de um mes, clinicorp_painel resolve em uma chamada. Endpoints sem tool dedicada: clinicorp_get."
+    instructions: "Acesso a API do Clinicorp (gestao de clinicas odontologicas). Leitura sempre disponivel; as tools marcadas ESCRITA alteram dados reais e so funcionam se a escrita estiver ligada. Antes de qualquer escrita, confirme com a pessoa o que sera alterado. Datas sempre YYYY-MM-DD. Use clinicorp_clinicas para descobrir os nomes aceitos em 'clinica' e clinicorp_unidades para descobrir os ids de unidade. Para uma visao geral de um mes, clinicorp_painel resolve em uma chamada. Endpoints sem tool dedicada: clinicorp_get."
   }
 );
-var pClinica = external_exports.string().optional().describe("Nome da clinica configurada (ou subscriber_id). Opcional se houver so uma configurada.");
+var pClinica3 = external_exports.string().optional().describe("Nome da clinica configurada (ou subscriber_id). Opcional se houver so uma configurada.");
 var pFrom = external_exports.string().describe("Data inicial YYYY-MM-DD (inclusive)");
 var pTo = external_exports.string().describe("Data final YYYY-MM-DD (inclusive)");
 var pUnidade = external_exports.number().int().optional().describe("id da unidade/clinica fisica (ver clinicorp_unidades). Omitido = todas do assinante.");
@@ -21738,11 +22395,13 @@ server.registerTool(
     return texto({
       base_url: BASE_URL,
       janela_maxima_listagem_dias: MAX_DAYS_PER_REQUEST,
-      clinicas: clinicas.map((c) => ({
-        nome: c.nome,
-        subscriber_id: c.subscriberId,
-        business_id_padrao: c.businessId ?? null
-      }))
+      clinicas: await Promise.all(
+        clinicas.map(async (c) => ({
+          nome: c.nome,
+          subscriber_id: await subscriberDe(c).catch(() => null) ?? "(nao definido \u2014 descoberto na 1a chamada)",
+          business_id_padrao: c.businessId ?? null
+        }))
+      )
     });
   }
 );
@@ -21751,13 +22410,13 @@ server.registerTool(
   {
     title: "Unidades (clinicas fisicas) do assinante",
     description: "GET /business/list \u2014 devolve o id de cada unidade. Esse id e o que vai em 'unidade_id' nas demais tools.",
-    inputSchema: { clinica: pClinica }
+    inputSchema: { clinica: pClinica3 }
   },
   async ({ clinica }) => {
     try {
       const c = pegarClinica(clinica);
       const dados = toArray(
-        await apiGet(c, "business/list", { subscriber_id: c.subscriberId })
+        await apiGet(c, "business/list", { subscriber_id: await subscriberDe(c) })
       );
       return texto({
         clinica: c.nome,
@@ -21780,7 +22439,7 @@ server.registerTool(
     title: "Profissionais do assinante",
     description: "GET /professional/list_all_professionals \u2014 id, nome e CPF dos profissionais.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       apenas_agendamento_online: external_exports.boolean().default(false).describe("So profissionais habilitados no agendamento online")
     }
   },
@@ -21805,7 +22464,7 @@ server.registerTool(
     title: "Agenda do periodo",
     description: "GET /appointment/list \u2014 itens da agenda. Por padrao traz SO agendamentos de paciente; para ocupacao real ative 'incluir_compromissos' (bloqueios e eventos ocupam a agenda e ficam invisiveis sem isso). Para auditoria/sync ative tambem cancelados e excluidos. Periodos longos sao fatiados automaticamente.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: pUnidade,
@@ -21847,14 +22506,14 @@ server.registerTool(
           data: i.date ?? i.AtomicDate,
           de: i.fromTime,
           ate: i.toTime,
-          dia_inteiro: flagX(i.AllDay),
+          dia_inteiro: flagX2(i.AllDay),
           paciente: i.PatientName ?? null,
           titulo: i.Name ?? null,
           unidade_id: i.Clinic_BusinessId,
           profissional_id: i.Dentist_PersonId ?? null,
           status_id: i.StatusId ?? null,
-          cancelado: flagX(i.Canceled),
-          excluido: flagX(i.Deleted)
+          cancelado: flagX2(i.Canceled),
+          excluido: flagX2(i.Deleted)
         }))
       });
     } catch (e) {
@@ -21867,7 +22526,7 @@ server.registerTool(
   {
     title: "Ocupacao da agenda (calculo oficial do Clinicorp)",
     description: "GET /appointment/schedule_occupation \u2014 tempo disponivel, agendado e percentual de ocupacao, por mes. Tempos em minutos.",
-    inputSchema: { clinica: pClinica, from: pFrom, to: pTo, unidade_id: pUnidade }
+    inputSchema: { clinica: pClinica3, from: pFrom, to: pTo, unidade_id: pUnidade }
   },
   async ({ clinica, from, to, unidade_id }) => {
     try {
@@ -21883,10 +22542,10 @@ server.registerTool(
         periodo: { from, to },
         meses: dados.map((m) => ({
           mes: m.month,
-          tempo_disponivel_min: num(m.TotalValidScheduleTime),
-          tempo_agendado_min: num(m.TotalAppointmentTime),
+          tempo_disponivel_min: num2(m.TotalValidScheduleTime),
+          tempo_agendado_min: num2(m.TotalAppointmentTime),
           tempo_eventos_min: m.TotalEvent,
-          tempo_indisponivel_min: num(m.TotalBusy),
+          tempo_indisponivel_min: num2(m.TotalBusy),
           // a API grafa "Ocupaccion"
           ocupacao_pct: m.Ocupaccion
         }))
@@ -21902,7 +22561,7 @@ server.registerTool(
     title: "KPIs de agendamento",
     description: "GET /appointment/list_info \u2014 total agendado, primeiras consultas, faltas e quebra por categoria no periodo.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: pUnidade,
@@ -21916,14 +22575,14 @@ server.registerTool(
         business_id: unidade_id,
         group_by: por_mes ? "month" : void 0
       });
-      const agendados = num(d.ScheduledTotal);
-      const faltas = num(d.MissedAppointmentTotal);
+      const agendados = num2(d.ScheduledTotal);
+      const faltas = num2(d.MissedAppointmentTotal);
       return texto({
         clinica: c.nome,
         periodo: { from, to },
         agendamentos: agendados,
         // a API grafa "FirsAppointmentTotal"
-        primeiras_consultas: num(d.FirsAppointmentTotal),
+        primeiras_consultas: num2(d.FirsAppointmentTotal),
         faltas,
         taxa_falta_pct: agendados ? Number((faltas / agendados * 100).toFixed(1)) : 0,
         categorias: d.Category ?? null
@@ -21939,7 +22598,7 @@ server.registerTool(
     title: "Buscar um paciente",
     description: "GET /patient/get \u2014 busca por id, nome, CPF, telefone ou e-mail (pelo menos um). Retorna UM paciente. Dado pessoal sensivel: use so quando a pergunta for realmente sobre uma pessoa especifica.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       paciente_id: external_exports.number().int().optional(),
       nome: external_exports.string().optional(),
       cpf: external_exports.string().optional().describe("CPF (campo OtherDocumentId na API)"),
@@ -21954,7 +22613,7 @@ server.registerTool(
         throw new Error("Informe pelo menos um criterio: paciente_id, nome, cpf, telefone ou email.");
       }
       const d = await apiGet(c, "patient/get", {
-        subscriber_id: c.subscriberId,
+        subscriber_id: await subscriberDe(c),
         PatientId: paciente_id,
         Name: nome,
         OtherDocumentId: cpf,
@@ -21976,7 +22635,7 @@ server.registerTool(
     title: "Aniversariantes do dia",
     description: "GET /patient/birthdays \u2014 pacientes que fazem aniversario na data (omitida = hoje).",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       data: external_exports.string().optional().describe("YYYY-MM-DD. Omitido = hoje"),
       limite: pLimite
     }
@@ -21985,7 +22644,7 @@ server.registerTool(
     try {
       const c = pegarClinica(clinica);
       const dados = toArray(
-        await apiGet(c, "patient/birthdays", { subscriber_id: c.subscriberId, date: data })
+        await apiGet(c, "patient/birthdays", { subscriber_id: await subscriberDe(c), date: data })
       );
       const r = recorte(dados, limite);
       return texto({
@@ -22011,7 +22670,7 @@ server.registerTool(
   {
     title: "Agendamentos de um paciente",
     description: "GET /patient/list_appointments \u2014 historico completo de agendamentos de um paciente (sem recorte de periodo).",
-    inputSchema: { clinica: pClinica, paciente_id: external_exports.number().int(), limite: pLimite }
+    inputSchema: { clinica: pClinica3, paciente_id: external_exports.number().int(), limite: pLimite }
   },
   async ({ clinica, paciente_id, limite }) => {
     try {
@@ -22038,7 +22697,7 @@ server.registerTool(
     title: "Orcamentos do periodo",
     description: "GET /estimates/list \u2014 paciente, valor, status (APPROVED/OPEN/FOLLOW_UP/REJECTED), profissional e procedimentos. Traz tambem o agregado por status. Periodos longos sao fatiados automaticamente.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: pUnidade,
@@ -22059,11 +22718,11 @@ server.registerTool(
         const s = String(o.Status ?? "?");
         porStatus[s] ??= { quantidade: 0, valor: 0 };
         porStatus[s].quantidade += 1;
-        porStatus[s].valor += num(o.Amount);
+        porStatus[s].valor += num2(o.Amount);
       }
       if (a.status) dados = dados.filter((o) => o.Status === a.status);
       const r = recorte(dados, a.limite);
-      const valor = dados.reduce((s, o) => s + num(o.Amount), 0);
+      const valor = dados.reduce((s, o) => s + num2(o.Amount), 0);
       return texto({
         clinica: c.nome,
         periodo: { from: a.from, to: a.to },
@@ -22095,13 +22754,13 @@ server.registerTool(
   {
     title: "Detalhe de um orcamento",
     description: "GET /estimates/get \u2014 detalhe pelo treatment_id (campo TreatmentId de clinicorp_orcamentos).",
-    inputSchema: { clinica: pClinica, treatment_id: external_exports.number().int() }
+    inputSchema: { clinica: pClinica3, treatment_id: external_exports.number().int() }
   },
   async ({ clinica, treatment_id }) => {
     try {
       const c = pegarClinica(clinica);
       const d = await apiGet(c, "estimates/get", {
-        subscriber_id: c.subscriberId,
+        subscriber_id: await subscriberDe(c),
         treatment_id
       });
       return texto({ clinica: c.nome, treatment_id, orcamento: d });
@@ -22116,7 +22775,7 @@ server.registerTool(
     title: "Conversao de orcamentos e ticket medio",
     description: "GET /sales/estimates_and_conversion \u2014 quantidade, valor, ticket medio e taxa de conversao por mes. Exige unidade_id.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: external_exports.number().int().describe("id da unidade \u2014 obrigatorio neste endpoint")
@@ -22143,7 +22802,7 @@ server.registerTool(
     title: "Pagamentos e parcelas do periodo",
     description: "GET /payment/list \u2014 a fonte mais detalhada de recebimentos. ATENCAO: 'base_data' muda completamente o resultado \u2014 'recebimento' (padrao) para regime de caixa, 'checkoutDate' para acompanhar venda, 'postDate' para data de lancamento. Periodos longos sao fatiados automaticamente.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       base_data: external_exports.enum(["recebimento", "postDate", "checkoutDate"]).default("recebimento").describe("Qual data o periodo filtra"),
@@ -22162,15 +22821,15 @@ server.registerTool(
         include_total_amount: "X",
         get_amount_with_discounts: X(a.valor_liquido)
       });
-      if (a.apenas_recebidos) dados = dados.filter((p) => flagX(p.PaymentReceived));
+      if (a.apenas_recebidos) dados = dados.filter((p) => flagX2(p.PaymentReceived));
       const porForma = {};
       for (const p of dados) {
         const f = String(p.PaymentForm ?? "?");
         porForma[f] ??= { quantidade: 0, valor: 0 };
         porForma[f].quantidade += 1;
-        porForma[f].valor += num(p.Amount);
+        porForma[f].valor += num2(p.Amount);
       }
-      const total = dados.reduce((s, p) => s + num(p.Amount), 0);
+      const total = dados.reduce((s, p) => s + num2(p.Amount), 0);
       const r = recorte(dados, a.limite);
       return texto({
         clinica: c.nome,
@@ -22190,8 +22849,8 @@ server.registerTool(
           forma: p.PaymentForm,
           parcela: `${p.InstallmentNumber}/${p.InstallmentsCount}`,
           vencimento: p.DueDate,
-          recebido: flagX(p.PaymentReceived),
-          confirmado: flagX(p.PaymentConfirmed)
+          recebido: flagX2(p.PaymentReceived),
+          confirmado: flagX2(p.PaymentConfirmed)
         }))
       });
     } catch (e) {
@@ -22205,7 +22864,7 @@ server.registerTool(
     title: "Fluxo de caixa",
     description: "GET /financial/list_cash_flow \u2014 entradas, saidas, previsto a receber/pagar e quebra por meio de pagamento. Exige unidade_id.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: external_exports.number().int().describe("id da unidade \u2014 obrigatorio neste endpoint")
@@ -22217,23 +22876,23 @@ server.registerTool(
       const d = await agregado(c, "financial/list_cash_flow", from, to, {
         business_id: unidade_id
       });
-      const entrou = num(d.in);
-      const saiu = num(d.out);
+      const entrou = num2(d.in);
+      const saiu = num2(d.out);
       return texto({
         clinica: c.nome,
         periodo: { from, to },
         realizado: { entradas: entrou, saidas: saiu, saldo: entrou - saiu, saldo_formatado: brl(entrou - saiu) },
-        previsto: { a_receber: num(d.in_forecast), a_pagar: num(d.out_forecast) },
-        saldo_projetado: entrou + num(d.in_forecast) - (saiu + num(d.out_forecast)),
+        previsto: { a_receber: num2(d.in_forecast), a_pagar: num2(d.out_forecast) },
+        saldo_projetado: entrou + num2(d.in_forecast) - (saiu + num2(d.out_forecast)),
         por_meio: {
-          dinheiro: num(d.cash),
-          boleto: num(d.bank_slip),
-          credito: num(d.credit_card),
-          debito: num(d.debit_card),
-          cheque: num(d.check),
-          transferencia: num(d.transfer)
+          dinheiro: num2(d.cash),
+          boleto: num2(d.bank_slip),
+          credito: num2(d.credit_card),
+          debito: num2(d.debit_card),
+          cheque: num2(d.check),
+          transferencia: num2(d.transfer)
         },
-        saldo_devedor: num(d.debit)
+        saldo_devedor: num2(d.debit)
       });
     } catch (e) {
       return erro(e);
@@ -22246,7 +22905,7 @@ server.registerTool(
     title: "Previsto x recebido x inadimplencia",
     description: "GET /financial/list_payments \u2014 totais consolidados do periodo. Exige unidade_id.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: external_exports.number().int().describe("id da unidade \u2014 obrigatorio neste endpoint")
@@ -22258,13 +22917,13 @@ server.registerTool(
       const d = await agregado(c, "financial/list_payments", from, to, {
         business_id: unidade_id
       });
-      const previsto = num(d.totalInForecastAmount);
-      const devedor = num(d.totalDebitAmount);
+      const previsto = num2(d.totalInForecastAmount);
+      const devedor = num2(d.totalDebitAmount);
       return texto({
         clinica: c.nome,
         periodo: { from, to },
         previsto,
-        recebido: num(d.totalPaymentsAmount),
+        recebido: num2(d.totalPaymentsAmount),
         em_aberto: devedor,
         em_aberto_formatado: brl(devedor),
         inadimplencia_pct: previsto ? Number((devedor / previsto * 100).toFixed(1)) : 0
@@ -22280,7 +22939,7 @@ server.registerTool(
     title: "Resumo financeiro (vendas, receitas, despesas)",
     description: "GET /financial/list_summary \u2014 total de vendas, receitas, despesas e lancamentos detalhados do periodo.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: pUnidade,
@@ -22294,13 +22953,13 @@ server.registerTool(
       const d = await agregado(c, "financial/list_summary", from, to, {
         business_id: unidade_id
       });
-      const receita = num(d.TotalIncome);
-      const despesa = num(d.TotalExpenses);
+      const receita = num2(d.TotalIncome);
+      const despesa = num2(d.TotalExpenses);
       const lancamentos = Array.isArray(d.values) ? d.values : [];
       return texto({
         clinica: c.nome,
         periodo: { from, to },
-        vendas: num(d.TotalSales),
+        vendas: num2(d.TotalSales),
         receitas: receita,
         despesas: despesa,
         resultado: receita - despesa,
@@ -22319,7 +22978,7 @@ server.registerTool(
   {
     title: "Painel consolidado por unidade",
     description: "GET /analytics/list_results \u2014 a visao mais completa em UMA chamada: orcamentos por status, receita, recebido, despesas, ticket medio, conversao, agendamentos, faltas e novos pacientes, por unidade. Use isto para 'como foi o mes'. Inclui unidades inativas que tiveram movimento.",
-    inputSchema: { clinica: pClinica, from: pFrom, to: pTo }
+    inputSchema: { clinica: pClinica3, from: pFrom, to: pTo }
   },
   async ({ clinica, from, to }) => {
     try {
@@ -22331,33 +22990,33 @@ server.registerTool(
         clinica: c.nome,
         periodo: { from, to },
         unidades: dados.map((u) => {
-          const agendados = num(u.AppointmentsTotal);
-          const faltas = num(u.AppointmentsMissed);
+          const agendados = num2(u.AppointmentsTotal);
+          const faltas = num2(u.AppointmentsMissed);
           return {
             unidade: u.UnityName,
             unidade_id: u.BusinessId,
-            receita: num(u.TotalRevenueAmount),
-            receita_formatada: brl(num(u.TotalRevenueAmount)),
-            recebido: num(u.TotalReceivedAmount),
-            despesas: num(u.TotalExpenses),
+            receita: num2(u.TotalRevenueAmount),
+            receita_formatada: brl(num2(u.TotalRevenueAmount)),
+            recebido: num2(u.TotalReceivedAmount),
+            despesas: num2(u.TotalExpenses),
             orcamentos: {
-              total_valor: num(u.EstimatesTotalAmount),
-              total_qtd: num(u.EstimatesTotalQuantity),
-              aprovados_valor: num(u.EstimatesApprovedAmount),
-              aprovados_qtd: num(u.EstimatesApprovedQuantity),
-              abertos_valor: num(u.EstimatesOpenAmount),
-              follow_up_valor: num(u.EstimatesFollowUpAmount),
-              rejeitados_valor: num(u.EstimatesRejectedAmount)
+              total_valor: num2(u.EstimatesTotalAmount),
+              total_qtd: num2(u.EstimatesTotalQuantity),
+              aprovados_valor: num2(u.EstimatesApprovedAmount),
+              aprovados_qtd: num2(u.EstimatesApprovedQuantity),
+              abertos_valor: num2(u.EstimatesOpenAmount),
+              follow_up_valor: num2(u.EstimatesFollowUpAmount),
+              rejeitados_valor: num2(u.EstimatesRejectedAmount)
             },
-            ticket_medio_aprovado: num(u.ApprovedTicketAverage),
+            ticket_medio_aprovado: num2(u.ApprovedTicketAverage),
             conversao: u.ConversionRate,
             agendamentos: agendados,
             // a API grafa "AppoinmentsFinished"
-            finalizados: num(u.AppoinmentsFinished),
+            finalizados: num2(u.AppoinmentsFinished),
             faltas,
             taxa_falta_pct: agendados ? Number((faltas / agendados * 100).toFixed(1)) : 0,
-            novos_pacientes: num(u.AppointmentsNewPatients),
-            pacientes_recorrentes: num(u.AppointmentsExistingPatients)
+            novos_pacientes: num2(u.AppointmentsNewPatients),
+            pacientes_recorrentes: num2(u.AppointmentsExistingPatients)
           };
         }).sort((a, b) => b.receita - a.receita)
       });
@@ -22372,7 +23031,7 @@ server.registerTool(
     title: "Metas de venda x realizado",
     description: "GET /operational/list_sales_goals \u2014 meta, realizado e projecao por mes. Exige unidade_id.",
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       from: pFrom,
       to: pTo,
       unidade_id: external_exports.number().int().describe("id da unidade \u2014 obrigatorio neste endpoint")
@@ -22392,14 +23051,14 @@ server.registerTool(
         clinica: c.nome,
         periodo: { from, to },
         meses: dados.map((m) => {
-          const meta = num(m.Goal);
-          const realizado = num(m.TotalRevenueAmount);
+          const meta = num2(m.Goal);
+          const realizado = num2(m.TotalRevenueAmount);
           return {
             mes: m.month,
             meta,
             realizado,
             atingimento_pct: meta ? Number((realizado / meta * 100).toFixed(1)) : null,
-            projecao: num(m.Projection)
+            projecao: num2(m.Projection)
           };
         })
       });
@@ -22414,7 +23073,7 @@ server.registerTool(
     title: "GET cru em qualquer endpoint da API",
     description: `Para os endpoints de leitura sem tool dedicada (ex.: procedures/list, appointment/status_list, payment/list_reconcile_claim, financial/list_invoices, business/list_available_times). Base: ${BASE_URL}. O subscriber_id e injetado automaticamente. Somente GET. Flags booleanas da API usam a string 'X'. Campos de resposta podem vir com os typos do proprio spec (Ocupaccion, FirsAppointmentTotal, StatusDescrition, ShedulingAccepted).`,
     inputSchema: {
-      clinica: pClinica,
+      clinica: pClinica3,
       path: external_exports.string().describe("Path relativo sem barra inicial. Ex.: 'procedures/list'"),
       params: external_exports.record(external_exports.string()).optional().describe("Query params adicionais (todos como string)"),
       limite: external_exports.number().int().positive().max(500).default(50)
@@ -22431,7 +23090,7 @@ server.registerTool(
           "Bloqueado: /appointment/change_status e um GET que ALTERA estado. Este servidor e somente leitura."
         );
       }
-      const payload = await apiGet(c, path, { subscriber_id: c.subscriberId, ...params ?? {} });
+      const payload = await apiGet(c, path, { subscriber_id: await subscriberDe(c), ...params ?? {} });
       const lista = toArray(payload);
       if (lista.length > 0) {
         const r = recorte(lista, limite);
@@ -22450,8 +23109,10 @@ server.registerTool(
     }
   }
 );
+registrarExtras(server, { pegarClinica, texto, erro });
+registrarEscrita(server, { pegarClinica, texto, erro });
 var transport = new StdioServerTransport();
 await server.connect(transport);
 console.error(
-  erroConfig ? `clinicorp-mcp SEM configuracao valida \u2014 ${erroConfig}` : `clinicorp-mcp pronto \u2014 ${clinicas.length} clinica(s): ${clinicas.map((c) => c.nome).join(", ")}`
+  erroConfig ? `clinicorp-mcp SEM configuracao valida \u2014 ${erroConfig}` : `clinicorp-mcp pronto \u2014 ${clinicas.length} clinica(s): ${clinicas.map((c) => c.nome).join(", ")} | escrita: ${escritaLiberada() ? "LIGADA" : "desligada (ligue em ~/.clinicorp-mcp.json)"}`
 );

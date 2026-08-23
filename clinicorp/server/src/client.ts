@@ -11,19 +11,19 @@ export const BASE_URL = process.env.CLINICORP_BASE_URL ?? "https://api.clinicorp
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
-const TIMEOUT_MS = Number(process.env.CLINICORP_TIMEOUT_MS ?? 45000);
+export const TIMEOUT_MS = Number(process.env.CLINICORP_TIMEOUT_MS ?? 45000);
 
 /** Janela de seguranca por request nos endpoints de LISTAGEM (a API nao pagina). */
 export const MAX_DAYS_PER_REQUEST = Number(process.env.CLINICORP_MAX_DAYS ?? 31);
 
-function authHeader(c: Clinic): string {
+export function authHeader(c: Clinic): string {
   return `Basic ${Buffer.from(`${c.username}:${c.token}`).toString("base64")}`;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 /** Remove chaves vazias — a API trata "" como valor e alguns filtros quebram. */
-function limpar(params: Record<string, string | number | undefined | null>): Record<string, string> {
+export function limpar(params: Record<string, string | number | undefined | null>): Record<string, string> {
   const out: Record<string, string> = {};
   for (const [k, v] of Object.entries(params)) {
     if (v === undefined || v === null || v === "") continue;
@@ -116,7 +116,7 @@ export async function apiGet(
 }
 
 /** `Message` pode ser string OU array de erros de validacao (estilo Zod). */
-function descreverMensagem(msg: unknown): string {
+export function descreverMensagem(msg: unknown): string {
   if (Array.isArray(msg)) {
     return msg
       .map((e) => {
@@ -129,13 +129,58 @@ function descreverMensagem(msg: unknown): string {
   return typeof msg === "string" ? msg : JSON.stringify(msg ?? "");
 }
 
-function extrairMensagem(corpo: string): string | null {
+export function extrairMensagem(corpo: string): string | null {
   try {
     const o = JSON.parse(corpo) as { Message?: unknown };
     return o.Message !== undefined ? descreverMensagem(o.Message) : null;
   } catch {
     return corpo ? corpo.slice(0, 300) : null;
   }
+}
+
+/**
+ * Resolve o subscriber_id da clinica. Se nao veio na configuracao, descobre via
+ * /group/list_subscribers (que nao exige subscriber_id) e cacheia pela sessao.
+ */
+const cacheSubscriber = new Map<string, string | undefined>();
+
+export async function subscriberDe(clinic: Clinic): Promise<string | undefined> {
+  if (clinic.subscriberId) return clinic.subscriberId;
+  if (cacheSubscriber.has(clinic.nome)) return cacheSubscriber.get(clinic.nome);
+
+  let achados: Array<Record<string, unknown>> = [];
+  try {
+    achados = toArray<Record<string, unknown>>(await apiGet(clinic, "group/list_subscribers"));
+  } catch {
+    // conta unica costuma inferir o assinante pelo token — segue sem subscriber_id
+    cacheSubscriber.set(clinic.nome, undefined);
+    return undefined;
+  }
+
+  const ids = achados
+    .map((a) => a.SubscriberBussinessUID ?? a.Namespace)
+    .filter((v): v is string => typeof v === "string" && v.length > 0);
+
+  if (ids.length > 1) {
+    throw new Error(
+      `A conta "${clinic.nome}" e de grupo/franquia e tem ${ids.length} assinantes: ${ids.join(", ")}. ` +
+        `Escolha um e preencha "subscriber_id" no arquivo de credenciais.`
+    );
+  }
+
+  const escolhido = ids[0];
+  cacheSubscriber.set(clinic.nome, escolhido);
+  return escolhido;
+}
+
+/** Cache de listas estaveis (unidades, status) — evita repetir a chamada a cada pergunta. */
+const cacheLista = new Map<string, unknown>();
+
+export async function listaCacheada<T>(chave: string, buscar: () => Promise<T>): Promise<T> {
+  if (cacheLista.has(chave)) return cacheLista.get(chave) as T;
+  const valor = await buscar();
+  cacheLista.set(chave, valor);
+  return valor;
 }
 
 /** A API ora devolve array puro, ora { data: [...] }. */
@@ -211,7 +256,7 @@ export async function listarPeriodo<T>(
   const todos: T[] = [];
   for (const j of janelas(from, to)) {
     const payload = await apiGet(clinic, path, {
-      subscriber_id: clinic.subscriberId,
+      subscriber_id: await subscriberDe(clinic),
       from: j.from,
       to: j.to,
       ...extra,
@@ -231,7 +276,7 @@ export async function agregado(
 ): Promise<unknown> {
   validarPeriodo(from, to);
   return apiGet(clinic, path, {
-    subscriber_id: clinic.subscriberId,
+    subscriber_id: await subscriberDe(clinic),
     from,
     to,
     ...extra,

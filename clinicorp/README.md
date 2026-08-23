@@ -9,12 +9,13 @@ Pergunte em portugues — "como foi agosto na Matriz?", "quantas faltas tivemos 
 
 | Componente | O que faz |
 |---|---|
-| **Servidor MCP** (19 tools) | As chamadas na API: agenda, orcamentos, pagamentos, financeiro, ocupacao, metas, painel |
+| **Servidor MCP** (32 tools) | As chamadas na API: agenda, orcamentos, pagamentos, financeiro, ocupacao, metas, painel — mais escrita opcional |
 | **Skill `clinicorp`** | O julgamento: qual tool responde cada pergunta e como ler o resultado sem errar o numero |
 | **`references/api-clinicorp.md`** | Documentacao completa dos 49 endpoints, para o que nao tem tool dedicada |
 
-**Somente leitura.** Toda tool faz `GET`. Nada cria, altera ou cancela no Clinicorp — inclusive
-`/appointment/change_status`, que a API expoe como `GET` mas altera estado, esta bloqueado.
+**Leitura sempre. Escrita desligada por padrao.** As 32 tools cobrem leitura e escrita, mas as de
+escrita (agendar, confirmar, cancelar, cadastrar paciente, lead no CRM, anexo, ordem de compra)
+so funcionam se voce ligar de proposito — ver [Escrita](#escrita) abaixo.
 
 ## Instalacao
 
@@ -49,12 +50,16 @@ Manualmente, se preferir: crie `~/.clinicorp-mcp.json` com as clinicas as quais 
 [
   {
     "nome": "Matriz",
-    "subscriber_id": "...",
     "username": "...",
     "token": "..."
   }
 ]
 ```
+
+O `subscriber_id` e **opcional**: se voce nao souber qual e, deixe fora que o servidor descobre
+sozinho na primeira chamada (via `/group/list_subscribers`) e guarda pela sessao. So e obrigatorio
+quando a conta e de grupo/franquia com mais de um assinante — nesse caso o erro lista as opcoes
+para voce escolher. A tool `clinicorp_assinantes` tambem mostra quais existem.
 
 Depois restrinja a permissao — o token da acesso a dado de paciente:
 
@@ -107,9 +112,47 @@ unidades) · `clinicorp_profissionais`
 **Financeiro** — `clinicorp_pagamentos` · `clinicorp_fluxo_caixa` · `clinicorp_inadimplencia` ·
 `clinicorp_resumo_financeiro`
 
-**Panorama** — `clinicorp_painel` (a visao de um mes inteiro em uma chamada) · `clinicorp_metas`
+**Panorama** — `clinicorp_painel` (a visao de um mes inteiro em uma chamada) · `clinicorp_metas` ·
+`clinicorp_parcelamento_medio` · `clinicorp_assinantes`
+
+**Escrita** (desligada por padrao) — `clinicorp_alterar_status` · `clinicorp_confirmar_agendamento` ·
+`clinicorp_cancelar_agendamento` · `clinicorp_criar_agendamento` · `clinicorp_solicitar_agendamento` ·
+`clinicorp_criar_paciente` · `clinicorp_adicionar_lead` · `clinicorp_anexar_arquivo` ·
+`clinicorp_criar_ordem_compra`, com apoio de `clinicorp_status_agendamento` e `clinicorp_campanhas`
 
 **Escape hatch** — `clinicorp_get` (GET cru em qualquer endpoint de leitura da API)
+
+## Escrita
+
+As tools de escrita vem **desligadas**. Para ligar, troque o arquivo de credenciais para a forma
+com objeto:
+
+```json
+{
+  "escrita": true,
+  "clinicas": [
+    { "nome": "Matriz", "username": "...", "token": "..." }
+  ]
+}
+```
+
+Reinicie o cliente depois. Alternativa por ambiente: `CLINICORP_ESCRITA=X`.
+
+O que muda quando esta ligada: `clinicorp_alterar_status` (confirmar/faltou/atendido em lote),
+`clinicorp_confirmar_agendamento`, `clinicorp_cancelar_agendamento`, `clinicorp_criar_agendamento`,
+`clinicorp_solicitar_agendamento`, `clinicorp_criar_paciente`, `clinicorp_adicionar_lead`,
+`clinicorp_anexar_arquivo` e `clinicorp_criar_ordem_compra`.
+
+Tres protecoes que ficam de pe mesmo com a escrita ligada:
+
+- **Sem retry.** Nenhum POST da API e idempotente. Se a chamada falhar por rede, o servidor manda
+  conferir no Clinicorp antes de repetir, em vez de tentar de novo e criar duplicata.
+- **Paciente nao duplica.** `clinicorp_criar_paciente` busca por CPF antes; se ja existir, devolve
+  o existente e nao cria.
+- **Campanha e validada.** `clinicorp_adicionar_lead` confere o nome na lista de campanhas ativas
+  antes de enviar — nome errado faz o lead sumir sem erro claro.
+
+Quem so precisa consultar nao deve ligar a escrita. Leitura funciona sem isso.
 
 ## LGPD
 

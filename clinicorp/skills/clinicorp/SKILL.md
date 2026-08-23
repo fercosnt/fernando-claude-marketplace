@@ -6,7 +6,11 @@ description: Use when the user asks about clinic performance data held in Clinic
 # Clinicorp — camada de julgamento
 
 As tools do MCP fazem as chamadas. Esta skill decide **qual** chamada responde a pergunta
-e **como** ler o resultado sem entregar numero errado. Todas as tools sao somente leitura.
+e **como** ler o resultado sem entregar numero errado. As tools de leitura estao sempre
+disponiveis. As de escrita vem **desligadas por padrao** e so respondem se o arquivo
+`~/.clinicorp-mcp.json` liberar, na forma `{ "escrita": true, "clinicas": [...] }`. Se uma tool
+de escrita falhar dizendo que a escrita esta desligada, oriente a pessoa a ligar assim — nao
+tente contornar por outra rota.
 
 ## Antes da primeira chamada
 
@@ -43,6 +47,10 @@ e **como** ler o resultado sem entregar numero errado. Todas as tools sao soment
 | "Quem faz aniversario hoje?" | `clinicorp_aniversariantes` | Base para acao de relacionamento |
 | "Batemos a meta?" | `clinicorp_metas` | Meta de venda, realizado e projecao; meta de falta so via `clinicorp_get` (operational/list_misses_goals) |
 | "Quais profissionais atendem na unidade?" | `clinicorp_profissionais` | Resolve nomes antes de filtrar por profissional |
+| "Em quantas vezes o pessoal esta parcelando?" | `clinicorp_parcelamento_medio` | Media de parcelas por mes — explica a distancia entre venda aprovada e caixa |
+| "Qual o subscriber dessa unidade?" / "qual a grade de horarios?" | `clinicorp_assinantes` | Descobre o `subscriber_id` de conta de grupo e a grade de horarios |
+| "Quais status de agendamento existem?" | `clinicorp_status_agendamento` | Devolve os ids de status; obrigatorio antes de `clinicorp_alterar_status` |
+| "Quais campanhas estao rodando?" | `clinicorp_campanhas` | Campanhas ativas do CRM; o nome exato daqui alimenta `clinicorp_adicionar_lead` |
 
 ## Tres exemplos completos
 
@@ -123,6 +131,57 @@ financeiras (fluxo de caixa, inadimplencia, parcelamento medio) exigem a clinica
 em conta unica. Se a chamada falhar por autorizacao, o primeiro suspeito e a unidade faltando,
 nao o token. Quais rotas exigem a unidade: `references/api-clinicorp.md` secao 9.8.
 
+## Escrita — regras
+
+Alteram a base da clinica: `clinicorp_alterar_status`, `clinicorp_confirmar_agendamento`,
+`clinicorp_cancelar_agendamento`, `clinicorp_criar_agendamento`,
+`clinicorp_solicitar_agendamento`, `clinicorp_criar_paciente`, `clinicorp_adicionar_lead`,
+`clinicorp_anexar_arquivo` (upload por URL) e `clinicorp_criar_ordem_compra`. Todas dependem de
+`"escrita": true` em `~/.clinicorp-mcp.json`.
+
+**Confirme com a pessoa antes de qualquer escrita.** Repita em texto o que sera alterado —
+paciente, data, horario, unidade — e espere o ok. A API nao tem desfazer: o que foi gravado so
+volta com outra escrita manual.
+
+**Nunca repita uma chamada de escrita que falhou por rede ou timeout.** Nenhum POST da API e
+idempotente e a requisicao pode ter chegado antes do erro estourar. O certo e conferir por
+leitura (`clinicorp_agenda`, `clinicorp_buscar_paciente`) se ja gravou, e so entao decidir.
+
+**Automacao usa `clinicorp_solicitar_agendamento`, nao `clinicorp_criar_agendamento`.** Bot,
+formulario e integracao devem cair na fila de aprovacao da clinica; o agendamento direto ja
+entra valendo na agenda, sem ninguem revisar.
+
+**Antes de agendar, confira o horario livre e resolva os ids.** `clinicorp_agenda` mostra se o
+horario esta ocupado; unidade, profissional e paciente vem de `clinicorp_unidades`,
+`clinicorp_profissionais` e `clinicorp_buscar_paciente`. Id chutado grava no lugar errado.
+
+**`clinicorp_alterar_status` exige o id de status vindo de `clinicorp_status_agendamento`,**
+casado pelo campo `tipo` (CONFIRMED, MISSED). Nunca case pela descricao: ela e texto que a
+clinica edita e muda de uma unidade para outra. Vale para 1 ou n agendamentos na mesma chamada.
+
+**`clinicorp_adicionar_lead` casa a campanha pelo NOME exato.** Rode `clinicorp_campanhas`
+antes e copie o nome como veio. Nome errado nao levanta erro claro — o lead entra fora da
+campanha e some do funil.
+
+**Criar paciente: sempre buscar por CPF antes.** A tool ja faz essa checagem; nao force
+`criar_mesmo_com_duplicata` sem a pessoa pedir, ou a clinica fica com dois prontuarios do mesmo
+paciente e o historico se parte em dois.
+
+**Datas de agendamento vao em ISO 8601 com fuso.** 12/09 as 00:00 em Brasilia e
+`"2026-09-12T03:00:00.000Z"`. Mandar a hora local como se fosse UTC agenda o paciente no dia
+errado — e o mesmo deslocamento da regra de fuso acima, agora gravando na base.
+
+### Receita: confirmacao do dia seguinte
+
+1. `clinicorp_agenda` no periodo de amanha, com compromissos incluidos.
+2. Filtre quem ainda **nao** esta confirmado, comparando pelo `tipo` do status resolvido em
+   `clinicorp_status_agendamento` — nunca pela descricao.
+3. Entregue a lista para a pessoa falar com os pacientes. **O disparo da mensagem nao e feito
+   por estas tools** — nao ha envio de WhatsApp, SMS ou e-mail aqui.
+4. So depois das respostas, rode `clinicorp_confirmar_agendamento` (ou
+   `clinicorp_alterar_status` em lote) nos que responderam. Marcar como confirmado quem nao
+   respondeu transforma o indicador de falta em ficcao.
+
 ## Nomes que a API erra
 
 Com as tools dedicadas isso e transparente. Ao usar `clinicorp_get`, os campos voltam com os
@@ -189,7 +248,7 @@ procedimentos e motivo da consulta.
 
 ## Antes de entregar a resposta
 
-Confira os cinco itens. Cada um corresponde a um erro que ja aconteceu:
+Confira os seis itens. Cada um corresponde a um erro que ja aconteceu:
 
 1. **Unidade resolvida** — a resposta e da unidade que a pessoa perguntou, nao a soma da rede.
 2. **Janela declarada** — o texto diz qual periodo foi consultado, com as datas.
@@ -198,12 +257,14 @@ Confira os cinco itens. Cada um corresponde a um erro que ja aconteceu:
 4. **Competencia x caixa nomeado** — esta claro se o numero e venda aprovada ou dinheiro que
    entrou. Nunca deixe o leitor adivinhar.
 5. **Agregado por padrao** — nao ha lista de paciente na resposta sem que tenha sido pedida.
+6. **Escrita declarada** — se a acao alterou dados, a resposta diz explicitamente o que foi
+   alterado e quantos registros. Escrita silenciosa e o pior erro da lista.
 
 Se algum item nao se aplica, tudo bem. O que nao pode e passar batido.
 
 ## Fallback
 
 Para endpoints sem tool dedicada (procedimentos, especialidades, cadeiras, notas fiscais,
-recibos, parcelamento medio, faturamento por convenio, campanhas de CRM, usuarios), use
+recibos, faturamento por convenio, usuarios), use
 `clinicorp_get` com o caminho do endpoint. Parametros, formatos de data, flags booleanas no
 formato string "X" e o schema de resposta de cada rota estao em `references/api-clinicorp.md`.

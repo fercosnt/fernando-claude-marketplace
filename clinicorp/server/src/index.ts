@@ -1,9 +1,10 @@
 /**
- * Servidor MCP do Clinicorp — SOMENTE LEITURA.
+ * Servidor MCP do Clinicorp.
  *
- * Todas as tools fazem GET. Nenhuma cria, altera ou cancela nada no Clinicorp.
- * (A API tem endpoints de escrita — criar paciente, agendar, cancelar, lead no CRM —
- *  deliberadamente nao expostos aqui.)
+ * Leitura sempre disponivel. Escrita (agendar, confirmar, cancelar, cadastrar paciente,
+ * lead no CRM, anexo, ordem de compra) fica DESLIGADA por padrao — ligue com
+ * { "escrita": true, "clinicas": [...] } no arquivo de credenciais, ou CLINICORP_ESCRITA=X.
+ * Ver src/tools-escrita.ts.
  */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -14,12 +15,17 @@ import {
   apiGet,
   agregado,
   listarPeriodo,
+  listaCacheada,
+  subscriberDe,
   toArray,
   validarPeriodo,
   BASE_URL,
   MAX_DAYS_PER_REQUEST,
 } from "./client.js";
 import type { ClinicorpEstimate, ClinicorpPayment } from "./types.js";
+import { registrarEscrita } from "./tools-escrita.js";
+import { registrarExtras } from "./tools-extra.js";
+import { escritaLiberada } from "./escrita.js";
 
 let clinicas: Clinic[] = [];
 let erroConfig: string | null = null;
@@ -61,7 +67,9 @@ const server = new McpServer(
   { name: "clinicorp", version: "0.1.0" },
   {
     instructions:
-      "Acesso SOMENTE LEITURA a API do Clinicorp (gestao de clinicas odontologicas). " +
+      "Acesso a API do Clinicorp (gestao de clinicas odontologicas). Leitura sempre disponivel; " +
+      "as tools marcadas ESCRITA alteram dados reais e so funcionam se a escrita estiver ligada. " +
+      "Antes de qualquer escrita, confirme com a pessoa o que sera alterado. " +
       "Datas sempre YYYY-MM-DD. Use clinicorp_clinicas para descobrir os nomes aceitos em 'clinica' " +
       "e clinicorp_unidades para descobrir os ids de unidade. Para uma visao geral de um mes, " +
       "clinicorp_painel resolve em uma chamada. Endpoints sem tool dedicada: clinicorp_get.",
@@ -112,11 +120,13 @@ server.registerTool(
     return texto({
       base_url: BASE_URL,
       janela_maxima_listagem_dias: MAX_DAYS_PER_REQUEST,
-      clinicas: clinicas.map((c) => ({
-        nome: c.nome,
-        subscriber_id: c.subscriberId,
-        business_id_padrao: c.businessId ?? null,
-      })),
+      clinicas: await Promise.all(
+        clinicas.map(async (c) => ({
+          nome: c.nome,
+          subscriber_id: (await subscriberDe(c).catch(() => null)) ?? "(nao definido — descoberto na 1a chamada)",
+          business_id_padrao: c.businessId ?? null,
+        }))
+      ),
     });
   }
 );
@@ -133,7 +143,7 @@ server.registerTool(
     try {
       const c = pegarClinica(clinica);
       const dados = toArray<Record<string, unknown>>(
-        await apiGet(c, "business/list", { subscriber_id: c.subscriberId })
+        await apiGet(c, "business/list", { subscriber_id: await subscriberDe(c) })
       );
       return texto({
         clinica: c.nome,
@@ -359,7 +369,7 @@ server.registerTool(
         throw new Error("Informe pelo menos um criterio: paciente_id, nome, cpf, telefone ou email.");
       }
       const d = (await apiGet(c, "patient/get", {
-        subscriber_id: c.subscriberId,
+        subscriber_id: await subscriberDe(c),
         PatientId: paciente_id,
         Name: nome,
         OtherDocumentId: cpf,
@@ -392,7 +402,7 @@ server.registerTool(
     try {
       const c = pegarClinica(clinica);
       const dados = toArray<Record<string, unknown>>(
-        await apiGet(c, "patient/birthdays", { subscriber_id: c.subscriberId, date: data })
+        await apiGet(c, "patient/birthdays", { subscriber_id: await subscriberDe(c), date: data })
       );
       const r = recorte(dados, limite);
       return texto({
@@ -521,7 +531,7 @@ server.registerTool(
     try {
       const c = pegarClinica(clinica);
       const d = await apiGet(c, "estimates/get", {
-        subscriber_id: c.subscriberId,
+        subscriber_id: await subscriberDe(c),
         treatment_id,
       });
       return texto({ clinica: c.nome, treatment_id, orcamento: d });
@@ -899,7 +909,7 @@ server.registerTool(
           "Bloqueado: /appointment/change_status e um GET que ALTERA estado. Este servidor e somente leitura."
         );
       }
-      const payload = await apiGet(c, path, { subscriber_id: c.subscriberId, ...(params ?? {}) });
+      const payload = await apiGet(c, path, { subscriber_id: await subscriberDe(c), ...(params ?? {}) });
       const lista = toArray<unknown>(payload);
 
       if (lista.length > 0) {
@@ -920,6 +930,11 @@ server.registerTool(
   }
 );
 
+// ======================================================= EXTRAS E ESCRITA
+
+registrarExtras(server, { pegarClinica, texto, erro });
+registrarEscrita(server, { pegarClinica, texto, erro });
+
 // =================================================================== START
 
 const transport = new StdioServerTransport();
@@ -927,5 +942,6 @@ await server.connect(transport);
 console.error(
   erroConfig
     ? `clinicorp-mcp SEM configuracao valida — ${erroConfig}`
-    : `clinicorp-mcp pronto — ${clinicas.length} clinica(s): ${clinicas.map((c) => c.nome).join(", ")}`
+    : `clinicorp-mcp pronto — ${clinicas.length} clinica(s): ${clinicas.map((c) => c.nome).join(", ")} ` +
+        `| escrita: ${escritaLiberada() ? "LIGADA" : "desligada (ligue em ~/.clinicorp-mcp.json)"}`
 );

@@ -38,8 +38,8 @@
     },
     {
       "name": "clinicorp",
-      "description": "Acesso somente-leitura aos dados do Clinicorp — 19 tools MCP (agenda, orcamentos, pagamentos, financeiro, ocupacao, metas, painel consolidado), skill com as convencoes e armadilhas da API e comando /clinicorp-setup. Credenciais por pessoa em ~/.clinicorp-mcp.json, nenhuma no repositorio.",
-      "version": "0.1.0",
+      "description": "Acesso aos dados do Clinicorp — 32 tools MCP: leitura (agenda, orcamentos, pagamentos, financeiro, ocupacao, metas, painel) e escrita opcional desligada por padrao (agendar, confirmar, cancelar, paciente, lead no CRM). Skill com as armadilhas da API e comando /clinicorp-setup. Credenciais por pessoa em ~/.clinicorp-mcp.json, nenhuma no repositorio.",
+      "version": "0.2.0",
       "source": "./clinicorp",
       "author": {
         "name": "Fernando Costa"

@@ -13,13 +13,21 @@ import { join } from "node:path";
 
 export interface Clinic {
   nome: string;
-  subscriberId: string;
+  /** Opcional: se ausente, e descoberto via /group/list_subscribers e cacheado. */
+  subscriberId?: string;
   username: string;
   token: string;
   businessId?: string;
 }
 
 const DEFAULT_FILE = join(homedir(), ".clinicorp-mcp.json");
+
+/** Ligada quando o arquivo de credenciais usa a forma { "escrita": true, "clinicas": [...] }. */
+let escritaNaConfig = false;
+
+export function escritaLiberadaNaConfig(): boolean {
+  return escritaNaConfig;
+}
 
 interface RawClinic {
   nome?: string;
@@ -32,6 +40,12 @@ interface RawClinic {
   businessId?: string;
 }
 
+const PLACEHOLDER = /^(cole_aqui|seu_|nome_da_clinica|\.\.\.|x+)$/i;
+
+function vazio(v?: string): boolean {
+  return !v || !v.trim() || PLACEHOLDER.test(v.trim());
+}
+
 function normalize(raw: RawClinic, index: number): Clinic {
   const nome = raw.nome ?? raw.name;
   const subscriberId = raw.subscriber_id ?? raw.subscriberId;
@@ -39,20 +53,22 @@ function normalize(raw: RawClinic, index: number): Clinic {
   const token = raw.token;
 
   const faltando: string[] = [];
-  if (!nome) faltando.push("nome");
-  if (!subscriberId) faltando.push("subscriber_id");
-  if (!username) faltando.push("username");
-  if (!token) faltando.push("token");
+  if (vazio(nome)) faltando.push("nome");
+  if (vazio(username)) faltando.push("username");
+  if (vazio(token)) faltando.push("token");
 
   if (faltando.length > 0) {
     throw new Error(
-      `Clinica #${index + 1} da configuracao esta incompleta — faltando: ${faltando.join(", ")}`
+      `Clinica #${index + 1} (${nome ?? "sem nome"}) esta incompleta — falta preencher: ${faltando.join(", ")}. ` +
+        `O subscriber_id e opcional: se voce nao souber, deixe fora que o servidor descobre sozinho.`
     );
   }
 
   return {
     nome: nome!,
-    subscriberId: String(subscriberId),
+    subscriberId: vazio(subscriberId ? String(subscriberId) : undefined)
+      ? undefined
+      : String(subscriberId),
     username: username!,
     token: token!,
     businessId: raw.business_id ?? raw.businessId,
@@ -65,6 +81,12 @@ function parseList(json: string, origem: string): Clinic[] {
     parsed = JSON.parse(json);
   } catch (e) {
     throw new Error(`Configuracao invalida em ${origem}: JSON malformado — ${(e as Error).message}`);
+  }
+
+  // Forma de objeto permite ligar a escrita no proprio arquivo:
+  // { "escrita": true, "clinicas": [ ... ] }
+  if (!Array.isArray(parsed) && parsed && typeof parsed === "object") {
+    escritaNaConfig = (parsed as { escrita?: boolean }).escrita === true;
   }
 
   const lista = Array.isArray(parsed)

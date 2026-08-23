@@ -1,7 +1,7 @@
 {
   "name": "clinicorp",
-  "version": "0.1.0",
-  "description": "Acesso somente-leitura aos dados do Clinicorp (gestao de clinicas odontologicas) — 19 tools MCP cobrindo agenda, orcamentos, pagamentos, financeiro, ocupacao, metas e painel consolidado, mais uma skill que ensina as convencoes e armadilhas da API.",
+  "version": "0.2.0",
+  "description": "Acesso aos dados do Clinicorp (gestao de clinicas odontologicas) — 32 tools MCP: leitura de agenda, orcamentos, pagamentos, financeiro, ocupacao, metas e painel consolidado, mais escrita opcional (agendar, confirmar, cancelar, cadastrar paciente, lead no CRM) desligada por padrao. Inclui skill com as convencoes e armadilhas da API.",
   "author": {
     "name": "Fernando Costa",
     "email": "fernandinho.costa.neto@gmail.com"

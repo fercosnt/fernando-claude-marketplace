@@ -24,8 +24,9 @@ Instrua, nessa ordem:
 1. Entrar no Clinicorp pelo navegador.
 2. **Gerenciar Assinatura** -> **Acesso Externo e Integracoes** -> secao **Integracoes**.
 3. Ali estao **Usuario API** e **Token API**.
-4. Precisa tambem do **subscriber_id** da conta. Se a pessoa nao souber qual e, oriente a
-   perguntar a quem administra a conta Clinicorp da clinica.
+4. O **subscriber_id** e opcional — nao mande a pessoa procurar. O servidor descobre sozinho na
+   primeira chamada. So sera necessario se a conta for de grupo com mais de um assinante, e nesse
+   caso o proprio erro lista as opcoes (ou rode `clinicorp_assinantes`).
 
 Se a pessoa nao encontrar a secao, o mais provavel e que o usuario dela nao tenha permissao de
 administrador — nesse caso quem administra a conta precisa gerar o acesso.
@@ -38,7 +39,6 @@ Crie `~/.clinicorp-mcp.json` com **placeholders**, nao com valores reais:
 [
   {
     "nome": "Matriz",
-    "subscriber_id": "COLE_AQUI",
     "username": "COLE_AQUI",
     "token": "COLE_AQUI"
   }
@@ -47,7 +47,7 @@ Crie `~/.clinicorp-mcp.json` com **placeholders**, nao com valores reais:
 
 Aplique `chmod 600` no arquivo.
 
-Depois peca para a pessoa **abrir o arquivo no editor dela** e substituir os tres `COLE_AQUI`
+Depois peca para a pessoa **abrir o arquivo no editor dela** e substituir os `COLE_AQUI`
 pelos valores reais, salvando em seguida. Diga o caminho completo do arquivo.
 
 Se a pessoa tem acesso a mais de uma clinica, explique que basta repetir o bloco dentro do
@@ -68,8 +68,24 @@ Depois que a pessoa confirmar que salvou:
 Se o servidor MCP nao aparecer, lembre que o Claude Code precisa ser reiniciado depois de
 instalar o plugin.
 
+## Passo 5 — escrita (so se a pessoa pedir)
+
+Por padrao o acesso e somente leitura. Se — e apenas se — a pessoa pedir para tambem agendar,
+confirmar, cancelar ou cadastrar pelo Claude, explique que isso altera a base real da clinica e,
+com o ok dela, troque o arquivo para a forma com objeto:
+
+```json
+{
+  "escrita": true,
+  "clinicas": [ ...os mesmos blocos de antes... ]
+}
+```
+
+Reinicie o cliente depois. Quem so consulta nao precisa disso e nao deve ligar.
+
 ## Ao terminar
 
 Confirme o que ficou disponivel: consultas de faturamento, orcamentos, agenda, ocupacao,
-pagamentos e inadimplencia — tudo **somente leitura**, nada e alterado no Clinicorp.
+pagamentos e inadimplencia. Diga tambem se a escrita ficou ligada ou nao — e, se ficou, que toda
+alteracao sera confirmada com ela antes de acontecer.
 Avise tambem que o arquivo de credenciais e local: nao vai para o GitHub nem e compartilhado.
