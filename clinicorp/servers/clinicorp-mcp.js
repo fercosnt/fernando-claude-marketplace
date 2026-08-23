@@ -21865,7 +21865,7 @@ function registrarEscrita(server2, d) {
           id: agendamento_ids.join(","),
           status_id
         });
-        const lista = toArray(r);
+        const lista = r && typeof r === "object" && !Array.isArray(r) && "id" in r ? [r] : toArray(r);
         return texto2({
           clinica: c.nome,
           alterados: lista.length,
@@ -21873,9 +21873,11 @@ function registrarEscrita(server2, d) {
             id: a.id,
             paciente: a.PatientName,
             data: a.Date,
-            // a API grafa "StatusDescrition"
+            // a doc avisa do typo "StatusDescrition", mas esta rota devolveu a grafia
+            // correta — aceite as duas.
             status: a.StatusDescrition ?? a.StatusDescription
-          }))
+          })),
+          aviso: lista.length === 0 ? "A API respondeu sem identificar o agendamento \u2014 confira por leitura se a alteracao valeu." : null
         });
       } catch (e) {
         return erro2(e);

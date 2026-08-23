@@ -111,7 +111,14 @@ export function registrarEscrita(server: McpServer, d: Deps): void {
           id: agendamento_ids.join(","),
           status_id,
         });
-        const lista = toArray<Record<string, unknown>>(r);
+        // Verificado contra a API em 08/2026: ao alterar UM agendamento a resposta e um
+        // OBJETO unico, nao o array que a doc mostra. Aceita as duas formas — senao um
+        // write bem-sucedido e reportado como "0 alterados".
+        const lista =
+          r && typeof r === "object" && !Array.isArray(r) && "id" in (r as Record<string, unknown>)
+            ? [r as Record<string, unknown>]
+            : toArray<Record<string, unknown>>(r);
+
         return texto({
           clinica: c.nome,
           alterados: lista.length,
@@ -119,9 +126,14 @@ export function registrarEscrita(server: McpServer, d: Deps): void {
             id: a.id,
             paciente: a.PatientName,
             data: a.Date,
-            // a API grafa "StatusDescrition"
+            // a doc avisa do typo "StatusDescrition", mas esta rota devolveu a grafia
+            // correta — aceite as duas.
             status: a.StatusDescrition ?? a.StatusDescription,
           })),
+          aviso:
+            lista.length === 0
+              ? "A API respondeu sem identificar o agendamento — confira por leitura se a alteracao valeu."
+              : null,
         });
       } catch (e) {
         return erro(e);
