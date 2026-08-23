@@ -124,8 +124,16 @@ unidades) · `clinicorp_profissionais`
 
 ## Escrita
 
-As tools de escrita vem **desligadas**. Para ligar, troque o arquivo de credenciais para a forma
-com objeto:
+As tools de escrita vem **desligadas**. Para ligar, o caminho simples e o comando:
+
+```
+/clinicorp-escrita
+```
+
+Ele lê o estado atual, confirma a intencao, converte o arquivo preservando as credenciais, valida
+o resultado e avisa para reiniciar — com backup automatico caso algo de errado.
+
+Na mao, se preferir: troque o arquivo de credenciais para a forma com objeto:
 
 ```json
 {
@@ -136,7 +144,8 @@ com objeto:
 }
 ```
 
-Reinicie o cliente depois. Alternativa por ambiente: `CLINICORP_ESCRITA=X`.
+Reinicie o cliente depois — o servidor le esse arquivo ao subir. O mesmo arquivo vale para o
+Claude Code e o Claude Desktop. Alternativa por ambiente: `CLINICORP_ESCRITA=X`.
 
 O que muda quando esta ligada: `clinicorp_alterar_status` (confirmar/faltou/atendido em lote),
 `clinicorp_confirmar_agendamento`, `clinicorp_cancelar_agendamento`, `clinicorp_criar_agendamento`,
