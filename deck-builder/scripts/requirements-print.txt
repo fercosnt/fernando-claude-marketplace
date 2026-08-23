@@ -1,0 +1,22 @@
+# Dependencias Python do deck-review-print (deck-builder v2.0.0)
+#
+# Instale no venv do projeto (recomendado — ver INSTALL.md):
+#     cd <raiz-do-repo>
+#     python3 -m venv .venv
+#     ./.venv/bin/python -m pip install -r deck-builder/scripts/requirements-print.txt
+#
+# Usar "pip install" solto instala no pip que estiver no PATH, que em maquinas
+# com pyenv/mise/asdf/venv NAO e o mesmo python3 do script. Foi assim que a
+# primeira instalacao falhou silenciosamente.
+
+# --- NUCLEO (sem isto nenhum dossie e gerado) ---
+Pillow>=10.0        # miniaturas e conversao CMYK para medicao de TAC
+numpy>=1.24         # media por pixel na medicao de TAC
+
+# --- ALTERNATIVA AO POPPLER (opcional, recomendado no Windows) ---
+# Com pymupdf instalado, o measure-tac.py rasteriza PDF sem precisar do
+# binario pdftoppm. Util onde instalar poppler e trabalhoso.
+pymupdf>=1.24
+
+# --- ROTA PPTX (opcional; so para ingerir .pptx) ---
+python-pptx>=0.6.21 # extrai texto por slide

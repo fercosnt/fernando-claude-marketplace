@@ -4,6 +4,123 @@ Todas as mudanças notáveis do plugin `deck-builder` são documentadas aqui.
 
 O formato segue [Keep a Changelog](https://keepachangelog.com/) e versionamento [SemVer](https://semver.org/).
 
+## [2.0.0] - 2026-08-23
+
+> **Breaking change sem mudanca de schema.** O que quebrou foi um contrato LOCKED de **comportamento**: a Fronteira nº 1 (`shared/fronteiras-explicitas.md`) dizia que o plugin nunca gera slides finais. Passa a dizer "nao gera **sem pedido explicito**", nomeando as skills autorizadas. Nenhuma alteracao no schema `STORYBOARD.md` v1.1, que segue LOCKED.
+>
+> **Estado:** Blocos C, A e D implementados e exercitados em deck real. Do Bloco B, o modo `anotar` entra; o modo `render` fica para o 2.1 (bloqueado por conta do Canva). Ver "Escopo do 2.0.0" no fim desta entrada.
+
+### Added — `deck-review-print` (Bloco A, RF-01..RF-19)
+
+Skill nova, **12ª do plugin**. Unica skill que **consome** um deck em vez de produzir um: pega Canva/PPTX/PDF e devolve `DOSSIE-{slug}-{HHmm}.pdf` — copia A4 preto sobre branco, numerada e anotavel a caneta.
+
+- **`skills/deck-review-print/SKILL.md`** — pipeline de 5 passos (dependencias → ingestao → classificacao → transcricao → composicao/medicao), 3 modos de saida, fronteiras proprias.
+- **`shared/print-dossie-schema.md`** (NOVO) — contrato do artefato: estrutura da entrada em 4 zonas, regra de numeracao espelhada (D18), marcacao `[CONFERIR]` (D17), tematizacao por marca, e o que o numero de TAC significa e o que nao significa.
+- **`scripts/measure-tac.py`** (NOVO) — mede TAC de PDF/imagem, compara original vs dossie e reporta o fator de reducao. Exit 1 acima do alvo, para uso em eval. Repete a ressalva metodologica no proprio output.
+- **`scripts/check-print-deps.sh`** (NOVO) — diagnostico de dependencias por rota. Ausencia de dep exclusiva de uma rota desabilita **apenas** aquela rota (RNF-09); nucleo incompleto bloqueia e instrui a instalacao.
+- **`assets/templates/dossie-layout.html`** (NOVO) — template A4 com `@page`, 2 entradas por folha, miniatura <= 62 mm, moldura tracejada para slide `foto`, pauta proporcional, tabela em fio fino, resumo final. Degrada em cinza neutro quando `brands.yaml` falta.
+- **`assets/checklists/conferencia-tabelas.md`** (NOVO) — checklist obrigatorio pre-entrega. Existe por causa do Risco nº 1 do PRD: um digito trocado chega ao presidente como se fosse o original.
+- **3 references** — `ingestao-3-fontes.md`, `classificacao-slides.md`, `modos-saida.md`.
+- **`evals/review-print-cases.md`** (NOVO) — 10 cases sobre a fixture **W4 GLP1TIGHT** (baseline: 6 paginas, 16,8% TAC).
+
+- **`INSTALL.md`** (NOVO) — instrucoes de instalacao por plataforma (macOS / Debian-Ubuntu), dependencia a dependencia, com a distincao entre nucleo e rotas opcionais. Documenta a armadilha do `pip` solto em maquinas com pyenv/mise/asdf/venv, que foi como a primeira instalacao falhou silenciosamente.
+- **`scripts/requirements-print.txt`** (NOVO) — pacotes Python, instalaveis com `python3 -m pip install -r`.
+- **`check-print-deps.sh`** agora imprime o caminho do `python3` ativo na primeira linha e sugere `python3 -m pip` em vez de `pip`.
+- **`README.md`** — secao de instalacao para maquina nova + `deck-review-print` na tabela de skills (11 → 12).
+
+- **Instalacao via venv do projeto** — `check-print-deps.sh` procura `<repo>/.venv` automaticamente (ordem: `$DECK_PY` → `.venv` → `python3`/`py`/`python`). Resolve de uma vez os dois modos de falha reais encontrados no setup: o bloqueio **PEP 668** do Homebrew Python e a ambiguidade de qual `python3` o script usa quando a maquina tem pyenv/mise/asdf. `INSTALL.md`, `README.md` e `requirements-print.txt` passam a documentar o venv como caminho principal.
+
+### Changed — correcoes da primeira execucao real (2026-08-12)
+
+Primeira passagem completa da skill sobre a fixture GLP1TIGHT. Tres correcoes vindas do confronto com o deck de verdade:
+
+- **D24 reescrito pela terceira vez — o TAC saiu do classificador.** A v1 usava limiar absoluto (150%), a v2 baseline relativa a mediana do deck. As duas estavam **erradas, nao mal calibradas**: na execucao, fotos mediram 65% e 273% e conteudo mediu 37% e 266%. Num fundo escuro chapado a foto e frequentemente mais clara que o fundo, e o sinal se inverte. A v2 chegou a classificar **zero** slides como foto. Classificacao passa a ser estrutura tabular → densidade de texto → leitura visual; o TAC continua medido e reportado como metrica de tinta, funcao na qual reproduziu o piloto quase slide a slide (193% x 17 paginas).
+- **Auditoria aritmetica entra no contrato, com marcacao `[DIVERGE]`.** A execucao encontrou erro real no deck do cliente: slide 13, linha *Massa muscular*, celulas somam 28 e o total declara 27X. Achado por habito, nao por exigencia da skill — agora e item obrigatorio do checklist. A skill **transcreve o valor do slide como esta** e sinaliza; corrigir e decisao de quem escreveu o deck.
+- **Sao 4 tabelas, nao 3.** O slide 07 e comparativo em duas colunas e nao era contado.
+
+**Execucao real de ponta a ponta (2026-08-12), fixture GLP1TIGHT (`DAHKNdTNVwI`, 17 slides):**
+
+| | Resultado |
+|---|---|
+| Ingestao | 17 PNGs via `read-design` → `get-export-formats` → `export-design` |
+| Original | **193% TAC medio x 17 paginas** — reproduziu o piloto quase slide a slide |
+| Dossie | **7 paginas · 17,1% TAC medio** (alvo <= 25%) |
+| Reducao | produto 3.281 → 120 — aproximadamente **27x** menos tinta |
+| Tabelas | 4 transcritas por leitura visual, todas `[CONFERIR]` |
+| Divergencia | 1 encontrada e marcada `[DIVERGE]` (slide 13) |
+| Privacidade | slide 10 (antes/depois de pacientes) entrou sem nenhum pixel, mantendo o numero |
+| Numeracao | 17 entradas, 01..17, D18 respeitado |
+
+O piloto manual de 2026-08-10 tinha registrado 6 paginas / 16,8%. A execucao real deu 7 / 17,1% porque inclui **4 tabelas** (o piloto contava 3) e os blocos de auditoria aritmetica, que nao existiam.
+
+- **`measure-tac.py` ganhou fallback PyMuPDF** — rasteriza PDF sem o binario `pdftoppm`. Alternativa util onde instalar poppler e trabalhoso (notadamente Windows). Preferencia: `pdftoppm` → `pymupdf` → erro acionavel.
+
+### Added — `deck-render-canva` e a camada de anotacao (Blocos B e D)
+
+Skill nova, **13ª do plugin**, com dois modos independentes:
+
+- **`anotar`** — escreve o briefing de montagem nas notas de cada pagina de um design existente e publica o comentario-indice. **Nao depende de brand template.** Foi por aqui que a hipotese do Epico C foi validada em campo: a redatora recebeu o deck anotado, montou em cima e respondeu **"nao abri o markdown"**.
+- **`render`** — preenche brand template. **Bloqueado**: a conta nao tem brand template e `publish-brand-template` falha (escopo `brandtemplate:content:write` ausente, ou recurso de plano Teams/Enterprise).
+
+Separar os dois foi decisao de realidade — a metade que funciona nao podia ficar refem da que esta travada.
+
+- **`shared/briefing-annotation-contract.md`** (NOVO) — formato v2 do bloco, os 4 rotulos, limites duros do canal, campo compartilhado (D22), limpeza com arquivamento (D26), comentario-indice.
+- **`shared/canva-render-contract.md`** (NOVO) — regras de edicao programatica, medidas em execucao real.
+- **2 references + 10 eval cases** sobre a fixture Beauty Smile.
+
+### Changed — formato do briefing (v2), a pedido da usuaria
+
+A redatora pediu "tamanhos de letra diferentes e pular linhas" nas notas. Quebra de linha e hierarquia foram atendidas: rotulo em linha propria, corpo indentado, linha em branco entre blocos. **Tamanho de fonte e impossivel** — `replace_speaker_notes` aceita texto puro. Os 13 briefings foram reescritos e regravados no Canva (517–713 chars, teto 900).
+
+### Added — baseline de regressao
+
+- **`evals/baselines/W4-glp1tight-review-print.md`** (NOVO) — registro da execucao real: 17 entradas, 7 paginas, 17,1% TAC, ~27x de reducao, 4 tabelas, 1 divergencia aritmetica, TAC por slide, classificacao de referencia e as 7 falhas que o fixture pega.
+- **`evals/baselines/` e um diretorio novo**, separado de `evals/fixtures/`. Motivo empirico: o `lint-storyboard-schema.sh` casa com `W*.md`, e o baseline colocado em `fixtures/` era capturado pelo glob e contado como FAIL, mudando o guardrail de 3 para 4 arquivos. Fixture de storyboard e baseline de execucao sao artefatos diferentes e nao dividem diretorio.
+
+### Escopo do 2.0.0 — o que entra e o que fica para depois
+
+**Entra:** Blocos C (contratos), A (`deck-review-print`) e D (camada de anotacao), mais o modo `anotar` do `deck-render-canva`. Os tres foram exercitados em deck real e o Bloco D teve a hipotese **validada em campo**.
+
+**Fica para o 2.1:** o modo `render` do `deck-render-canva`. Esta bloqueado por conta, nao por codigo — a conta nao tem brand template e `publish-brand-template` falha por escopo `brandtemplate:content:write` ausente (ou por ser recurso de plano Teams/Enterprise). Publicar 2.0.0 com uma skill declarada e inoperante seria anunciar capacidade inexistente, que e exatamente o erro que este ciclo passou corrigindo.
+
+O `SKILL.md` do `deck-render-canva` declara o modo `render` como bloqueado e nao o oferece quando nao ha template — degradacao explicita, nao falha silenciosa.
+
+### Conhecido — divida pre-existente, nao introduzida aqui
+
+- **As fixtures W1-W3 nao passam no lint desde antes desta mudanca.** As tres falham por `Meta sem campo: 'Modo de entrega:'`, campo que o schema v1.1 tornou obrigatorio e ao qual as fixtures nunca foram migradas. Baseline em `main` verificado antes e depois: **3 FAIL / 3 arquivos, identico**. Esta entrega nao introduziu regressao — o diff nao toca fixtures, script de lint nem `storyboard-schema.md`.
+
+### Changed — contratos compartilhados
+
+- **`shared/fronteiras-explicitas.md`** — Fronteira nº 1 emendada conforme **D15**, em redacao **enumerativa**: render e atribuicao exclusiva de `deck-render-canva`, sempre opt-in (D16), e qualquer nova skill de render exige nova decisao D. PPTX/Google Slides/Figma/Gamma seguem proibidos. Fronteira nº 3 esclarecida com **D20** (preencher template ≠ desenhar; o plugin entrega base, a designer entrega peca). Fronteira nº 8 estendida aos 3 artefatos novos. Duas fronteiras novas: nº 9 (nao imprime — entrega PDF) e nº 10 (nao publica, compartilha nem move de pasta no Canva).
+- **`shared/output-convention.md`** — 3 artefatos novos na tabela de anexos: `DOSSIE-{slug}-{HHmm}.pdf`, `DECKLINK-{slug}-{HHmm}.md` e `BRIEFING-{slug}-{HHmm}.md`. Nota explicita de que **STORYBOARD e documento de autoria, nao de execucao** — quem revisa e monta precisa de view reduzida, e o schema v1.1 nao deve ser amputado para resolver isso.
+- **`shared/routing-matrix.md`** — 2 rotas internas de ciclo (`deck-review-print`, `deck-render-canva`) + secao propria documentando a degradacao obrigatoria sem MCP do Canva.
+- **11 SKILL.md** — bloco de fronteiras atualizado com D15 nas 11 skills. `deck-scientific` ganhou secao `## Fronteiras (§10.8)`, que nao tinha.
+
+### Added — handoff opt-in
+
+- **Bloco `## Handoff: render no Canva`** nas **8 verticais** (fundraising, sales, clinical, equipment, teaching, proposal, internal, scientific): 13 linhas, oferta via `AskUserQuestion`, nunca automatica. Com o MCP do Canva desconectado o handoff **nao e oferecido** — nem como opcao quebrada. As 8 verticais continuam funcionando sem Canva.
+
+### Decisoes novas (D15–D26)
+
+| # | Decisao |
+|---|---------|
+| D15 | Fronteira nº 1 emendada, de forma enumerativa — render so por pedido explicito, so pelas skills nomeadas |
+| D16 | Render e sempre opt-in via `AskUserQuestion`; sem MCP conectado, nem e oferecido |
+| D17 | Transcricao de tabela e sempre visual (imagem do slide, nunca o texto corrido da API); toda tabela sai `[CONFERIR]` |
+| D18 | Numeracao espelhada — todo artefato derivado preserva a numeracao do deck de origem |
+| D19 | Sem brand template, sem geracao livre — reporta e pula |
+| D20 | O plugin entrega base, a designer entrega peca |
+| D21 | Nenhum artefato de handoff sai sem a instrucao de como usa-lo |
+| D22 | Speaker notes sao campo compartilhado, delimitado por marcador (briefing de montagem + notas do apresentador) |
+| D23 | A camada de anotacao e uma view, nao uma copia — teto de 900 chars, 4 rotulos fixos (`PROVAR`/`ESCREVER`/`NAO MEXER`/`DECIDIR`) |
+| D24 | **O TAC mede tinta, nao classifica slide** — classificacao e estrutura tabular → densidade de texto → leitura visual |
+| D25 | `deck-review-apply` e modo (`--modo aplicar`) do `deck-review-print`, nao skill propria |
+| D26 | O briefing e editavel; a limpeza arquiva no `DECKLINK` o que foi escrito a mao antes de remover |
+
+### Evidencia de campo para D19
+
+Render manual em 2026-08-11 (design `DAHSC1Q6iNA`): a geracao livre do Canva, sem brand template, **descartou em silencio** o slide de disclaimer forward-looking (Res. CVM 160/22), o footnote de compliance cfo-cfm ("autoreporte, nao auditada por terceiros nesta fase"), o qualificador metodologico do NPS ("n=131, metodologia Bain") e 3 numeros do storyboard — e inventou uma pagina de contato com placeholder de template (`hello@reallygreatsite`). D19 deixa de ser preferencia estetica e vira trava de compliance.
+
 ## [1.2.0] - 2026-05-17
 
 ### Added

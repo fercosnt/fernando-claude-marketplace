@@ -282,12 +282,26 @@ Cabecalho `## Meta`:
 
 ## Limites
 
-- NAO gera slides finais (PPTX/Gamma/Figma) — so STORYBOARD.md.
+- NAO gera slides finais sem pedido explicito (D15) — default e STORYBOARD.md. Render e exclusividade de `deck-render-canva`, opt-in e so com MCP do Canva conectado. PPTX/Google Slides/Figma/Gamma seguem proibidos.
 - NAO projeta espaco/cenografia — D3 LOCKED, delega `skill-cenografia`.
 - NAO renderiza imagens — `deck-image-prompts` faz prompts.
 - NAO faz post de redes sociais — delega `/copy`.
 - NAO busca dados em tempo real — usuario fornece I4.
 - NAO substitui consultoria estrategica — modo strategy-presentation estrutura, NAO inventa estrategia.
+
+## Handoff: render no Canva (v2.0.0 — opt-in, D16)
+
+Ao entregar o `STORYBOARD.md`, **se e somente se** o MCP do Canva estiver conectado, ofereca via `AskUserQuestion`:
+
+> "Gero a base deste deck no Canva a partir do storyboard?"
+> - Sim → `deck-render-canva`
+> - Nao → encerra normalmente
+
+Invioláveis:
+- **Nunca** chama `deck-render-canva` automaticamente (D16).
+- MCP do Canva desconectado → **nao oferece**. Sem aviso e sem opcao quebrada (D15).
+- Recusa encerra o fluxo normalmente — nao insiste, nao repergunta.
+- Sem brand template para a marca, o render reporta e pula. Nunca cai para geracao livre (D19).
 
 ## Eval cases (3 — detalhe em [references/eval-cases-internal.md](references/eval-cases-internal.md))
 

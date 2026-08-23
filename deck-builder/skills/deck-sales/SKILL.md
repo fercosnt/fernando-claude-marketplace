@@ -23,7 +23,7 @@ assets:
 
 Skill vertical do plugin **deck-builder**. Gera `STORYBOARD-{slug}-{HHmm}.md` para vendas B2B consultivas e demos de produto, com narrativa Challenger Sale + Gap Selling + Andy Raskin (Old World → New World) + PAS opcional, ROI/payback explicito e comparativo responsavel (sem badmouth).
 
-> **Esta skill NAO gera slides finais** (PPTX/Gamma/Figma) — produz apenas STORYBOARD.md schema §10.2. Designer/IA gera visual depois.
+> **Esta skill NAO gera slides finais sem pedido explicito** (D15) — produz STORYBOARD.md schema §10.2. Render e exclusividade de `deck-render-canva`, opt-in.
 
 ## Quando ativa
 
@@ -44,13 +44,27 @@ Skill vertical do plugin **deck-builder**. Gera `STORYBOARD-{slug}-{HHmm}.md` pa
 
 ## Fronteiras (LOCKED — SHARED.md §10.8)
 
-- NAO gera slides finais (PPTX/Gamma/Figma) — so STORYBOARD.md
+- NAO gera slides finais sem pedido explicito (D15) — default e STORYBOARD.md. Render e exclusividade de `deck-render-canva`, opt-in e so com MCP do Canva conectado. PPTX/Google Slides/Figma/Gamma seguem proibidos.
 - NAO busca dados em tempo real (CIOSP datas, precos, etc.) — usuario fornece ou skill marca `{INPUT_USUARIO: ...}` no STORYBOARD
 - NAO inventa cases de sucesso — se usuario nao fornecer em S5, slide prova-social vira generico ("inserir case real aqui") e marca em 🟡
 - NAO faz badmouth de concorrente — risco juridico (Lei 9.279/96 art. 195). Detalhe em [references/comparativo-responsavel.md](references/comparativo-responsavel.md)
 - NAO promete absolutos ("garantimos X%") — vira "tipicamente", "em cenarios similares observamos"
 - NAO escreve post de redes sociais — delega `/copy`
 - NAO chama APIs pagas sem confirmacao
+
+## Handoff: render no Canva (v2.0.0 — opt-in, D16)
+
+Ao entregar o `STORYBOARD.md`, **se e somente se** o MCP do Canva estiver conectado, ofereca via `AskUserQuestion`:
+
+> "Gero a base deste deck no Canva a partir do storyboard?"
+> - Sim → `deck-render-canva`
+> - Nao → encerra normalmente
+
+Invioláveis:
+- **Nunca** chama `deck-render-canva` automaticamente (D16).
+- MCP do Canva desconectado → **nao oferece**. Sem aviso e sem opcao quebrada (D15).
+- Recusa encerra o fluxo normalmente — nao insiste, nao repergunta.
+- Sem brand template para a marca, o render reporta e pula. Nunca cai para geracao livre (D19).
 
 ## Protocolo (8 passos)
 
