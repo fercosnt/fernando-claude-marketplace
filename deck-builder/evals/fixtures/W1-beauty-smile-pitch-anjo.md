@@ -6,6 +6,7 @@
 - Audiência: Investidor anjo regional, ex-CFO Iguatemi, alta exposição a varejo
 - Duração: 15 min
 - Formato: pitch presencial
+- Modo de entrega: hibrido — apresentado ao vivo + leave-behind (anjo leva versão impressa)
 - Big Idea: Crescemos 10x em 24 meses com 0,3% CAC sobre receita
 - Marca: Beauty Smile
 - Framework principal: Sequoia + Andy Raskin

@@ -85,6 +85,24 @@ A redatora pediu "tamanhos de letra diferentes e pular linhas" nas notas. Quebra
 
 O `SKILL.md` do `deck-render-canva` declara o modo `render` como bloqueado e nao o oferece quando nao ha template — degradacao explicita, nao falha silenciosa.
 
+### Fixed — divida pre-existente do lint
+
+- **As fixtures W1-W3 voltaram a passar no `lint-storyboard-schema.sh`.** As tres falhavam por `Meta sem campo: 'Modo de entrega:'`, campo que o schema v1.1 tornou obrigatorio e ao qual nunca foram migradas. O linter estava certo; os arquivos e que ficaram para tras.
+
+  Resultado: **3 FAIL / 3 → 0 FAIL / 3**. Contando o `BAD-incomplete-meta.md`, que deve falhar por design: **1 FAIL / 4 arquivos**, exatamente o teste negativo.
+
+  Os valores nao foram derivados do campo `Formato` — foram lidos das versoes completas dos mesmos storyboards, que declaram `hibrido` nos tres casos. Derivar do formato teria produzido `apresentado-ao-vivo` no W2 e no W3, que seria errado: a aula distribui material pos-aula e o pitch ao CEO entrega um 6-pager impresso.
+
+  O guardrail do PRD ("lint passa em 100% das fixtures") volta a significar alguma coisa. Enquanto estava em 0%, o criterio real era "mesmo numero de falhas antes e depois", que detecta regressao nova mas nao valida nada.
+
+### Escopo do 2.0.0 — o que entra e o que fica para depois
+
+**Entra:** Blocos C (contratos), A (`deck-review-print`) e D (camada de anotacao), mais o modo `anotar` do `deck-render-canva`. Os tres foram exercitados em deck real e o Bloco D teve a hipotese **validada em campo**.
+
+**Fica para o 2.1:** o modo `render` do `deck-render-canva`. Esta bloqueado por conta, nao por codigo — a conta nao tem brand template e `publish-brand-template` falha por escopo `brandtemplate:content:write` ausente (ou por ser recurso de plano Teams/Enterprise). Publicar 2.0.0 com uma skill declarada e inoperante seria anunciar capacidade inexistente, que e exatamente o erro que este ciclo passou corrigindo.
+
+O `SKILL.md` do `deck-render-canva` declara o modo `render` como bloqueado e nao o oferece quando nao ha template — degradacao explicita, nao falha silenciosa.
+
 ### Conhecido — divida pre-existente, nao introduzida aqui
 
 - **As fixtures W1-W3 nao passam no lint desde antes desta mudanca.** As tres falham por `Meta sem campo: 'Modo de entrega:'`, campo que o schema v1.1 tornou obrigatorio e ao qual as fixtures nunca foram migradas. Baseline em `main` verificado antes e depois: **3 FAIL / 3 arquivos, identico**. Esta entrega nao introduziu regressao — o diff nao toca fixtures, script de lint nem `storyboard-schema.md`.

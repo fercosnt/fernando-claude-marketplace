@@ -6,6 +6,7 @@
 - Audiência: CEO Beauty Smile, perfil financeiro, atenção a unit economics, decide em <30min
 - Duração: 12 min
 - Formato: pitch presencial
+- Modo de entrega: hibrido — 9min apresentado ao vivo + 6-pager entregue impresso
 - Big Idea: Cada R$1 em viagens precisa devolver R$3 ou não autorizamos
 - Marca: Beauty Smile
 - Framework principal: Pyramid Minto BLUF + Working Backwards Amazon

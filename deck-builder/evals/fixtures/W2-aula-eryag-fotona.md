@@ -6,6 +6,7 @@
 - Audiência: 18 dentistas pós-graduação, mix iniciantes Er:YAG (12) + experientes (6)
 - Duração: 240 min
 - Formato: pitch presencial
+- Modo de entrega: hibrido — slides projetados em aula + material distribuído pós-aula
 - Big Idea: Er:YAG não é laser de corte — é instrumento de precisão biológica
 - Marca: Fotona (LightWalker — auto-detect)
 - Framework principal: Andragogy Knowles + Bloom + Mayer + chunks ≤7min
