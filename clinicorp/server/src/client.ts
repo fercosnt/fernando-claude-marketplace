@@ -148,13 +148,13 @@ export async function subscriberDe(clinic: Clinic): Promise<string | undefined> 
   if (clinic.subscriberId) return clinic.subscriberId;
   if (cacheSubscriber.has(clinic.nome)) return cacheSubscriber.get(clinic.nome);
 
+  // 1) Conta de grupo/franquia: os assinantes vem listados aqui.
+  //    Em conta unica esse endpoint responde vazio — por isso o passo 2.
   let achados: Array<Record<string, unknown>> = [];
   try {
     achados = toArray<Record<string, unknown>>(await apiGet(clinic, "group/list_subscribers"));
   } catch {
-    // conta unica costuma inferir o assinante pelo token — segue sem subscriber_id
-    cacheSubscriber.set(clinic.nome, undefined);
-    return undefined;
+    achados = [];
   }
 
   const ids = achados
@@ -168,9 +168,15 @@ export async function subscriberDe(clinic: Clinic): Promise<string | undefined> 
     );
   }
 
-  const escolhido = ids[0];
-  cacheSubscriber.set(clinic.nome, escolhido);
-  return escolhido;
+  if (ids.length === 1) {
+    cacheSubscriber.set(clinic.nome, ids[0]);
+    return ids[0];
+  }
+
+  // 2) Em conta unica, o id do assinante e o proprio Usuario API.
+  //    (Confirmado contra a API: /business/list responde com subscriber_id = username.)
+  cacheSubscriber.set(clinic.nome, clinic.username);
+  return clinic.username;
 }
 
 /** Cache de listas estaveis (unidades, status) — evita repetir a chamada a cada pergunta. */
@@ -190,6 +196,12 @@ export function toArray<T>(payload: unknown): T[] {
     const obj = payload as Record<string, unknown>;
     for (const chave of ["data", "items", "results", "list"]) {
       if (Array.isArray(obj[chave])) return obj[chave] as T[];
+    }
+    // /procedures/list devolve um objeto agrupado por tabela de preco:
+    // { "Tabela A": [...], "Tabela B": [...] } — achata mantendo a ordem.
+    const valores = Object.values(obj);
+    if (valores.length > 0 && valores.every((v) => Array.isArray(v))) {
+      return (valores as unknown[][]).flat() as T[];
     }
   }
   return [];

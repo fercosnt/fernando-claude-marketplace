@@ -1,11 +1,26 @@
 /** Tipos das respostas da API Clinicorp (validados contra dados reais no Dash-Unidades-BS). */
 
+/**
+ * Item do ProcedureList de um orcamento.
+ *
+ * ATENCAO: ao contrario do que a doc sugere, este objeto NAO traz ProcedureName.
+ * O nome do procedimento sai do catalogo (/procedures/list), casando
+ * PriceId (aqui) com id (la). Verificado contra a API em 08/2026.
+ */
 export interface ClinicorpProcedure {
-  ProcedureName: string;
-  ProcedureExpertiseName: string;
-  OriginalAmount: number;
-  OperationDescription: string;
+  PriceId?: number;
+  Procedure_CharacteristicId?: number;
+  PriceListId?: number;
   Amount: number;
+  FinalAmount?: number;
+  OriginalAmount?: number;
+  Executed?: string; // "X" | ""
+  Tooth?: string;
+  Surface?: string;
+  HasSteps?: string;
+  /** Presente em algumas contas; nao confie nele. */
+  ProcedureName?: string;
+  ProcedureExpertiseName?: string;
 }
 
 export interface ClinicorpEstimateStep {

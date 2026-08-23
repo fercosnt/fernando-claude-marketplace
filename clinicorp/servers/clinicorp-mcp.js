@@ -21631,8 +21631,7 @@ async function subscriberDe(clinic) {
   try {
     achados = toArray(await apiGet(clinic, "group/list_subscribers"));
   } catch {
-    cacheSubscriber.set(clinic.nome, void 0);
-    return void 0;
+    achados = [];
   }
   const ids = achados.map((a) => a.SubscriberBussinessUID ?? a.Namespace).filter((v) => typeof v === "string" && v.length > 0);
   if (ids.length > 1) {
@@ -21640,9 +21639,12 @@ async function subscriberDe(clinic) {
       `A conta "${clinic.nome}" e de grupo/franquia e tem ${ids.length} assinantes: ${ids.join(", ")}. Escolha um e preencha "subscriber_id" no arquivo de credenciais.`
     );
   }
-  const escolhido = ids[0];
-  cacheSubscriber.set(clinic.nome, escolhido);
-  return escolhido;
+  if (ids.length === 1) {
+    cacheSubscriber.set(clinic.nome, ids[0]);
+    return ids[0];
+  }
+  cacheSubscriber.set(clinic.nome, clinic.username);
+  return clinic.username;
 }
 var cacheLista = /* @__PURE__ */ new Map();
 async function listaCacheada(chave, buscar) {
@@ -21657,6 +21659,10 @@ function toArray(payload) {
     const obj = payload;
     for (const chave of ["data", "items", "results", "list"]) {
       if (Array.isArray(obj[chave])) return obj[chave];
+    }
+    const valores = Object.values(obj);
+    if (valores.length > 0 && valores.every((v) => Array.isArray(v))) {
+      return valores.flat();
     }
   }
   return [];
@@ -22713,6 +22719,17 @@ server.registerTool(
         // atencao: aqui a API chama de clinic_id, nao business_id
         clinic_id: a.unidade_id
       });
+      const nomeProcedimento = /* @__PURE__ */ new Map();
+      if (dados.length > 0 && a.formato === "resumo") {
+        const catalogo = toArray(
+          await listaCacheada(`procedimentos:${c.nome}`, () => apiGet(c, "procedures/list"))
+        );
+        for (const p of catalogo) {
+          if (p.id != null && typeof p.ProcedureName === "string") {
+            nomeProcedimento.set(String(p.id), p.ProcedureName);
+          }
+        }
+      }
       const porStatus = {};
       for (const o of dados) {
         const s = String(o.Status ?? "?");
@@ -22741,7 +22758,11 @@ server.registerTool(
           status: o.Status,
           data: o.CreateDate,
           profissional: o.ProfessionalName,
-          procedimentos: (o.ProcedureList ?? []).map((p) => p.ProcedureName)
+          procedimentos: (o.ProcedureList ?? []).map((p) => ({
+            nome: nomeProcedimento.get(String(p.PriceId ?? "")) ?? "(nome nao encontrado no catalogo)",
+            valor: num2(p.FinalAmount ?? p.Amount),
+            executado: flagX2(p.Executed)
+          }))
         }))
       });
     } catch (e) {
@@ -22986,6 +23007,14 @@ server.registerTool(
       const dados = toArray(
         await agregado(c, "analytics/list_results", from, to)
       );
+      if (dados.length === 0) {
+        return texto({
+          clinica: c.nome,
+          periodo: { from, to },
+          unidades: [],
+          aviso: "O painel consolidado (analytics/list_results) voltou vazio para esta conta. Isso NAO significa que nao houve movimento: o endpoint nao esta populado em todas as contas. Monte a visao pelas fontes analiticas: clinicorp_orcamentos (venda e conversao), clinicorp_pagamentos (caixa) e clinicorp_kpis_agenda (agendamentos e faltas)."
+        });
+      }
       return texto({
         clinica: c.nome,
         periodo: { from, to },

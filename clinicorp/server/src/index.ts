@@ -478,6 +478,20 @@ server.registerTool(
         clinic_id: a.unidade_id,
       });
 
+      // O ProcedureList do orcamento NAO traz ProcedureName (a doc erra nisso):
+      // traz PriceId, que casa com o id do catalogo em /procedures/list.
+      const nomeProcedimento = new Map<string, string>();
+      if (dados.length > 0 && a.formato === "resumo") {
+        const catalogo = toArray<Record<string, unknown>>(
+          await listaCacheada(`procedimentos:${c.nome}`, () => apiGet(c, "procedures/list"))
+        );
+        for (const p of catalogo) {
+          if (p.id != null && typeof p.ProcedureName === "string") {
+            nomeProcedimento.set(String(p.id), p.ProcedureName);
+          }
+        }
+      }
+
       const porStatus: Record<string, { quantidade: number; valor: number }> = {};
       for (const o of dados) {
         const s = String(o.Status ?? "?");
@@ -511,7 +525,11 @@ server.registerTool(
                 status: o.Status,
                 data: o.CreateDate,
                 profissional: o.ProfessionalName,
-                procedimentos: (o.ProcedureList ?? []).map((p) => p.ProcedureName),
+                procedimentos: (o.ProcedureList ?? []).map((p) => ({
+                  nome: nomeProcedimento.get(String(p.PriceId ?? "")) ?? "(nome nao encontrado no catalogo)",
+                  valor: num(p.FinalAmount ?? p.Amount),
+                  executado: flagX(p.Executed),
+                })),
               })),
       });
     } catch (e) {
@@ -793,6 +811,21 @@ server.registerTool(
       const dados = toArray<Record<string, unknown>>(
         await agregado(c, "analytics/list_results", from, to)
       );
+
+      // Verificado em 08/2026: em algumas contas este endpoint responde vazio
+      // mesmo com movimento no periodo. Nao anuncie "sem movimento" — diga a verdade.
+      if (dados.length === 0) {
+        return texto({
+          clinica: c.nome,
+          periodo: { from, to },
+          unidades: [],
+          aviso:
+            "O painel consolidado (analytics/list_results) voltou vazio para esta conta. " +
+            "Isso NAO significa que nao houve movimento: o endpoint nao esta populado em todas as contas. " +
+            "Monte a visao pelas fontes analiticas: clinicorp_orcamentos (venda e conversao), " +
+            "clinicorp_pagamentos (caixa) e clinicorp_kpis_agenda (agendamentos e faltas).",
+        });
+      }
 
       return texto({
         clinica: c.nome,
