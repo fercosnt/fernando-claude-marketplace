@@ -1,0 +1,35 @@
+{
+  "skill_name": "project-instructions",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Criei um projeto no Claude pra escrever posts do Instagram da clinica. Me escreve as instrucoes do projeto.",
+      "expected_output": "Should detect Chat Project (nao Cowork). Should run the entrevista (max 7 perguntas, agrupadas) instead of writing blind — minimo perguntar o entregavel, o publico, os erros conhecidos e a fronteira. Should NOT dump a 90-line XML template. Final output: bloco de codigo com cabecalho dono/data, 3-5 blocos rotulados, dentro de 1.500-2.500 caracteres, mais onde colar e o que foi roteado pra knowledge.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Meu projeto do Cowork so fica conversando comigo, explica o que faria e nao entrega a planilha. As instrucoes que eu botei foram: 'Voce e um analista financeiro senior. Seja preciso, profissional e detalhista. Explique seu raciocinio.'",
+      "expected_output": "Should diagnose two named failures: instrucao-curriculo and Cowork conversacional. Should explain the Cowork mental model (tell what you need, not how) and that the instruction is missing ENTREGAVEL, PRONTO QUANDO, ONDE SALVA and FRONTEIRA. Should rewrite the full instruction with verifiable done-conditions and a save path. Should NOT merely add 'seja mais direto'.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Quero que meu time todo use o mesmo projeto do Cowork pra fechar relatorio. Como compartilho?",
+      "expected_output": "Should state the blocking fact: projeto Cowork e local, nao sincroniza nem compartilha. Should NOT invent a sharing feature. Should propose the versioned source-file workflow (INSTRUCOES.md no repo + checklist de setup replicavel: connectors, pastas, skills) e mencionar que skill que so existe em ~/.claude precisa ser adicionada em Customize.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Aqui estao as instrucoes do meu projeto, ta com 9 mil caracteres e ele ignora metade. [instrucao longa com tabela de precos colada, 3 paragrafos de persona, e 12 regras]",
+      "expected_output": "Should count and classify each trecho as manter/reescrever/mover para [camada]/cortar. Should name enciclopedia (tabela de precos -> knowledge) and instrucao-curriculo (persona -> cortar). Should explain that project instructions consomem janela de contexto. Should deliver a full rewrite, not just edits, plus 2-3 testes concretos. Should NOT claim a specific character limit for project instructions.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "Qual a ordem de precedencia entre as instrucoes do projeto, as minhas preferencias globais e a memoria?",
+      "expected_output": "Should state only what is documented: organization > individual. Should say explicitly that Anthropic nao documenta a precedencia entre project instructions, perfil, memoria e skills, and advise writing instructions that nao dependem de resolucao de conflito. Should NOT fabricate a hierarchy.",
+      "files": []
+    }
+  ]
+}

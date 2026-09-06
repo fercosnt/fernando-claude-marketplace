@@ -131,6 +131,29 @@
       ]
     },
     {
+      "name": "prompt-suite",
+      "description": "As tres superficies onde se escreve instrucao para o Claude, num plugin so, com orquestrador que decide qual delas e a sua. Entrypoint /prompt-suite classifica pela pergunta que resolve — onde esse texto vai morar, e por quanto tempo — e roteia: claude-md-generator (Claude Code: CLAUDE.md e a estrutura .claude/), project-instructions (Projects do chat e do Cowork: roteador de camadas, teste de permanencia, 9 falhas de auditoria, pacote de time) e prompt-engineer (prompt avulso, system prompt, N8N, Notion Custom AI, OpenClaw, scorecard 4D). Escolher a superficie errada falha em silencio: CLAUDE.md nao existe num Chat Project, instrucao de Cowork num chat manda salvar em pasta que nao ha, e prompt avulso congelado numa instrucao permanente vira regra morta. Fatos de plataforma verificados contra a doc oficial, inclusive os que a Anthropic nao publica (limite de caracteres, precedencia entre camadas), que a suite se recusa a inventar. Prompt de imagem nao esta aqui — ver deck-image-prompts.",
+      "version": "1.0.0",
+      "source": "./prompt-suite",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": [
+        "prompt-engineering",
+        "instrucoes",
+        "project-instructions",
+        "claude-md",
+        "cowork",
+        "claude-desktop",
+        "claude-code",
+        "n8n",
+        "notion",
+        "contexto",
+        "portugues",
+        "brasil"
+      ]
+    },
+    {
       "name": "fotona-design-system",
       "description": "Design system da Fotona Brasil — fonte unica de verdade visual, cobrindo os dois registros da marca: o claro (dashboards, LPs, apps, artifacts, 14 componentes @fotona/ui) e o escuro (slides 1920x1080, posts do @fotonalaser, capas, campanhas). Traz tokens CSS prontos, logotipo vetorial oficial, as tres fontes embutidas, 9 arquetipos de slide com medidas e copy, 7 formatos de post e prompts de imagem calibrados. Heuristica central: se a peca vai ser usada e clara, se vai ser mostrada e escura. Autocontida — funciona sem acesso ao repositorio de origem.",
       "version": "1.0.0",

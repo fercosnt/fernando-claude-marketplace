@@ -1,0 +1,8 @@
+{
+  "name": "prompt-suite",
+  "version": "1.0.0",
+  "description": "As tres superficies onde se escreve instrucao para o Claude, num plugin so, com um orquestrador que decide qual delas e a sua. prompt-suite (entrypoint) classifica o pedido pela pergunta que resolve — onde esse texto vai morar, e por quanto tempo — e roteia. claude-md-generator cuida do Claude Code: CLAUDE.md e a estrutura .claude/ inteira. project-instructions cuida dos Projects do chat e do Cowork, com roteador de camadas, teste de permanencia, catalogo de 9 falhas de auditoria e montagem do pacote de time. prompt-engineer cuida do tiro avulso e das outras plataformas: system prompt, N8N, Notion Custom AI, OpenClaw, com scorecard de qualidade. Escolher a superficie errada custa caro — CLAUDE.md nao existe num Chat Project, instrucao de Cowork num chat manda salvar em pasta que nao ha, e prompt avulso congelado numa instrucao permanente vira regra morta. Fatos de plataforma verificados contra a documentacao oficial. Autocontido: funciona no Claude Code e no Cowork.",
+  "author": {
+    "name": "Fernando Costa"
+  }
+}
