@@ -49,6 +49,7 @@ Skills com `scripts/` (ex.: `deep-research`, `presentation-text-extractor`) traz
 | [deck-builder](./deck-builder/) | STORYBOARD de apresentacoes em 8 verticais + 2 auxiliares + orquestrador. Entry: `/deck`. Auto-detect de marca, NotebookLM-aware | 11 | 1.2.0 |
 | [legal-analyzer](./legal-analyzer/) | Analise contratual BR — coordenador + 9 skills (revisar, NDA, LGPD, risco, briefings, fornecedor, resposta, assinatura) | 10 | 0.1.0 |
 | [skill-prd](./skill-prd/) | Criacao, validacao e melhoria de PRDs estruturados — 4 modos, 3 niveis, scorecard 5D, Deep Modules, vertical slicing (tracer bullets) | 1 | 0.3.0 |
+| [fotona-design-system](./fotona-design-system/) | Design system da Fotona Brasil — os dois registros da marca (claro de produto, escuro de marca), tokens, logo, fontes, 14 componentes, 9 arquetipos de slide, 7 formatos de post e prompts de imagem | 1 | 1.0.0 |
 
 ## Skills avulsas
 

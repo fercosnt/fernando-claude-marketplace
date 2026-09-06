@@ -1,0 +1,217 @@
+/* ==========================================================================
+   @fotona/ui · estilos dos componentes
+   Requer os tokens de @fotona/tokens (tokens.css) e as fontes (fonts.css).
+   Vocabulario: .ftn-<componente>, .ftn-<componente>__<parte>, .ftn-<componente>--<variante>
+   ========================================================================== */
+
+/* --- base opcional para o container da aplicacao --------------------------- */
+.ftn {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+}
+.ftn a { color: var(--pilar-cientifico); }
+.ftn a:hover { color: var(--text); }
+
+/* --- pilares: cada componente le --pilar e --pilar-wash --------------------- */
+.ftn-pilar-evento     { --pilar: var(--pilar-evento);     --pilar-wash: var(--wash-evento); }
+.ftn-pilar-cientifico { --pilar: var(--pilar-cientifico); --pilar-wash: var(--wash-cientifico); }
+.ftn-pilar-creators   { --pilar: var(--pilar-creators);   --pilar-wash: var(--wash-creators); }
+.ftn-pilar-comercial  { --pilar: var(--pilar-comercial);  --pilar-wash: var(--wash-comercial); }
+.ftn-pilar-imprensa   { --pilar: var(--pilar-imprensa);   --pilar-wash: var(--wash-imprensa); }
+
+/* --- rotulo (ecoa "choose perfection") ------------------------------------- */
+.ftn-label {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: lowercase;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+.ftn-label--error { color: var(--fotona-red); }
+
+/* --- titulos ---------------------------------------------------------------- */
+.ftn-heading { margin: 0; color: var(--text); text-wrap: balance; }
+.ftn-heading--display {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 42px; line-height: 1.08; letter-spacing: -0.015em;
+}
+.ftn-heading--section {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 30px; line-height: 1.15; letter-spacing: -0.01em;
+}
+.ftn-heading--card {
+  font-family: var(--font-ui); font-weight: 600;
+  font-size: 20px; line-height: 1.3; letter-spacing: -0.01em;
+}
+
+/* --- cabecalho de secao ------------------------------------------------------ */
+.ftn-section { display: flex; flex-direction: column; gap: 6px; }
+.ftn-section__head { display: flex; align-items: baseline; gap: 14px; }
+.ftn-section__dot {
+  width: 7px; height: 7px; border-radius: 50%; flex: none;
+  background: var(--fotona-red); position: relative; top: -4px;
+}
+.ftn-section--neutral .ftn-section__dot { background: var(--ink-muted); }
+.ftn-section__lede {
+  margin: 0; color: var(--text-muted); max-width: 66ch;
+  font-family: var(--font-ui); font-size: 14.5px; line-height: 1.55;
+}
+
+/* --- botao ------------------------------------------------------------------ */
+.ftn-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 32px; padding: 0 15px; box-sizing: border-box;
+  border-radius: var(--radius); border: 1px solid transparent;
+  font-family: var(--font-ui); font-size: 12.5px; font-weight: 600; line-height: 1;
+  white-space: nowrap; cursor: pointer; text-decoration: none;
+  transition: background-color .12s ease, color .12s ease, border-color .12s ease;
+}
+.ftn-btn--primary { background: var(--fotona-red); color: #FFFFFF; }
+.ftn-btn--primary:hover { background: var(--fotona-red-deep); }
+.ftn-btn--primary:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+.ftn-btn--secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+.ftn-btn--secondary:hover { background: var(--surface-sunken); }
+.ftn-btn--ghost { background: transparent; color: var(--text-muted); }
+.ftn-btn--ghost:hover { background: var(--surface-sunken); color: var(--text); }
+.ftn-btn--secondary:focus-visible, .ftn-btn--ghost:focus-visible { outline: 2px solid var(--fotona-red); outline-offset: 2px; }
+.ftn-btn--sm { height: 26px; padding: 0 10px; font-size: 12px; }
+.ftn-btn--lg { height: 40px; padding: 0 20px; font-size: 14px; }
+.ftn-btn:disabled, .ftn-btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+.ftn-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* --- controle segmentado ---------------------------------------------------- */
+.ftn-seg {
+  display: inline-flex; border: 1px solid var(--border-strong);
+  border-radius: var(--radius); overflow: hidden; background: var(--surface);
+}
+.ftn-seg__item {
+  appearance: none; background: transparent; border: 0; margin: 0;
+  border-right: 1px solid var(--border-strong);
+  height: 30px; padding: 0 13px; box-sizing: border-box;
+  font-family: var(--font-ui); font-size: 12.5px; color: var(--text-muted); cursor: pointer;
+}
+.ftn-seg__item:last-child { border-right: 0; }
+.ftn-seg__item[aria-pressed="true"] { background: var(--surface-sunken); color: var(--text); font-weight: 600; }
+.ftn-seg__item:focus-visible { outline: 2px solid var(--fotona-red); outline-offset: -2px; }
+
+/* --- pilula de filtro por pilar --------------------------------------------- */
+.ftn-filter {
+  appearance: none; margin: 0; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 26px; padding: 0 10px; box-sizing: border-box; border-radius: 999px;
+  border: 1px solid var(--border-strong); background: transparent;
+  font-family: var(--font-ui); font-size: 12px; color: var(--text-muted);
+}
+.ftn-filter__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pilar); flex: none; }
+.ftn-filter[aria-pressed="true"] { border-color: transparent; background: var(--surface-sunken); color: var(--text); font-weight: 500; }
+.ftn-filter:focus-visible { outline: 2px solid var(--fotona-red); outline-offset: 2px; }
+
+/* --- botao de icone (rail lateral) ------------------------------------------ */
+.ftn-iconbtn {
+  appearance: none; border: 0; margin: 0; padding: 0; cursor: pointer;
+  width: 34px; height: 34px; border-radius: var(--radius);
+  display: inline-grid; place-items: center;
+  color: var(--text-faint); background: transparent;
+}
+.ftn-iconbtn svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ftn-iconbtn:hover { color: var(--text); background: var(--surface-sunken); }
+.ftn-iconbtn[aria-current="page"], .ftn-iconbtn[aria-pressed="true"] {
+  color: var(--text); background: var(--surface); box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+.ftn-iconbtn:focus-visible { outline: 2px solid var(--fotona-red); outline-offset: 2px; }
+
+/* --- chip de pilar ----------------------------------------------------------- */
+.ftn-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 3px 9px 3px 8px; border-radius: 4px;
+  font-family: var(--font-ui); font-size: 12px; font-weight: 500; line-height: 1.5;
+  white-space: nowrap; background: var(--pilar-wash); color: var(--pilar);
+}
+.ftn-chip__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pilar); flex: none; }
+
+/* --- pilula de estado --------------------------------------------------------- */
+.ftn-status {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 9px; border-radius: 999px;
+  font-family: var(--font-ui); font-size: 11.5px; font-weight: 600; letter-spacing: .01em; line-height: 1.5;
+}
+.ftn-status--ao-vivo   { color: var(--estado-ao-vivo);   background: var(--wash-evento); }
+.ftn-status--publicado { color: var(--estado-publicado); background: var(--wash-creators); }
+.ftn-status--pendente  { color: var(--estado-pendente);  background: var(--wash-comercial); }
+.ftn-status--rascunho  { color: var(--estado-rascunho);  background: var(--surface-sunken); }
+
+/* --- campo de texto ---------------------------------------------------------- */
+.ftn-field { display: flex; flex-direction: column; gap: 6px; font-family: var(--font-ui); }
+.ftn-field__input {
+  height: 34px; padding: 0 10px; box-sizing: border-box; width: 100%;
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  background: var(--surface); color: var(--text);
+  font-family: var(--font-ui); font-size: 13px; line-height: 1;
+}
+.ftn-field__input::placeholder { color: var(--text-faint); }
+.ftn-field__input:focus-visible { outline: 2px solid var(--fotona-red); outline-offset: 2px; }
+.ftn-field__input:disabled { background: var(--surface-alt); color: var(--text-faint); cursor: not-allowed; }
+.ftn-field--error .ftn-field__input { border-color: var(--fotona-red); }
+.ftn-field__hint { font-size: 11.5px; line-height: 1.45; color: var(--text-muted); }
+.ftn-field--error .ftn-field__hint { color: var(--fotona-red); }
+
+/* --- card ------------------------------------------------------------------- */
+.ftn-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-card); padding: 20px 22px; box-sizing: border-box;
+  font-family: var(--font-ui); color: var(--text);
+}
+.ftn-card--compact { padding: 16px 18px; }
+.ftn-card--elevated { border-color: var(--border-strong); box-shadow: var(--shadow); }
+.ftn-card__title { margin: 0 0 6px; font-size: 14px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.4; }
+.ftn-card__body { font-size: 13.5px; color: var(--text-muted); line-height: 1.55; }
+.ftn-card__body > p { margin: 0; }
+
+/* --- metrica ----------------------------------------------------------------- */
+.ftn-metric { display: flex; flex-direction: column; font-family: var(--font-ui); }
+.ftn-metric__row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.ftn-metric__value {
+  font-family: var(--font-display); font-weight: 400; font-size: 26px; line-height: 1;
+  color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+}
+.ftn-metric--lg .ftn-metric__value { font-size: 38px; }
+.ftn-metric__delta { font-size: 11px; font-weight: 600; color: var(--estado-publicado); }
+.ftn-metric__delta--flat { color: var(--text-faint); }
+.ftn-metric__name { font-size: 11px; color: var(--text-muted); letter-spacing: .02em; margin-top: 4px; }
+.ftn-metric__meter { height: 3px; background: var(--surface-sunken); border-radius: 2px; margin-top: 7px; overflow: hidden; }
+.ftn-metric__fill { display: block; height: 100%; background: var(--text-muted); }
+.ftn-metric--hit .ftn-metric__fill { background: var(--estado-publicado); }
+
+/* --- item de calendario ------------------------------------------------------ */
+.ftn-event {
+  font-family: var(--font-ui); font-size: 11.5px; line-height: 1.35;
+  border-radius: 3px; padding: 4px 6px 4px 7px;
+  border-left: 2px solid var(--pilar); color: var(--text); background: var(--pilar-wash);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ftn-event__time { color: var(--text-faint); font-variant-numeric: tabular-nums; margin-right: 5px; }
+.ftn-event--ghost {
+  background: transparent; border-left-color: var(--border-strong);
+  color: var(--text-faint); font-style: italic;
+}
+
+/* --- alerta ------------------------------------------------------------------ */
+.ftn-alert {
+  display: grid; grid-template-columns: 6px minmax(0, 1fr); gap: 9px;
+  font-family: var(--font-ui); font-size: 12px; line-height: 1.45; color: var(--text-muted);
+}
+.ftn-alert__dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 6px; background: var(--pilar-imprensa); }
+.ftn-alert--evento    .ftn-alert__dot { background: var(--estado-ao-vivo); }
+.ftn-alert--pendente  .ftn-alert__dot { background: var(--estado-pendente); }
+.ftn-alert--publicado .ftn-alert__dot { background: var(--estado-publicado); }
+.ftn-alert__title { display: block; color: var(--text); font-weight: 600; }
+
+/* --- logotipo ------------------------------------------------------------------ */
+.ftn-logo { display: block; height: 46px; width: auto; }

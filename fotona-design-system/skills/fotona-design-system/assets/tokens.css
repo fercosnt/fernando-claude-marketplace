@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Fotona · design tokens (@fotona/tokens)
+   Fonte: logotipo oficial + LP institucional. Ver design-system/DESIGN-SYSTEM.md.
+   Tema escuro e opt-in: <html data-theme="dark"> (ou qualquer ancestral).
+   ========================================================================== */
+
+:root {
+  /* --- marca --------------------------------------------------------- */
+  --fotona-red: #ED1C24;        /* acao primaria · hoje · ao vivo. Nada mais. */
+  --fotona-red-deep: #CC0000;   /* hover do botao primario */
+  --ink: #414042;               /* grafite do wordmark */
+  --ink-muted: #808285;         /* cinza da tagline · rotulos */
+
+  /* --- superficies e texto ------------------------------------------- */
+  --surface: #FFFFFF;
+  --surface-alt: #F9F9F9;
+  --surface-sunken: #F5F4F3;
+  --border: #EBEBEB;
+  --border-strong: #DBD9D7;
+  --dark-bg: #111111;
+  --text: #212121;
+  --text-muted: #6E6E6E;
+  --text-faint: #9A9895;
+
+  /* --- pilares de conteudo ------------------------------------------- */
+  --pilar-evento: #ED1C24;
+  --pilar-cientifico: #1863DC;  /* tambem a cor de apoio para links */
+  --pilar-creators: #0F8377;
+  --pilar-comercial: #9A6B10;
+  --pilar-imprensa: #55555A;
+
+  /* washes (fundo dos chips) — mesma cor a ~10% */
+  --wash-evento: rgba(237, 28, 36, .08);
+  --wash-cientifico: rgba(24, 99, 220, .09);
+  --wash-creators: rgba(15, 131, 119, .10);
+  --wash-comercial: rgba(154, 107, 16, .11);
+  --wash-imprensa: rgba(85, 85, 90, .09);
+
+  /* --- estados semanticos -------------------------------------------- */
+  --estado-ao-vivo: var(--fotona-red);
+  --estado-publicado: var(--pilar-creators);
+  --estado-pendente: var(--pilar-comercial);
+  --estado-rascunho: var(--text-faint);
+
+  /* --- tipografia ----------------------------------------------------- */
+  --font-ui: 'Instrument Sans', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --tracking-label: 0.16em;     /* rotulos em caixa baixa */
+
+  /* --- forma ---------------------------------------------------------- */
+  --radius: 5px;                /* discreto · nada de rounded-lg em card */
+  --radius-card: 6px;
+  --shadow: 0 1px 2px rgba(30, 28, 26, .05), 0 8px 24px -12px rgba(30, 28, 26, .18);
+}
+
+/* Tema escuro: redefinir SO os tokens, nunca estilizar componentes aqui. */
+[data-theme="dark"] {
+  --ink: #EDECEA;
+  --ink-muted: #95948F;
+  --surface: #1A1A1B;
+  --surface-alt: #151516;
+  --surface-sunken: #202021;
+  --border: #2A2A2B;
+  --border-strong: #3A3A3C;
+  --text: #F1F0EE;
+  --text-muted: #A3A19D;
+  --text-faint: #77756F;
+  --pilar-cientifico: #75A7FF;
+  --pilar-creators: #43CFBE;
+  --pilar-comercial: #E0AE5E;
+  --pilar-imprensa: #B0AEAB;
+  --wash-evento: rgba(237, 28, 36, .16);
+  --wash-cientifico: rgba(117, 167, 255, .13);
+  --wash-creators: rgba(67, 207, 190, .12);
+  --wash-comercial: rgba(224, 174, 94, .13);
+  --wash-imprensa: rgba(176, 174, 171, .10);
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -14px rgba(0, 0, 0, .7);
+}
+
+/* --- registro de marca: apresentacoes, social e imagens ----------------------
+   Medido nos slides do Canva e no feed do @fotonalaser (set/2026). Use para
+   heros, capas, slides e pecas de campanha; o registro claro acima segue sendo
+   o padrao de dashboards e LPs institucionais. */
+:root {
+  --brand-black: #000000;
+  --brand-black-soft: #0C0202;
+  --crimson-900: #1F0003;
+  --crimson-800: #3A0009;
+  --crimson-700: #5F0503;
+  --crimson-600: #7D0000;
+  --crimson-500: #9C130D;
+  --brand-gradient: linear-gradient(135deg, #000000 0%, #1F0003 40%, #5F0503 75%, #9C130D 100%);
+  --brand-halo: radial-gradient(60% 80% at 100% 0%, rgba(156, 19, 13, .55) 0%, rgba(31, 0, 3, 0) 70%);
+  --stage-light: #F5F4F1;
+  --font-brand: 'Montserrat', 'Instrument Sans', 'Segoe UI', sans-serif;  /* titulos de slides, posts e campanhas: 300 + 700 em caixa alta */
+  --brand-bar: 8px;              /* barra vermelha rente a borda inferior (web); em slides 1920x1080 sao 24px */
+}

@@ -1,0 +1,8 @@
+{
+  "name": "fotona-design-system",
+  "version": "1.0.0",
+  "description": "Design system da Fotona Brasil — fonte unica de verdade visual. Cobre os dois registros da marca: o claro (dashboards, LPs, apps, artifacts, componentes @fotona/ui) e o escuro (slides 1920x1080, posts do @fotonalaser, capas, campanhas). Traz tokens CSS prontos, logotipo vetorial oficial, as tres fontes embutidas, 14 componentes com props e classes, 9 arquetipos de slide com medidas e copy, 7 formatos de post e prompts de imagem calibrados no Higgsfield. Autocontida: funciona no Claude Code e no Cowork sem acesso ao repositorio de origem.",
+  "author": {
+    "name": "Fernando Costa"
+  }
+}

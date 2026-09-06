@@ -129,6 +129,30 @@
         "portugues",
         "brasil"
       ]
+    },
+    {
+      "name": "fotona-design-system",
+      "description": "Design system da Fotona Brasil — fonte unica de verdade visual, cobrindo os dois registros da marca: o claro (dashboards, LPs, apps, artifacts, 14 componentes @fotona/ui) e o escuro (slides 1920x1080, posts do @fotonalaser, capas, campanhas). Traz tokens CSS prontos, logotipo vetorial oficial, as tres fontes embutidas, 9 arquetipos de slide com medidas e copy, 7 formatos de post e prompts de imagem calibrados. Heuristica central: se a peca vai ser usada e clara, se vai ser mostrada e escura. Autocontida — funciona sem acesso ao repositorio de origem.",
+      "version": "1.0.0",
+      "source": "./fotona-design-system",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": [
+        "design-system",
+        "fotona",
+        "marca",
+        "identidade-visual",
+        "ui",
+        "tokens",
+        "css",
+        "slides",
+        "social-media",
+        "instagram",
+        "prompts-imagem",
+        "portugues",
+        "brasil"
+      ]
     }
   ]
 }
