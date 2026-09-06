@@ -1,0 +1,34 @@
+{
+  "plugin": "mkt-fotona",
+  "nota": "Os evals rodam sobre fixtures em ../../mkt-fotona-workspace/fixtures/ — nunca sobre o Notion real, para não criar nem alterar dado de produção.",
+  "evals": [
+    {
+      "id": 0,
+      "name": "triagem-fila-completa",
+      "skill": "mkt-triagem",
+      "prompt": "Processa a fila de triagem do MKT. Os dados estão no arquivo FIXTURE (fila em Status=Triagem, banco 👥 Time com carga atual, áreas, projetos e campanhas ativos). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Me mostra o que você propõe para cada item antes de qualquer coisa. Salve sua resposta em OUTPUT_DIR/triagem.md.",
+      "expected_output": "Tabela item a item com dono, prazo, estimativa, área, tipo de trabalho e prioridade + justificativa; alerta de concentração; item t5 marcado como 'precisa de resposta do solicitante'; ressalva sobre quem não tem conta no Notion; pedido explícito de confirmação antes de escrever."
+    },
+    {
+      "id": 1,
+      "name": "status-semana-segunda",
+      "skill": "mkt-status-semana",
+      "prompt": "Monta o status da semana do time de MKT para a reunião de segunda. Os dados estão no arquivo FIXTURE (atrasadas, foco da semana, em aprovação, travadas, carga por pessoa, conteúdo). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Quero um texto pronto para ler na reunião e mandar no grupo. Salve em OUTPUT_DIR/status-semana.md.",
+      "expected_output": "Texto curto e escaneável; no máximo 3 itens no bloco de decisão e no máximo 5 por bloco; carga comparada com a capacidade de cada pessoa (não entre pessoas); aponta a travada sem motivo escrito e o furo de calendário; termina com perguntas para a reunião."
+    },
+    {
+      "id": 2,
+      "name": "relatorio-mensal-agosto",
+      "skill": "mkt-relatorio-mensal",
+      "prompt": "Escreve o relatório mensal de marketing de agosto/2026 para a diretoria e o CEO. Os números estão no arquivo FIXTURE. Trabalhe só com esse arquivo — não consulte o Notion nem o GoHighLevel. Entrega em .docx. Salve o arquivo em OUTPUT_DIR/ e também deixe a versão em markdown em OUTPUT_DIR/relatorio.md.",
+      "expected_output": ".docx gerado; entregas em contagem E pontos lado a lado; nunca chama pontos de throughput; sem média de lead time; % no prazo com denominador na Data desejada; GHL marcado como indisponível em vez de zero; Marcos sem capacidade cadastrada não vira 0%; capacidade reportada por time/área, não ranking de pessoas; 5 a 9 KPIs no corpo."
+    },
+    {
+      "id": 3,
+      "name": "status-semana-sexta",
+      "skill": "mkt-status-semana",
+      "prompt": "Faz o fechamento da semana do MKT para eu mandar no grupo agora, sexta à tarde. Os dados estão no arquivo FIXTURE. Trabalhe só com esse arquivo — não consulte o Notion. Considere que hoje é sexta, 11/09/2026, e que o que está listado como 'foco da semana' com prazo até hoje e ainda aberto não fechou. Salve em OUTPUT_DIR/fechamento-sexta.md.",
+      "expected_output": "Leitura retrospectiva (o que fechou, o que escorregou, o que entrou sem ser planejado), não a lista do que vem; tom de grupo; sem ranking entre pessoas; curto."
+    }
+  ]
+}

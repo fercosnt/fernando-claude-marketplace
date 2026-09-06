@@ -14,7 +14,14 @@
       "author": {
         "name": "Fernando Costa"
       },
-      "tags": ["legal", "contratos", "brasil", "lgpd", "compliance", "portugues"]
+      "tags": [
+        "legal",
+        "contratos",
+        "brasil",
+        "lgpd",
+        "compliance",
+        "portugues"
+      ]
     },
     {
       "name": "skill-prd",
@@ -24,7 +31,16 @@
       "author": {
         "name": "Fernando Costa"
       },
-      "tags": ["prd", "product-management", "requirements", "planning", "discovery", "deep-modules", "testing", "portugues"]
+      "tags": [
+        "prd",
+        "product-management",
+        "requirements",
+        "planning",
+        "discovery",
+        "deep-modules",
+        "testing",
+        "portugues"
+      ]
     },
     {
       "name": "deck-builder",
@@ -34,7 +50,19 @@
       "author": {
         "name": "Fernando Costa"
       },
-      "tags": ["deck", "slides", "storyboard", "presentation", "fundraising", "sales", "clinical", "teaching", "scientific", "portugues", "brasil"]
+      "tags": [
+        "deck",
+        "slides",
+        "storyboard",
+        "presentation",
+        "fundraising",
+        "sales",
+        "clinical",
+        "teaching",
+        "scientific",
+        "portugues",
+        "brasil"
+      ]
     },
     {
       "name": "clinicorp",
@@ -44,7 +72,37 @@
       "author": {
         "name": "Fernando Costa"
       },
-      "tags": ["clinicorp", "odontologia", "clinica", "mcp", "faturamento", "agenda", "financeiro", "portugues", "brasil"]
+      "tags": [
+        "clinicorp",
+        "odontologia",
+        "clinica",
+        "mcp",
+        "faturamento",
+        "agenda",
+        "financeiro",
+        "portugues",
+        "brasil"
+      ]
+    },
+    {
+      "name": "mkt-fotona",
+      "description": "Skills do time de Marketing da Fotona sobre o sistema no Notion (teamspace Marketing): mkt-triagem (processa a fila de Triagem e sugere dono/prazo/estimativa), mkt-status-semana (leitura de segunda e fechamento de sexta) e mkt-relatorio-mensal (relatorio da diretoria em .docx). Contexto compartilhado em shared/sistema-mkt.md com os IDs dos 11 bancos, os campos, as formulas prontas e as armadilhas de SQL do conector. Evals sobre fixtures, com e sem skill: 27/27 x 21/27.",
+      "version": "1.0.0",
+      "source": "./mkt-fotona",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": [
+        "notion",
+        "marketing",
+        "fotona",
+        "triagem",
+        "kanban",
+        "relatorio",
+        "mkt-ops",
+        "portugues",
+        "brasil"
+      ]
     }
   ]
 }

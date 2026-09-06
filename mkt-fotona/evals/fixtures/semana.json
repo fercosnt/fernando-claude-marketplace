@@ -1,0 +1,54 @@
+{
+  "_nota": "Snapshot fictício do banco ✅ Tarefas para a leitura da semana. Contêineres já excluídos. Use como se fosse o resultado da consulta ao Notion. NÃO consulte o Notion real.",
+  "hoje": "2026-09-07",
+  "dia_da_semana": "segunda-feira",
+  "atrasadas": [
+    {"Tarefa":"Arte do folder CSBD","Responsável":"Luana","Prazo":"2026-09-03","Estimativa":"M","Área":"Design"},
+    {"Tarefa":"Roteiro do reel Dra. Marina","Responsável":"Beatriz","Prazo":"2026-09-04","Estimativa":"P","Área":"Social Media"},
+    {"Tarefa":"Orçamento de montagem do stand","Responsável":"Morena Manhães","Prazo":"2026-09-01","Estimativa":"M","Área":"Eventos & Congressos"},
+    {"Tarefa":"Correção do formulário da LP StarWalker","Responsável":"Leandro Lomeu","Prazo":"2026-09-05","Estimativa":"P","Área":"Web"},
+    {"Tarefa":"Copy do e-mail de convite CSBD","Responsável":"Sabrina Amorim","Prazo":"2026-09-02","Estimativa":"P","Área":"Produto/Lançamentos"},
+    {"Tarefa":"Edição do vídeo institucional GTS","Responsável":"Isabela Canário","Prazo":"2026-09-05","Estimativa":"G","Área":"Audiovisual"},
+    {"Tarefa":"Lista de convidados do jantar","Responsável":"Marcos","Prazo":"2026-09-04","Estimativa":"P","Área":"Eventos & Congressos"}
+  ],
+  "foco_semana": [
+    {"Tarefa":"Impressão do folder CSBD","Responsável":"Morena Manhães","Prazo":"2026-09-09","Estimativa":"M"},
+    {"Tarefa":"Post carrossel GLP1TIGHT","Responsável":"Beatriz","Prazo":"2026-09-10","Estimativa":"M"},
+    {"Tarefa":"Apresentação de resultados distribuidores","Responsável":"Sabrina Amorim","Prazo":"2026-09-09","Estimativa":"M"},
+    {"Tarefa":"Arte dos 6 posts GTS","Responsável":"Luana","Prazo":"2026-09-11","Estimativa":"G"},
+    {"Tarefa":"Captação do depoimento Dra. Marina","Responsável":"Isabela Canário","Prazo":"2026-09-12","Estimativa":"M"},
+    {"Tarefa":"Briefing de imprensa CSBD","Responsável":"Maria Clara Maruchi","Prazo":"2026-09-12","Estimativa":"P"},
+    {"Tarefa":"Setup de campanha Meta Fotona4GLOW","Responsável":"Leandro Lomeu","Prazo":"2026-09-11","Estimativa":"M"},
+    {"Tarefa":"Revisão do site — página de contato","Responsável":"Leandro Lomeu","Prazo":"2026-09-12","Estimativa":"P"},
+    {"Tarefa":"Kit de mídia para distribuidores","Responsável":"Sabrina Amorim","Prazo":"2026-09-13","Estimativa":"M"}
+  ],
+  "em_aprovacao": [
+    {"Tarefa":"Carrossel Educativo — laser e melasma","Aprovador":"Maria Clara Maruchi","Entrou em aprovação em":"2026-09-03T09:00","Horas em aprovação":94},
+    {"Tarefa":"Peça de anúncio Fotona4GLOW","Aprovador":"Fernando Costa Neto","Entrou em aprovação em":"2026-09-05T14:00","Horas em aprovação":42},
+    {"Tarefa":"Roteiro clínico do reel GLP1TIGHT","Aprovador":"Maria Clara Maruchi","Entrou em aprovação em":"2026-09-02T10:00","Horas em aprovação":118}
+  ],
+  "travadas": [
+    {"Tarefa":"Vídeo institucional GTS","Responsável":"Isabela Canário","Motivo do bloqueio":"esperando aprovação da marca GTS pela Amanda","Revisar bloqueio em":"2026-09-08"},
+    {"Tarefa":"Página de captura StarWalker","Responsável":"Leandro Lomeu","Motivo do bloqueio":"","Revisar bloqueio em":null}
+  ],
+  "carga": [
+    {"Responsável":"Leandro Lomeu","Pontos abertos":19,"Capacidade semanal":8},
+    {"Responsável":"Avson Apolinário (Avinho)","Pontos abertos":24,"Capacidade semanal":15},
+    {"Responsável":"Luana","Pontos abertos":11,"Capacidade semanal":18},
+    {"Responsável":"Isabela Canário","Pontos abertos":9,"Capacidade semanal":15},
+    {"Responsável":"Beatriz","Pontos abertos":16,"Capacidade semanal":18},
+    {"Responsável":"Sabrina Amorim","Pontos abertos":7,"Capacidade semanal":18},
+    {"Responsável":"Morena Manhães","Pontos abertos":21,"Capacidade semanal":15},
+    {"Responsável":"Marcos","Pontos abertos":5,"Capacidade semanal":18},
+    {"Responsável":"Maria Clara Maruchi","Pontos abertos":12,"Capacidade semanal":15}
+  ],
+  "conteudo_semana": [
+    {"Tarefa":"Carrossel — laser e melasma","Data planejada":"2026-09-08","Canal":"Instagram","Link do post":null},
+    {"Tarefa":"Reel GLP1TIGHT","Data planejada":"2026-09-10","Canal":"Instagram","Link do post":null},
+    {"Tarefa":"Artigo blog — recuperação pós-GLP1","Data planejada":"2026-09-11","Canal":"Blog","Link do post":null}
+  ],
+  "conteudo_furado": [
+    {"Tarefa":"Story bastidores do centro de treinamento","Data planejada":"2026-09-02","Canal":"Instagram","Link do post":null},
+    {"Tarefa":"Post institucional — 4 anos Beauty Smile","Data planejada":"2026-09-04","Canal":"Instagram","Link do post":null}
+  ]
+}

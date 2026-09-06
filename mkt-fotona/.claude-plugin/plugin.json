@@ -1,0 +1,10 @@
+{
+  "name": "mkt-fotona",
+  "version": "1.0.0",
+  "description": "Skills do time de Marketing da Fotona sobre o sistema no Notion (teamspace Marketing): triagem da fila, leitura da semana e relatorio mensal para a diretoria. Onda 1 do plano 14-plano-plugin-e-skills.md.",
+  "author": {
+    "name": "Fernando Costa",
+    "email": "fernandinho.costa.neto@gmail.com"
+  },
+  "keywords": ["notion", "marketing", "fotona", "triagem", "kanban", "relatorio", "mkt-ops", "portugues", "brasil"]
+}
