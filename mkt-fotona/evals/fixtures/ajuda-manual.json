@@ -1,0 +1,57 @@
+{
+  "_nota": "Fixture fictícia. Representa o 📘 Manual do Sistema e a estrutura dos bancos como estariam no Notion. Nomes de pessoas são inventados. Serve para testar a mkt-ajuda sem tocar no Notion real.",
+  "manual": {
+    "titulo": "📘 Manual do Sistema — MKT",
+    "atualizado_em": "2026-09-06",
+    "secoes": [
+      {
+        "titulo": "1. Por onde entra trabalho",
+        "conteudo": "Pedido de fora do MKT entra pelo formulário 📥 Solicitações — MKT. Evento entra pelo formulário 🎪 Solicitação de evento. Quem é do time abre direto no banco ✅ Tarefas, com Status = Triagem. Tudo que entra passa pela triagem diária do coordenador de MKT, que define Responsável, Prazo, Prioridade e Estimativa."
+      },
+      {
+        "titulo": "2. Os status de uma tarefa",
+        "conteudo": "Triagem (entrou, ainda sem dono) · A fazer (tem dono e prazo) · Em produção · Em aprovação · Parada/Bloqueada (exige Motivo do bloqueio) · Concluída · Arquivada · Cancelada. Mover card é na tela, arrastando no Kanban."
+      },
+      {
+        "titulo": "3. Os bancos e para que serve cada um",
+        "conteudo": "✅ Tarefas é o trabalho. 🗂️ Projetos é iniciativa com entregável e prazo. 🚀 Campanhas busca resultado no mercado, com período e budget. 🧭 Áreas são as 11 frentes do MKT. 🎯 Metas & OKRs. 📚 Base de Conhecimento guarda documento, guia, template e comparativo. 💡 Ideias & Oportunidades guarda o que ainda não tem dono nem data. 🤝 Reuniões & Atas guarda ata e action item. 🌟 Creators."
+      },
+      {
+        "titulo": "4. Campos que confundem",
+        "conteudo": "Data desejada é a data que o solicitante pediu; Prazo é a data que a triagem definiu. Tipo de trabalho (Planejado · Ad-hoc/Demanda extra · Fire-drill/P0) é classificação de entrada e não se reclassifica. Publicado é o Link do post, não o status. Data planejada não se edita quando atrasa."
+      },
+      {
+        "titulo": "5. Calendários editoriais",
+        "conteudo": "Cada calendário tem três views: 🗓️ Mês (o que vai ao ar, por Data planejada), 📋 Produção (as fases abertas, por responsável) e ⚠️ Furos (peça que passou da Data planejada sem Link do post)."
+      },
+      {
+        "titulo": "6. Aprovações",
+        "conteudo": "O campo Requer aprovação clínica? marca a peça que precisa de revisão clínica antes de publicar. O Aprovador é quem assina. Não existe campo de aprovação jurídica."
+      }
+    ],
+    "lacunas_conhecidas": [
+      "O manual ainda não explica quando uma tarefa deve virar sub-item.",
+      "O manual ainda não explica onde entra aula para médico."
+    ]
+  },
+  "bancos": {
+    "Tarefas": {
+      "campos_select": {
+        "Status": ["Triagem", "A fazer", "Em produção", "Em aprovação", "Parada/Bloqueada", "Concluída", "Arquivada", "Cancelada"],
+        "Tipo de trabalho": ["Planejado", "Ad-hoc/Demanda extra", "Fire-drill/P0"],
+        "Tipo de entrega": ["Conteúdo", "Design", "Tráfego", "Evento", "Vídeo", "Impresso", "Aula/Workshop", "Apresentação", "Outro"],
+        "Empresa": ["Fotona", "GTS", "Beauty Smile", "IC360", "Fernando Costa Jr"],
+        "Categoria": ["Operacional", "Conteúdo"]
+      },
+      "campos_data": ["Prazo", "Data desejada", "Prazo interno", "Data planejada", "Publicado em"],
+      "campos_ia": ["🤖 Resumo (IA)", "🤖 Sugestão de triagem (IA)", "🤖 Analisado em"]
+    },
+    "Areas": ["Social Media", "Performance", "Produto/Lançamentos", "Design", "Audiovisual", "Eventos & Congressos", "Branding", "Web", "Comercial", "Imprensa", "Creators"]
+  },
+  "time_ficticio": [
+    {"nome": "Otávio Bragança", "papel": "coordenador de MKT (triagem)"},
+    {"nome": "Renata Sicupira", "papel": "coordenadora de criação"},
+    {"nome": "Ivo Palhares", "papel": "coordenador de eventos"},
+    {"nome": "Duda Nepomuceno", "papel": "social media"}
+  ]
+}

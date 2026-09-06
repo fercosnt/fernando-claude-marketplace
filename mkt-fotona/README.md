@@ -1,4 +1,4 @@
-# Plugin MKT Fotona — v2.0.1
+# Plugin MKT Fotona — v2.1.0
 
 O Claude na rotina do **time** de Marketing da Fotona (as 11 pessoas), sobre o sistema no Notion. É
 o irmão do `pmo-fotona` com a regra invertida: o PMO lê tudo e escreve pouco; este **escreve o que
@@ -6,14 +6,15 @@ a pessoa disse, sobre o trabalho da própria pessoa**, e não lê o que é dos o
 
 | Skill | Quem usa | O que faz | O que grava no Notion |
 |---|---|---|---|
+| **`mkt-ajuda`** | todos | Balcão de dúvidas do sistema — "isso é projeto ou campanha?", "em que área entra essa aula?", "esse campo é o quê?". Explica, diz onde clicar e entrega para a skill que faz | **Nada.** Só explica |
 | **`mkt-nova-demanda`** | todos | Abre uma demanda conversando — pergunta quem pede, cobre as 9 perguntas do formulário em ≤ 3 trocas, insiste no "para quê", checa duplicata | 1 página em `Triagem`, só com o que a pessoa disse; inferência vai para `🤖` |
 | **`mkt-brief-conteudo`** | social, criação, copy | Briefing da peça na voz da empresa (objetivo · público · mensagem · CTA · o que não dizer · aprovação clínica) | O corpo da página da peça, depois de mostrar |
 | **`mkt-pauta-conteudo`** | social media, coord. de criação | Propõe a pauta do mês (e declara a regra), confirma, propõe donos por fase, cria as peças | Mãe + 5 fases (6 em vídeo), prazos escalonados, só o confirmado |
 | **`mkt-meu-mes`** | cada pessoa, sobre si | Relatório individual do mês, em absoluto, contra a própria série | Nada; registro no Log do PMO |
 | **`mkt-resultados-conteudo`** | social media, quinzenal | Busca alcance e engajamento por publicação no **Reportei** (casando pelo permalink com o `Link do post`), ou aceita os números colados do painel nativo, e lê o que performou por pilar e canal | Só os 3 campos de métrica, só em peça com `Link do post` |
 
-Chame pelo nome (`/mkt-nova-demanda`) ou simplesmente peça: "preciso de um carrossel do GLP1TIGHT
-pra semana que vem", "monta a pauta de outubro", "escreve o brief desse reels", "como foi meu mês",
+Chame pelo nome (`/mkt-nova-demanda`) ou simplesmente peça: "isso é projeto ou campanha?", "preciso de um carrossel
+do GLP1TIGHT pra semana que vem", "monta a pauta de outubro", "escreve o brief desse reels", "como foi meu mês",
 "atualiza as métricas dos posts".
 
 ## O que nenhuma skill deste plugin faz
@@ -46,8 +47,11 @@ inventam ID. O conector do Notion precisa estar autenticado **na sua conta** (gu
 
 ## Como foi testado
 
-`evals/` traz **11 casos** com e sem skill sobre **fixtures fictícias** (nomes inventados; nunca o
-Notion real), rodados com o `skill-creator`: **100% com skill × 48–56% sem**. O que eles cobrem:
+`evals/` traz **17 casos** com e sem skill sobre **fixtures fictícias** (nomes inventados; nunca o
+Notion real), rodados com o `skill-creator`. Nos 11 casos das skills que escrevem: **100% com skill
+× 48–56% sem**. Nos 6 casos da `mkt-ajuda`: **93% com skill × 73% sem** — sem ela o Claude responde
+razoavelmente, mas monta o card campo a campo (trabalho da `mkt-nova-demanda`), inventa nome de
+campo e recusa gestão por falta de acesso em vez de por escopo. O que eles cobrem:
 paridade com o formulário (mesma demanda → mesmos campos), o nome sempre perguntado, duplicata antes
 de criar, teto de 3 trocas, estrutura da peça (arte = 6 páginas, vídeo = 7, prazos batendo com a
 tabela, fim de semana e feriado recuando), recusa de escrita fora da classe, recusa do mês de outra
@@ -56,6 +60,10 @@ e métrica sempre com fonte.
 
 ## Histórico
 
+- **2.1.0 (06/09/2026)** — entra a **`mkt-ajuda`**, o balcão de dúvidas do sistema. O time é guest e
+  não tem Notion AI: dúvida de dois minutos hoje vira interrupção ou chute em campo de
+  classificação. Ela só explica — a fronteira que a iteração 2 dos evals cravou é que *explicar o
+  que um campo é* é a resposta, e *listar os campos a preencher* já é a `mkt-nova-demanda`.
 - **2.0.1 (06/09/2026)** — o escopo do sistema passou a **cinco empresas**: entra a marca pessoal
   `Fernando Costa Jr`, ao lado de Fotona · GTS · Beauty Smile · IC360. A `mkt-brief-conteudo`
   ganhou a regra de voz dela (primeira pessoa, sem inventar opinião do dono da marca).

@@ -86,8 +86,8 @@
     },
     {
       "name": "mkt-fotona",
-      "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-creator: 100% com skill x 48% sem, 10 casos, fixtures ficticias.",
-      "version": "2.0.0",
+      "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-ajuda (balcao de duvidas do sistema — projeto ou campanha, em que area entra, o que e esse campo; so explica, nao grava), mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-creator: 100% com skill x 48% sem nas skills que escrevem; 93% x 73% na mkt-ajuda. 17 casos, fixtures ficticias.",
+      "version": "2.1.0",
       "source": "./mkt-fotona",
       "author": {
         "name": "Fernando Costa"
@@ -96,6 +96,9 @@
         "notion",
         "marketing",
         "fotona",
+        "manual",
+        "duvidas",
+        "ajuda",
         "demanda",
         "briefing",
         "pauta",
