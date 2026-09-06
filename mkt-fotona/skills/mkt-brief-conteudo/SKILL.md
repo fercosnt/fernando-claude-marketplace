@@ -1,6 +1,6 @@
 ---
 name: mkt-brief-conteudo
-description: Escreve o briefing de uma peça de conteúdo do MKT da Fotona (post, carrossel, reels, story, e-mail, blog) no template da casa — objetivo, público, mensagem-chave, referência, CTA, o que não dizer — na voz da empresa certa (Fotona, GTS, Beauty Smile, IC360), e grava no corpo da página da peça no Notion depois de mostrar. Use sempre que alguém pedir "briefing", "brief do post", "escreve o brief da peça", "o que esse carrossel precisa dizer", "monta a pauta desse reels" (no sentido de roteiro/mensagem), "manda o direcionamento pra designer/copy", ou quiser o direcionamento criativo de uma peça já na pauta — mesmo sem usar a palavra briefing. Não use para escrever a legenda final ou o texto pronto do post: o briefing direciona; quem escreve a peça é a pessoa.
+description: Escreve o briefing de uma peça de conteúdo do MKT da Fotona (post, carrossel, reels, story, e-mail, blog) no template da casa — objetivo, público, mensagem-chave, referência, CTA, o que não dizer — na voz da empresa certa (Fotona, GTS, Beauty Smile, IC360, Fernando Costa Jr), e grava no corpo da página da peça no Notion depois de mostrar. Use sempre que alguém pedir "briefing", "brief do post", "escreve o brief da peça", "o que esse carrossel precisa dizer", "monta a pauta desse reels" (no sentido de roteiro/mensagem), "manda o direcionamento pra designer/copy", ou quiser o direcionamento criativo de uma peça já na pauta — mesmo sem usar a palavra briefing. Não use para escrever a legenda final ou o texto pronto do post: o briefing direciona; quem escreve a peça é a pessoa.
 ---
 
 # Briefing da peça
@@ -39,6 +39,10 @@ briefing precisa ser coerente com o que já foi decidido na pauta, não uma segu
 - **Fotona, GTS, IC360**: use a página **Voz da Marca** da empresa se existir no contexto ou na 📚
   Base de Conhecimento; senão, derive o tom do `Objetivo / Por quê` da peça, do pilar e da campanha,
   e **diga que derivou** — assim a coordenação sabe que ainda falta o guia.
+- **Fernando Costa Jr** (marca pessoal): é a voz de **uma pessoa**, não de uma empresa — primeira
+  pessoa, opinião assumida, sem "nós da marca". Sem página Voz da Marca, derive do `Objetivo / Por
+  quê` e diga que derivou, como nas demais. Nunca escreva em nome dele algo que ele não teria dito:
+  se a peça pede posição pessoal, deixe a frase como pergunta no briefing em vez de inventá-la.
 
 O mesmo tema pede tons distintos: um resultado clínico para a Fotona fala com o profissional
 (evidência, protocolo, parâmetros); para a Beauty Smile fala com o paciente (o que ele sente, o que

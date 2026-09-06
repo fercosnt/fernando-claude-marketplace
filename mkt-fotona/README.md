@@ -1,4 +1,4 @@
-# Plugin MKT Fotona — v2.0.0
+# Plugin MKT Fotona — v2.0.1
 
 O Claude na rotina do **time** de Marketing da Fotona (as 11 pessoas), sobre o sistema no Notion. É
 o irmão do `pmo-fotona` com a regra invertida: o PMO lê tudo e escreve pouco; este **escreve o que
@@ -56,6 +56,9 @@ e métrica sempre com fonte.
 
 ## Histórico
 
+- **2.0.1 (06/09/2026)** — o escopo do sistema passou a **cinco empresas**: entra a marca pessoal
+  `Fernando Costa Jr`, ao lado de Fotona · GTS · Beauty Smile · IC360. A `mkt-brief-conteudo`
+  ganhou a regra de voz dela (primeira pessoa, sem inventar opinião do dono da marca).
 - **2.0.0 (06/09/2026)** — plugin do time, 5 skills. As três skills da v1 (`mkt-triagem`,
   `mkt-status-semana`, `mkt-relatorio-mensal`) migraram para o `pmo-fotona` v2.0.0: quem as usava
   era a coordenação, não o time. O `shared/` saiu do marketplace.
