@@ -10,7 +10,7 @@ a pessoa disse, sobre o trabalho da própria pessoa**, e não lê o que é dos o
 | **`mkt-brief-conteudo`** | social, criação, copy | Briefing da peça na voz da empresa (objetivo · público · mensagem · CTA · o que não dizer · aprovação clínica) | O corpo da página da peça, depois de mostrar |
 | **`mkt-pauta-conteudo`** | social media, coord. de criação | Propõe a pauta do mês (e declara a regra), confirma, propõe donos por fase, cria as peças | Mãe + 5 fases (6 em vídeo), prazos escalonados, só o confirmado |
 | **`mkt-meu-mes`** | cada pessoa, sobre si | Relatório individual do mês, em absoluto, contra a própria série | Nada; registro no Log do PMO |
-| **`mkt-resultados-conteudo`** | social media, quinzenal | Pede/puxa alcance, engajamento, cliques das peças publicadas e lê o que performou por pilar e canal | Só os 3 campos de métrica, só em peça com `Link do post` |
+| **`mkt-resultados-conteudo`** | social media, quinzenal | Pede alcance, engajamento e cliques das peças publicadas (do painel nativo — o GHL não devolve métrica por post, testado em 06/09) e lê o que performou por pilar e canal | Só os 3 campos de métrica, só em peça com `Link do post` |
 
 Chame pelo nome (`/mkt-nova-demanda`) ou simplesmente peça: "preciso de um carrossel do GLP1TIGHT
 pra semana que vem", "monta a pauta de outubro", "escreve o brief desse reels", "como foi meu mês",
