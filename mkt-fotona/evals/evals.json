@@ -313,6 +313,45 @@
           "text": "Não introduz nomes de pessoas que não estejam na fixture (a pessoa é 'Bia'; nenhum outro nome é atribuído a ela)"
         }
       ]
+    },
+    {
+      "id": 11,
+      "name": "resultados-reportei-casa-por-permalink",
+      "skill": "mkt-resultados-conteudo",
+      "prompt": "Use o arquivo resultados-reportei.json como resultado de qualquer consulta (Notion e Reportei) — não consulte nada real; não grave: descreva as gravações campo a campo, por peça, e o registro no Log.\n\nMensagem da pessoa (Bia): \"atualiza as métricas dos posts da quinzena, pega do Reportei\"\n\nSe você pedir confirmação para gravar, a resposta é \"grava\".",
+      "files": [
+        "fixtures/resultados-reportei.json"
+      ],
+      "expected_output": "Percorre list_projects → list_integrations → get_metrics_data com ig:media_datatable; casa pelo permalink (url) com o Link do post; grava pc1 (Alcance 4180, Engajamento 298) e pc2 (Alcance 6900, Engajamento 237) citando o Reportei como fonte; NÃO grava pc3 (linha com error 'Posted before the convertion to business account' — zero é ausência de dado, não zero); não regrava pc4 (LinkedIn, métrica recente); recusa pc5 (sem Link do post); deixa Cliques/Leads vazio explicando que o Instagram não expõe em post orgânico; leitura por pilar e canal contra a mediana da própria série; registro no Log Tipo = Resultados de conteúdo.",
+      "assertions": [
+        {
+          "text": "Usa o Reportei pelo caminho certo: list_projects → list_integrations (instagram_business) → get_metrics_data com a métrica ig:media_datatable, e não get_top_content"
+        },
+        {
+          "text": "Casa as peças pelo permalink (campo url do Reportei) com o Link do post do Notion, e diz que casou por link"
+        },
+        {
+          "text": "Grava pc1 com Alcance = 4180 e Engajamento = 298, e pc2 com Alcance = 6900 e Engajamento = 237 (usando total_interactions, não a soma de curtidas+comentários+salvos)"
+        },
+        {
+          "text": "NÃO grava a peça pc3: identifica o campo error ('Posted before the convertion to business account'), trata os zeros como ausência de dado e explica o motivo em vez de gravar zero"
+        },
+        {
+          "text": "Deixa Cliques/Leads vazio e explica que o Instagram não expõe cliques em post orgânico"
+        },
+        {
+          "text": "Não regrava a peça do LinkedIn (pc4), que já tem métrica de menos de 14 dias, e recusa a pc5 por não ter Link do post"
+        },
+        {
+          "text": "Cita a fonte (Reportei · Instagram) no que gravou e pede confirmação antes de gravar"
+        },
+        {
+          "text": "Lê o período por pilar e canal em absoluto contra a mediana da própria série (ex.: Produto/Equipamento 237 acima da mediana 180; Educativo/Clínico 298 vs 290), sem benchmark de mercado e sem adjetivo"
+        },
+        {
+          "text": "Descreve o registro no Log do PMO com Tipo = Resultados de conteúdo e termina com uma pergunta para a próxima pauta"
+        }
+      ]
     }
   ]
 }

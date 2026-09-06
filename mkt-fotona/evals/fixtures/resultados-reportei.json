@@ -1,0 +1,270 @@
+{
+  "_nota": "Snapshot fictício para a mkt-resultados-conteudo COM a fonte Reportei. Use como resultado das consultas: 'notion' é o retorno da Q12 no Notion; 'reportei' é o retorno de list_projects / list_integrations / get_metrics_data com ig:media_datatable, no MESMO formato que o conector devolve. NÃO consulte o Notion nem o Reportei reais. NÃO grave: descreva as gravações campo a campo, por peça, e o registro no Log. Nomes fictícios.",
+  "hoje": "2026-09-30",
+  "quem_conversa": "Bia (Analista de Social Media)",
+  "notion_pecas_periodo_Q12": [
+    {
+      "url": "pc1",
+      "Tarefa": "Carrossel · GLP1TIGHT antes e depois 90 dias",
+      "Empresa": "Fotona",
+      "Canal": [
+        "Instagram"
+      ],
+      "Formato": "carrossel",
+      "Pilar de conteúdo": "Educativo/Clínico",
+      "Link do post": "https://www.instagram.com/p/DcT0EyMyhNW/",
+      "Publicado em": "2026-09-16",
+      "Alcance": null,
+      "Engajamento": null,
+      "Cliques/Leads": null
+    },
+    {
+      "url": "pc2",
+      "Tarefa": "Reels · 3 dúvidas sobre o Dynamis",
+      "Empresa": "Fotona",
+      "Canal": [
+        "Instagram"
+      ],
+      "Formato": "reels",
+      "Pilar de conteúdo": "Produto/Equipamento",
+      "Link do post": "https://www.instagram.com/reel/DcjZxL6yO6_/",
+      "Publicado em": "2026-09-18",
+      "Alcance": null,
+      "Engajamento": null,
+      "Cliques/Leads": null
+    },
+    {
+      "url": "pc3",
+      "Tarefa": "Reels · bastidores da gravação",
+      "Empresa": "Fotona",
+      "Canal": [
+        "Instagram"
+      ],
+      "Formato": "reels",
+      "Pilar de conteúdo": "Bastidores",
+      "Link do post": "https://www.instagram.com/reel/DcRaEjZyvej/",
+      "Publicado em": "2026-09-20",
+      "Alcance": null,
+      "Engajamento": null,
+      "Cliques/Leads": null
+    },
+    {
+      "url": "pc4",
+      "Tarefa": "Texto · caso de uso StarWalker",
+      "Empresa": "Fotona",
+      "Canal": [
+        "LinkedIn"
+      ],
+      "Formato": "texto autoral",
+      "Pilar de conteúdo": "Prova social",
+      "Link do post": "https://linkedin.com/posts/x3",
+      "Publicado em": "2026-09-18",
+      "Alcance": 2100,
+      "Engajamento": 96,
+      "Cliques/Leads": 12
+    },
+    {
+      "url": "pc5",
+      "Tarefa": "Carrossel · depoimento Dra. Renata",
+      "Empresa": "Fotona",
+      "Canal": [
+        "Instagram"
+      ],
+      "Formato": "carrossel",
+      "Pilar de conteúdo": "Prova social",
+      "Link do post": "",
+      "Publicado em": null,
+      "Alcance": null,
+      "Engajamento": null,
+      "Cliques/Leads": null
+    }
+  ],
+  "reportei": {
+    "list_projects": {
+      "data": [
+        {
+          "id": 1324901,
+          "name": "Fotona",
+          "timezone": "America/Sao_Paulo",
+          "locale": "pt_br"
+        }
+      ],
+      "meta": {
+        "total": 1,
+        "last_page": 1
+      }
+    },
+    "list_integrations": {
+      "data": [
+        {
+          "id": 3772916,
+          "source_id": "17841402340017856",
+          "name": "fotonalaser",
+          "slug": "instagram_business",
+          "status": "active",
+          "project_id": 1324901,
+          "project_name": "Fotona"
+        },
+        {
+          "id": 3772920,
+          "source_id": "95181555",
+          "name": "Fotona Brasil",
+          "slug": "linkedin",
+          "status": "active",
+          "project_id": 1324901,
+          "project_name": "Fotona"
+        }
+      ],
+      "meta": {
+        "total": 2,
+        "last_page": 1
+      }
+    },
+    "list_metrics_instagram_business__ig_media_datatable": {
+      "reference_key": "ig:media_datatable",
+      "component": "datatable_v1",
+      "metrics": [
+        "type",
+        "reach",
+        "views",
+        "total_interactions",
+        "post_interactions_rate",
+        "likes",
+        "comments",
+        "saved",
+        "follows",
+        "profile_visits",
+        "shares",
+        "created_at"
+      ],
+      "dimensions": [
+        "media"
+      ],
+      "sort": [
+        "-reach"
+      ],
+      "custom": {
+        "sendByWebhook": true
+      }
+    },
+    "get_metrics_data__ig_media_datatable__2026-09-15_a_2026-09-30": {
+      "media-datatable": {
+        "type": "media_datatable",
+        "_ordem_das_colunas": [
+          "<objeto media>",
+          "type",
+          "reach",
+          "views",
+          "total_interactions",
+          "post_interactions_rate",
+          "likes",
+          "comments",
+          "saved",
+          "follows",
+          "profile_visits",
+          "shares",
+          "created_at"
+        ],
+        "values": [
+          [
+            {
+              "id": "18002053983001591",
+              "text": "Uma clínica que tem laser não é a mesma coisa que uma clínica de laser...",
+              "cdn_image": "https://scontent.cdninstagram.com/v/t51.x.jpg",
+              "url": "https://www.instagram.com/p/DcT0EyMyhNW/",
+              "error": ""
+            },
+            "Carrossel",
+            4180,
+            5020,
+            298,
+            0.0713,
+            241,
+            19,
+            32,
+            "-",
+            "-",
+            6,
+            "2026-09-16T13:56:19-03:00"
+          ],
+          [
+            {
+              "id": "17880042876687268",
+              "text": "O CPAP está no armário. Você tentou duas semanas...",
+              "cdn_image": "https://scontent.cdninstagram.com/v/t51.y.jpg",
+              "url": "https://www.instagram.com/reel/DcjZxL6yO6_/",
+              "error": ""
+            },
+            "Reels",
+            6900,
+            9240,
+            237,
+            0.0343,
+            180,
+            21,
+            28,
+            "-",
+            "-",
+            8,
+            "2026-09-18T15:15:35-03:00"
+          ],
+          [
+            {
+              "id": "18083476955308811",
+              "text": "Bastidores da gravação do protocolo...",
+              "cdn_image": "https://scontent.cdninstagram.com/v/t51.z.jpg",
+              "url": "https://www.instagram.com/reel/DcRaEjZyvej/",
+              "error": "Posted before the convertion to business account."
+            },
+            "Reels",
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            "-",
+            "-",
+            0,
+            "2026-09-20T15:29:48-03:00"
+          ]
+        ]
+      }
+    }
+  },
+  "serie_2_meses_anteriores_por_canal": {
+    "Instagram": {
+      "pecas": 14,
+      "mediana_alcance": 3100,
+      "mediana_engajamento": 210,
+      "por_pilar": {
+        "Educativo/Clínico": {
+          "pecas": 5,
+          "mediana_engajamento": 290
+        },
+        "Prova social": {
+          "pecas": 3,
+          "mediana_engajamento": 240
+        },
+        "Institucional": {
+          "pecas": 3,
+          "mediana_engajamento": 150
+        },
+        "Bastidores": {
+          "pecas": 2,
+          "mediana_engajamento": 260
+        },
+        "Produto/Equipamento": {
+          "pecas": 1,
+          "mediana_engajamento": 180
+        }
+      }
+    },
+    "LinkedIn": {
+      "pecas": 6,
+      "mediana_alcance": 1800,
+      "mediana_engajamento": 80
+    }
+  }
+}
