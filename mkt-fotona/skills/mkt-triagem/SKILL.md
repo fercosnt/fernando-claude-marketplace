@@ -44,7 +44,7 @@ permite discordar rápido.
 Como decidir cada campo:
 
 - **Dono:** a área do assunto define a função; entre pessoas da mesma função, quem tem menos carga.
-  Diga a carga atual junto ("Luana, 11 pontos abertos" vs "Avinho, 24").
+  Diga a carga atual junto ("Lia, 11 pontos abertos" vs "Aldo, 24").
 - **Prazo:** parta da `Data desejada`. Se ela não couber na carga da pessoa, proponha outra data e
   **diga que está renegociando** — silenciosamente aceitar uma data impossível é o começo do atraso.
   Sem data desejada, use o lead time do tipo de entrega (story 1d · post 3d · reel 5d · YouTube

@@ -21,7 +21,7 @@
       "name": "relatorio-mensal-agosto",
       "skill": "mkt-relatorio-mensal",
       "prompt": "Escreve o relatório mensal de marketing de agosto/2026 para a diretoria e o CEO. Os números estão no arquivo FIXTURE. Trabalhe só com esse arquivo — não consulte o Notion nem o GoHighLevel. Entrega em .docx. Salve o arquivo em OUTPUT_DIR/ e também deixe a versão em markdown em OUTPUT_DIR/relatorio.md.",
-      "expected_output": ".docx gerado; entregas em contagem E pontos lado a lado; nunca chama pontos de throughput; sem média de lead time; % no prazo com denominador na Data desejada; GHL marcado como indisponível em vez de zero; Marcos sem capacidade cadastrada não vira 0%; capacidade reportada por time/área, não ranking de pessoas; 5 a 9 KPIs no corpo."
+      "expected_output": ".docx gerado; entregas em contagem E pontos lado a lado; nunca chama pontos de throughput; sem média de lead time; % no prazo com denominador na Data desejada; GHL marcado como indisponível em vez de zero; Miguel sem capacidade cadastrada não vira 0%; capacidade reportada por time/área, não ranking de pessoas; 5 a 9 KPIs no corpo."
     },
     {
       "id": 3,

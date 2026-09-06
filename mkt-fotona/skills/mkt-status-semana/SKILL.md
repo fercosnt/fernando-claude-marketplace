@@ -68,7 +68,7 @@ Regras de escrita que fazem diferença:
 - **Nunca liste mais de 5 itens por bloco.** Acima disso, dê o número e o link da view. Lista de 30
   linhas não é informada, é ignorada.
 - **Diga o que fazer, não só o que está errado.** "Aprovação do carrossel parada há 3 dias com a
-  Maria Clara" é um fato; "…— vale cobrar hoje ou passar para o backup" é uma leitura.
+  Marina" é um fato; "…— vale cobrar hoje ou passar para o backup" é uma leitura.
 - **Não compare pessoas por pontos.** Funções diferentes têm ritmos diferentes; comparar vira
   ranking e ranking mata o preenchimento honesto. Compare cada pessoa com a própria capacidade.
 - **Fale de tendência quando tiver base.** "Terceira semana seguida com aprovação estourando o SLA"

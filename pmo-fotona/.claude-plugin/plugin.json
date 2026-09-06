@@ -1,0 +1,7 @@
+{
+  "name": "pmo-fotona",
+  "version": "2.0.0",
+  "description": "O cerebro do agente de PMO do time de Marketing da Fotona: triagem da fila, leitura da semana, relatorio mensal em 4 escopos, briefing sob demanda e replanejamento com cenarios — sobre o sistema no Notion (teamspace Marketing), com memoria no banco Log do PMO. Publico: coordenacao (diretor, gerente de MKT, coordenador de criacao). Le tudo; escreve so em campo de sugestao e, na triagem, em campo real com confirmacao item a item.",
+  "author": { "name": "Fernando Costa", "email": "fernandinho.costa.neto@gmail.com" },
+  "keywords": ["notion", "pmo", "marketing", "fotona", "triagem", "kanban", "relatorio", "mkt-ops", "portugues", "brasil"]
+}

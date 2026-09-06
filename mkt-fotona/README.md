@@ -5,7 +5,7 @@ bancos do Notion, os nomes dos campos e as regras que não são óbvias.
 
 | Skill | Quem usa | Quando |
 |---|---|---|
-| **`mkt-triagem`** | Leandro | Diariamente, na fila `Status = Triagem` |
+| **`mkt-triagem`** | Léo | Diariamente, na fila `Status = Triagem` |
 | **`mkt-status-semana`** | Coordenação | Segunda de manhã (e sexta, para o fechamento da semana) |
 | **`mkt-relatorio-mensal`** | Fernando | No fechamento do mês |
 

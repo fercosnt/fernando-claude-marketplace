@@ -86,8 +86,8 @@
     },
     {
       "name": "mkt-fotona",
-      "description": "Skills do time de Marketing da Fotona sobre o sistema no Notion (teamspace Marketing): mkt-triagem (processa a fila de Triagem e sugere dono/prazo/estimativa), mkt-status-semana (leitura de segunda e fechamento de sexta) e mkt-relatorio-mensal (relatorio da diretoria em .docx). Contexto compartilhado em shared/sistema-mkt.md com os IDs dos 11 bancos, os campos, as formulas prontas e as armadilhas de SQL do conector. Evals sobre fixtures, com e sem skill: 27/27 x 21/27.",
-      "version": "1.0.0",
+      "description": "[Substituido] As 3 skills da onda 1 (mkt-triagem, mkt-status-semana, mkt-relatorio-mensal) migraram para o plugin pmo-fotona v2. Este plugin recomeca na onda 2 como o plugin do TIME (mkt-nova-demanda, mkt-pauta-conteudo, mkt-meu-mes, mkt-briefing-rapido, mkt-resultados-conteudo). O shared/sistema-mkt.md com IDs e nomes reais saiu do marketplace: contexto agora vem do repositorio privado fotona-mkt-contexto (ver pmo-fotona/CONTEXTO.md).",
+      "version": "1.0.1",
       "source": "./mkt-fotona",
       "author": {
         "name": "Fernando Costa"
@@ -99,6 +99,30 @@
         "triagem",
         "kanban",
         "relatorio",
+        "mkt-ops",
+        "portugues",
+        "brasil"
+      ]
+    },
+    {
+      "name": "pmo-fotona",
+      "description": "O cerebro do agente de PMO do time de Marketing da Fotona sobre o sistema no Notion: pmo-triagem (fila de Triagem, confirmacao item a item), pmo-status-semana (segunda e sexta, com memoria no Log do PMO), pmo-relatorio-mensal (4 escopos: MKT, area, projeto, pessoa; md/docx/html/pdf), pmo-briefing (como esta X) e pmo-replanejamento (palpite antes dos cenarios). prompts/ alimentam os ritos agendados no n8n a partir dos mesmos arquivos. Nao contem IDs nem nomes: contexto vem do repositorio privado fotona-mkt-contexto (CONTEXTO.md). Evals skill-creator: 98% com skill x 35% sem, 7 casos.",
+      "version": "2.0.0",
+      "source": "./pmo-fotona",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": [
+        "notion",
+        "pmo",
+        "marketing",
+        "fotona",
+        "triagem",
+        "kanban",
+        "relatorio",
+        "briefing",
+        "replanejamento",
+        "n8n",
         "mkt-ops",
         "portugues",
         "brasil"

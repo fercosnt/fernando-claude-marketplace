@@ -1,0 +1,44 @@
+{
+  "_nota": "Snapshot fictício de um projeto atrasado e das tarefas ligadas a ele, mais carga dos envolvidos e o Log do PMO. Use como resultado das consultas Q13, Q14, Q9 e do Log. NÃO consulte o Notion real. Nomes fictícios.",
+  "hoje": "2026-09-07",
+  "usuario_do_conector": "Fernando (Diretor de MKT — coordenação)",
+  "projeto": {
+    "url": "p-csbd", "Projeto": "CSBD 2026 — stand com a Avène", "Status": "Em andamento", "Responsável (Owner)": "Marta Moraes",
+    "Prazo": "2026-09-25", "Empresa": "Fotona", "Área": "Eventos & Congressos", "Saúde (RAG)": "🔴", "Motivo (se 🟡/🔴)": "",
+    "Última atualização de status": "2026-08-27", "🤖 Leitura do PMO": "", "🤖 Analisado em": null
+  },
+  "tarefas_do_projeto": [
+    {"url":"c1","Tarefa":"Briefing do folder CSBD","Status":"Concluída","Responsável":"Marta Moraes","Estimativa":"P","Prazo":"2026-08-28","Data de conclusão":"2026-08-28"},
+    {"url":"c2","Tarefa":"Arte do folder CSBD","Status":"Em produção","Responsável":"Lia","Estimativa":"M","Prazo":"2026-09-03","Última entrada em produção":"2026-08-29","Bloqueada por":[],"Bloqueia":["c3","c4"]},
+    {"url":"c3","Tarefa":"Aprovação clínica do folder","Status":"A fazer","Responsável":"Aldo","Estimativa":"P","Prazo":"2026-09-08","Bloqueada por":["c2"]},
+    {"url":"c4","Tarefa":"Impressão do folder (gráfica)","Status":"A fazer","Responsável":"Marta Moraes","Estimativa":"M","Prazo":"2026-09-12","Bloqueada por":["c3"]},
+    {"url":"c5","Tarefa":"Banner do stand 3x2","Status":"Em produção","Responsável":"Lia","Estimativa":"M","Prazo":"2026-09-10","Última entrada em produção":"2026-09-01"},
+    {"url":"c6","Tarefa":"Vídeo de bastidores (teaser)","Status":"A fazer","Responsável":"Ivana Castro","Estimativa":"G","Prazo":"2026-09-15"},
+    {"url":"c7","Tarefa":"Roteiro do vídeo institucional para o telão","Status":"Em aprovação","Responsável":"Sara Alves","Aprovador":"Fernando","Estimativa":"M","Prazo":"2026-09-05","Entrou em aprovação em":"2026-09-03T10:00:00"},
+    {"url":"c8","Tarefa":"Edição do vídeo institucional","Status":"A fazer","Responsável":"Ivana Castro","Estimativa":"G","Prazo":"2026-09-18","Bloqueada por":["c7"]},
+    {"url":"c9","Tarefa":"Lista de convidados do jantar","Status":"Parada/Bloqueada","Responsável":"Miguel","Estimativa":"P","Prazo":"2026-09-04","Motivo do bloqueio":"o Miguel está de atestado por problema de saúde até dia 12","Última entrada em produção":"2026-09-01"},
+    {"url":"c10","Tarefa":"Convite do jantar (arte + e-mail)","Status":"A fazer","Responsável":"Lia","Estimativa":"M","Prazo":"2026-09-11","Bloqueada por":["c9"]},
+    {"url":"c11","Tarefa":"Brindes e kit do stand","Status":"A fazer","Responsável":"Marta Moraes","Estimativa":"M","Prazo":"2026-09-19"},
+    {"url":"c12","Tarefa":"Posts de cobertura (3 stories/dia × 3 dias)","Status":"A fazer","Responsável":"Bia","Estimativa":"G","Prazo":"2026-09-24"},
+    {"url":"c13","Tarefa":"Escala da equipe no stand","Status":"A fazer","Responsável":"Marta Moraes","Estimativa":"P","Prazo":"2026-09-17"}
+  ],
+  "carga_dos_envolvidos": [
+    {"Responsável":"Lia","pontos_abertos_total":18,"pontos_atrasados_total":11,"itens_em_producao":4,"neste_projeto":9},
+    {"Responsável":"Ivana Castro","pontos_abertos_total":19,"pontos_atrasados_total":8,"itens_em_producao":3,"neste_projeto":16},
+    {"Responsável":"Marta Moraes","pontos_abertos_total":14,"pontos_atrasados_total":3,"itens_em_producao":3,"neste_projeto":8},
+    {"Responsável":"Bia","pontos_abertos_total":9,"pontos_atrasados_total":1,"itens_em_producao":2,"neste_projeto":8},
+    {"Responsável":"Sara Alves","pontos_abertos_total":7,"pontos_atrasados_total":1,"itens_em_producao":2,"neste_projeto":3},
+    {"Responsável":"Miguel","pontos_abertos_total":3,"pontos_atrasados_total":1,"itens_em_producao":1,"neste_projeto":1},
+    {"Responsável":"Aldo","pontos_abertos_total":11,"pontos_atrasados_total":0,"itens_em_producao":2,"neste_projeto":1}
+  ],
+  "outras_areas_para_comparacao": [
+    {"Área":"Design","pontos_abertos":24,"pontos_atrasados":13},
+    {"Área":"Audiovisual","pontos_abertos":19,"pontos_atrasados":8},
+    {"Área":"Eventos & Congressos","pontos_abertos":17,"pontos_atrasados":4},
+    {"Área":"Social Media","pontos_abertos":9,"pontos_atrasados":1}
+  ],
+  "log_do_pmo_14d": [
+    {"Título":"Briefing 25/08 · CSBD","Tipo":"Alerta de higiene","Dado observado":"RAG desatualizado há 9 dias","Sugestão":"Atualizar o farol do CSBD","Confiança":"Alta","Desfecho":"Aceita","Status do fato":"Confirmado","created_time":"2026-08-25"},
+    {"Título":"Segunda 31/08 · CSBD","Tipo":"Leitura da semana","Dado observado":"folder com 3 dependências em cadeia; arte atrasada 2 dias","Sugestão":"Se a arte não fechar até 03/09, a impressão não chega para o evento","Confiança":"Média","Desfecho":"Sem resposta","Status do fato":"Hipótese","created_time":"2026-08-31"}
+  ]
+}
