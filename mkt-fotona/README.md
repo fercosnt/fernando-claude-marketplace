@@ -1,38 +1,60 @@
-# Plugin MKT Fotona — onda 1
+# Plugin MKT Fotona — v2.0.0
 
-Três skills que põem o Claude dentro da rotina do time de Marketing da Fotona, já sabendo os IDs dos
-bancos do Notion, os nomes dos campos e as regras que não são óbvias.
+O Claude na rotina do **time** de Marketing da Fotona (as 11 pessoas), sobre o sistema no Notion. É
+o irmão do `pmo-fotona` com a regra invertida: o PMO lê tudo e escreve pouco; este **escreve o que
+a pessoa disse, sobre o trabalho da própria pessoa**, e não lê o que é dos outros.
 
-| Skill | Quem usa | Quando |
-|---|---|---|
-| **`mkt-triagem`** | Léo | Diariamente, na fila `Status = Triagem` |
-| **`mkt-status-semana`** | Coordenação | Segunda de manhã (e sexta, para o fechamento da semana) |
-| **`mkt-relatorio-mensal`** | Fernando | No fechamento do mês |
+| Skill | Quem usa | O que faz | O que grava no Notion |
+|---|---|---|---|
+| **`mkt-nova-demanda`** | todos | Abre uma demanda conversando — pergunta quem pede, cobre as 9 perguntas do formulário em ≤ 3 trocas, insiste no "para quê", checa duplicata | 1 página em `Triagem`, só com o que a pessoa disse; inferência vai para `🤖` |
+| **`mkt-brief-conteudo`** | social, criação, copy | Briefing da peça na voz da empresa (objetivo · público · mensagem · CTA · o que não dizer · aprovação clínica) | O corpo da página da peça, depois de mostrar |
+| **`mkt-pauta-conteudo`** | social media, coord. de criação | Propõe a pauta do mês (e declara a regra), confirma, propõe donos por fase, cria as peças | Mãe + 5 fases (6 em vídeo), prazos escalonados, só o confirmado |
+| **`mkt-meu-mes`** | cada pessoa, sobre si | Relatório individual do mês, em absoluto, contra a própria série | Nada; registro no Log do PMO |
+| **`mkt-resultados-conteudo`** | social media, quinzenal | Pede/puxa alcance, engajamento, cliques das peças publicadas e lê o que performou por pilar e canal | Só os 3 campos de métrica, só em peça com `Link do post` |
 
-Chame pelo nome (`/mkt-triagem`) ou simplesmente peça: "processa a fila de triagem", "como está a
-semana", "monta o relatório de setembro".
+Chame pelo nome (`/mkt-nova-demanda`) ou simplesmente peça: "preciso de um carrossel do GLP1TIGHT
+pra semana que vem", "monta a pauta de outubro", "escreve o brief desse reels", "como foi meu mês",
+"atualiza as métricas dos posts".
 
-## Como funciona por dentro
+## O que nenhuma skill deste plugin faz
 
-`shared/sistema-mkt.md` é o mapa do sistema — IDs dos 11 bancos, campos de ✅ Tarefas, as fórmulas
-que já existem (não recalcule na mão), as duas armadilhas de SQL do conector do Notion e as sete
-regras do sistema. As três skills leem esse arquivo antes de consultar qualquer coisa.
+Mudar `Status`, `Prazo`, `Responsável`, `Prioridade`, `Tipo de trabalho` ou `Estimativa` de
+qualquer tarefa existente (mover card é na UI; dono e prazo são triagem). Ler carga, aging ou
+atraso de outra pessoa (isso é o `pmo-fotona`, da coordenação). Mostrar o mês de outra pessoa.
+Publicar. Criar projeto ou campanha. O formulário 📥 Solicitações continua existindo e é o padrão
+se as duas portas divergirem.
 
-## Pré-requisitos
+## Antes de usar: o contexto
 
-- **Conector do Notion** autenticado, com acesso ao teamspace **Marketing** do workspace Beauty
-  Smile. Idealmente **cada pessoa autentica o próprio** — é o que preserva a autoria do que for
-  criado.
-- **Conta no Notion** para quem vai aparecer como `Responsável`: é campo de Pessoa e só aceita
-  membros do workspace.
-- Para o relatório mensal: acesso ao **GoHighLevel** (leads, oportunidades, receita influenciada) e
-  a skill `docx` disponível.
+Este plugin **não** carrega IDs de banco nem nomes de pessoas — isso é contexto privado, num
+repositório separado, o mesmo do `pmo-fotona`. Clone-o uma vez e mantenha atualizado:
 
-## O que estas skills não fazem
+```
+git clone git@github.com:fercosnt/fotona-mkt-contexto.git ~/fotona-mkt-contexto
+cd ~/fotona-mkt-contexto && git pull      # antes de usar, sempre
+```
 
-Não mudam status de tarefa fora da triagem, não repriorização de board, não falam com o time e não
-escrevem inferência em campo real — inferência vai nos campos `🤖 ...`, e a decisão fica com a
-pessoa. Erro de IA em campo real é invisível e contamina métrica.
+`CONTEXTO.md` explica a ordem de busca. Sem o contexto, as skills param e dizem o que falta — nunca
+inventam ID. O conector do Notion precisa estar autenticado **na sua conta** (guest do workspace).
 
-Ondas 2 e 3 (pauta de conteúdo, briefing, entrada conversacional, ata, resultados, vigia) estão
-planejadas em `01-blueprint-notion/14-plano-plugin-e-skills.md`.
+## Instalar
+
+```
+/plugin marketplace add fercosnt/fernando-claude-marketplace
+/plugin install mkt-fotona@fernando-claude-marketplace
+```
+
+## Como foi testado
+
+`evals/` traz os casos com e sem skill sobre **fixtures fictícias** (nomes inventados; nunca o Notion
+real), rodados com o `skill-creator`. O que os evals cobrem: paridade com o formulário (mesma demanda
+→ mesmos campos), o nome sempre perguntado, duplicata antes de criar, teto de 3 trocas, estrutura da
+peça (arte = 6 páginas, vídeo = 7, prazos batendo com a tabela, fim de semana recuando), recusa de
+escrita fora da classe, recusa do mês de outra pessoa, métrica só com fonte.
+
+## Histórico
+
+- **2.0.0 (06/09/2026)** — plugin do time, 5 skills. As três skills da v1 (`mkt-triagem`,
+  `mkt-status-semana`, `mkt-relatorio-mensal`) migraram para o `pmo-fotona` v2.0.0: quem as usava
+  era a coordenação, não o time. O `shared/` saiu do marketplace.
+- **1.0.0 (05/09/2026)** — onda 1: triagem, leitura da semana, relatório mensal.

@@ -86,8 +86,8 @@
     },
     {
       "name": "mkt-fotona",
-      "description": "[Substituido] As 3 skills da onda 1 (mkt-triagem, mkt-status-semana, mkt-relatorio-mensal) migraram para o plugin pmo-fotona v2. Este plugin recomeca na onda 2 como o plugin do TIME (mkt-nova-demanda, mkt-pauta-conteudo, mkt-meu-mes, mkt-briefing-rapido, mkt-resultados-conteudo). O shared/sistema-mkt.md com IDs e nomes reais saiu do marketplace: contexto agora vem do repositorio privado fotona-mkt-contexto (ver pmo-fotona/CONTEXTO.md).",
-      "version": "1.0.1",
+      "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-creator: 100% com skill x 48% sem, 10 casos, fixtures ficticias.",
+      "version": "2.0.0",
       "source": "./mkt-fotona",
       "author": {
         "name": "Fernando Costa"
@@ -96,9 +96,11 @@
         "notion",
         "marketing",
         "fotona",
-        "triagem",
-        "kanban",
-        "relatorio",
+        "demanda",
+        "briefing",
+        "pauta",
+        "conteudo",
+        "calendario-editorial",
         "mkt-ops",
         "portugues",
         "brasil"

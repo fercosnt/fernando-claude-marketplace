@@ -1,0 +1,23 @@
+{
+  "_nota": "Snapshot fictício para a mkt-brief-conteudo: duas peças sobre o mesmo tema, uma da Fotona (profissional) e uma da Beauty Smile (paciente). Use como resultado das consultas. NÃO consulte o Notion real. NÃO grave: mostre o briefing e diga onde gravaria. Nomes fictícios. A guia beauty-smile-design-system NÃO está instalada neste ambiente.",
+  "hoje": "2026-10-01",
+  "quem_conversa": "Sara Alves (Comunicação e Produto)",
+  "pecas": [
+    {
+      "url":"p-fotona-glp1","Tarefa":"Carrossel · GLP1TIGHT — o que muda na pele em 90 dias","Empresa":"Fotona","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Educativo/Clínico","Linha/Produto":["GLP1TIGHT"],"Campanha":"GLP1TIGHT — resultados 90 dias","Data planejada":"2026-10-13","Requer aprovação clínica?":true,
+      "Objetivo / Por quê":"Mostrar ao dermatologista o protocolo e os marcos de 30/60/90 dias para que ele peça o material completo",
+      "corpo_atual":"",
+      "campanha_objetivo":"Que dermatologistas que já conhecem o protocolo peçam o material completo",
+      "base_de_conhecimento":[{"título":"Protocolo GLP1TIGHT — parâmetros e evidência (interno)","resumo":"Série de casos interna: 24 pacientes, avaliação de firmeza aos 90 dias; parâmetros por passada; não é estudo publicado"}]
+    },
+    {
+      "url":"p-bs-glp1","Tarefa":"Carrossel · flacidez depois do emagrecimento: o que dá para fazer","Empresa":"Beauty Smile","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Educativo/Clínico","Linha/Produto":["GLP1TIGHT"],"Campanha":"","Data planejada":"2026-10-15","Requer aprovação clínica?":true,
+      "Objetivo / Por quê":"Paciente que emagreceu com caneta e ficou com a pele solta: explicar que existe protocolo e chamar para avaliação",
+      "corpo_atual":"Ideia inicial (Bia, 25/09): slide 1 pergunta 'emagreceu e a pele ficou solta?'; slide 2 explica por quê; slide 3 mostra o laser; slide 4 chama pra avaliação. Ver se dá pra usar o depoimento da paciente do 1º andar.",
+      "campanha_objetivo":null,
+      "base_de_conhecimento":[]
+    }
+  ],
+  "dono_clinico":"Dra. Helena Prado (LA&HA)",
+  "voz_da_marca":{"Fotona":"não existe página Voz da Marca","Beauty Smile":"guia beauty-smile-design-system não instalada neste ambiente"}
+}

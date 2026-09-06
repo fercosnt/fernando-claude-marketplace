@@ -1,0 +1,36 @@
+{
+  "_nota": "Snapshot fictício para a mkt-pauta-conteudo (outubro de 2026, Fotona). Use como resultado das consultas. NÃO consulte o Notion real. NÃO grave nada: liste as páginas que criaria, campo a campo. Nomes fictícios.",
+  "hoje": "2026-09-28",
+  "quem_conversa": "Bia (Analista de Social Media)",
+  "time": [
+    {"Pessoa":"Léo Lima","Cargo":"Gerente de MKT","Área principal":"Performance"},
+    {"Pessoa":"Aldo Almeida","Cargo":"Coordenador de Criação","Área principal":"Design"},
+    {"Pessoa":"Lia","Cargo":"Designer Gráfico","Área principal":"Design"},
+    {"Pessoa":"Ivana Castro","Cargo":"Produtora de Mídia Jr","Área principal":"Audiovisual"},
+    {"Pessoa":"Bia","Cargo":"Analista de Social Media","Área principal":"Social Media"},
+    {"Pessoa":"Sara Alves","Cargo":"Analista de Comunicação e Produto","Área principal":"Produto/Lançamentos"},
+    {"Pessoa":"Marina Cruz","Cargo":"Especialista em Branding e PR","Área principal":"Branding"},
+    {"Pessoa":"Dra. Helena Prado","Cargo":"Responsável clínica (LA&HA)","Área principal":"LA&HA","papel":"dono clínico — aprova peça clínica"}
+  ],
+  "campanhas_no_periodo": [
+    {"url":"camp-glp1","Campanha":"GLP1TIGHT — resultados 90 dias","Empresa":"Fotona","Status":"No ar","Período":"2026-09-01 a 2026-10-31","Objetivo":"Que dermatologistas que já conhecem o protocolo peçam o material completo"},
+    {"url":"camp-melasma","Campanha":"Melasma Recovery — primavera","Empresa":"Fotona","Status":"Produção","Período":"2026-10-05 a 2026-11-30","Objetivo":"Lançar o protocolo de primavera para a base de clínicas"}
+  ],
+  "setembro_publicado_Q12": [
+    {"Tarefa":"Carrossel · GLP1TIGHT antes e depois","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Educativo/Clínico","Publicado em":"2026-09-02"},
+    {"Tarefa":"Reels · bastidores da gravação LA&HA","Canal":["Instagram"],"Formato":"reels","Pilar de conteúdo":"Bastidores","Publicado em":"2026-09-04"},
+    {"Tarefa":"Story · enquete melasma","Canal":["Instagram"],"Formato":"story","Pilar de conteúdo":"Tendências","Publicado em":"2026-09-08"},
+    {"Tarefa":"Carrossel · depoimento Dr. Ramos","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Prova social","Publicado em":"2026-09-11"},
+    {"Tarefa":"Texto · por que laser em odontologia","Canal":["LinkedIn"],"Formato":"texto autoral","Pilar de conteúdo":"Institucional","Publicado em":"2026-09-09"},
+    {"Tarefa":"Reels · 3 dúvidas sobre o Dynamis","Canal":["Instagram"],"Formato":"reels","Pilar de conteúdo":"Produto/Equipamento","Publicado em":"2026-09-16"},
+    {"Tarefa":"Texto · caso de uso StarWalker","Canal":["LinkedIn"],"Formato":"texto autoral","Pilar de conteúdo":"Prova social","Publicado em":"2026-09-16"},
+    {"Tarefa":"Carrossel · CSBD: o que levamos","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Institucional","Publicado em":"2026-09-23"}
+  ],
+  "cadencia_padrao_da_casa": "Instagram 3/semana (1 educativa a cada 3; 1 prova social por quinzena) · LinkedIn 1/semana · YouTube 1/mês · campanha ativa puxa ≥ 2 peças",
+  "dias_uteis_outubro_2026": {"feriado":"2026-10-12 (segunda) — feriado nacional; não planejar postagem nem prazo nesse dia"},
+  "mae_e_fases_esperadas": {
+    "carrossel (ou qualquer não-vídeo)": ["Roteiro D-7","Arte/Edição D-4","Legenda D-2","Aprovação D-1","Postagem D0"],
+    "vídeo (reels, YouTube…)": ["Roteiro D-10","Gravação D-7","Arte/Edição D-4","Legenda D-2","Aprovação D-1","Postagem D0"],
+    "regra": "prazo em sábado/domingo recua para a sexta anterior; mãe sem Prazo, com Prazo interno = D-1"
+  }
+}
