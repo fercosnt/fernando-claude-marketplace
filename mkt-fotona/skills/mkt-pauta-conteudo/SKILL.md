@@ -49,9 +49,10 @@ peças; LinkedIn 1/semana". A regra declarada é o que permite a pessoa discorda
 com uma frase ("não, esse mês é 2 por semana") em vez de editar linha por linha.
 
 Datas: dias úteis, distribuídos na semana; não empilhe duas peças no mesmo canal no mesmo dia sem
-motivo. `Requer aprovação clínica?` sugerido quando `Pilar = Educativo/Clínico`, quando a
-linha/produto é protocolo clínico, ou quando o tema fala de resultado, indicação ou paciente; nos
-demais, deixe como pergunta.
+motivo. `Aprovação clínica = Aguardando` sugerido quando `Pilar = Educativo/Clínico`, quando a
+linha/produto é protocolo clínico, ou quando o tema fala de resultado, indicação ou paciente;
+`Não requer` nos demais que forem claros; em dúvida, deixe como pergunta. (É um select — desde
+09/09/2026 não existe mais o checkbox `Requer aprovação clínica?`.)
 
 Peça a **confirmação da pauta**: a pessoa corta, troca, move; você reapresenta a tabela final e
 pergunta "essa é a pauta?". Só então passe aos donos.
@@ -77,8 +78,10 @@ legendas com a social media"). Bloco explícito conta como confirmação **daque
 depois de uma lista de 30 linhas não conta como 30 decisões — percorra por peça. Dono que não está
 no banco 👥 Time não é gravado: escreva o nome no texto e deixe a fase em `Triagem`.
 
-Aprovação clínica confirmada → a fase Aprovação vai para o dono clínico (LA&HA) e o prazo da fase
-respeita o D-1; se a pessoa quiser folga, aumente a Data planejada, não encurte as outras fases.
+Aprovação clínica confirmada (`Aguardando`) → a fase Aprovação vai para o dono clínico (LA&HA) e o
+prazo da fase respeita o D-1; se a pessoa quiser folga, aumente a Data planejada, não encurte as
+outras fases. A aprovação em si acontece no grupo de WhatsApp da clínica; quem aprova muda o select
+para `Aprovada` (ou `Reprovada`) e a automação carimba `Aprovação clínica em`.
 
 ### 4. Crie — mãe primeiro, fases depois
 
@@ -87,7 +90,8 @@ Para cada peça confirmada:
 1. **Mãe:** `Tarefa` = "<formato> · <tema>" · `Categoria = Conteúdo` · `Tipo de trabalho = Planejado`
    · `Canal de entrada = Agente` · `Empresa` · `Canal` · `Formato` · `Pilar de conteúdo` ·
    `Linha/Produto` · `Data planejada` · `Prazo interno` (D-1, do script) · `Campanha` (quando
-   houver) · `Requer aprovação clínica?` · `Objetivo / Por quê` (o tema em uma frase + a campanha).
+   houver) · `Aprovação clínica` (`Aguardando` ou `Não requer`) · `Objetivo / Por quê` (o tema em uma
+   frase + a campanha).
    Sem `Responsável`, sem `Prazo`, `Status = A fazer`. A mãe é contêiner.
 2. **Fases:** uma página por fase, `Tarefa` = "<fase> — <tema>", `Subtarefa de` = a mãe, `Categoria =
    Conteúdo`, `Tipo de trabalho = Planejado`, `Canal de entrada = Agente`, `Empresa`, `Prazo` =

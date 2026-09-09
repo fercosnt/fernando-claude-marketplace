@@ -32,12 +32,15 @@ manda.
 Propor por **área e formato**, nunca por carga. Se a pessoa disser "a designer está no CSBD esse
 mês, põe a produtora nas artes", aceite — é ela quem sabe.
 
-## `Requer aprovação clínica?` — quando sugerir marcado
+## `Aprovação clínica` — quando sugerir `Aguardando`
 
-`Pilar = Educativo/Clínico` · `Linha/Produto` é protocolo (GLP1TIGHT, Melasma, ATPReboost, qualquer
-protocolo com indicação/resultado) · o tema fala de resultado, indicação, contraindicação ou
-paciente. Nos demais, perguntar. Peça clínica: a fase Aprovação vai para o dono clínico e a evidência
-vai por e-mail; a fase fecha com "aprovado por + data".
+É um select (Não requer · Aguardando · Aprovada · Reprovada). Sugira `Aguardando` quando `Pilar =
+Educativo/Clínico` · `Linha/Produto` é protocolo (GLP1TIGHT, Melasma, ATPReboost, qualquer protocolo
+com indicação/resultado) · o tema fala de resultado, indicação, contraindicação ou paciente. `Não
+requer` quando é claramente institucional, bastidores ou promocional sem claim. Em dúvida, perguntar.
+Peça clínica: a fase Aprovação vai para o dono clínico; a aprovação acontece no grupo de WhatsApp e
+quem aprova muda o select para `Aprovada` — a automação carimba `Aprovação clínica em`. A skill
+nunca grava `Aprovada`: isso é ato de quem aprova.
 
 ## Exemplo — 1 carrossel + 1 reels, Data planejada 19/10/2026 (segunda)
 

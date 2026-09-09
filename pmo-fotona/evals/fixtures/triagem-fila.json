@@ -1,5 +1,5 @@
 {
- "_nota": "Snapshot fictício da fila de triagem — Status='Triagem' no banco ✅ Tarefas. Use como se fosse o resultado da consulta ao Notion. NÃO consulte o Notion real. Itens t1 e t2 já têm análise da entrada (campos 🤖). Em t2 o fingerprint do texto atual difere do da análise. O campo _fingerprint_texto_atual simula o hash do texto de hoje.",
+ "_nota": "Snapshot fictício da fila de triagem — Status='Triagem' no banco ✅ Tarefas. Use como se fosse o resultado da consulta ao Notion. NÃO consulte o Notion real. Itens t1 e t2 já têm análise da entrada (campos 🤖). Em t2 o fingerprint do texto atual difere do da análise. O campo _fingerprint_texto_atual simula o hash do texto de hoje. Origem só tem áreas de fora do MKT — vazia = demanda do próprio time. Entregas pedidas é o que o solicitante marcou; Tipo de entrega quem define é a triagem.",
  "hoje": "2026-09-07",
  "fila": [
   {
@@ -18,13 +18,17 @@
    "🤖 Resumo (IA)": "Post para Instagram sobre o protocolo GLP1TIGHT, Fotona, sem data firme",
    "🤖 Sugestão de triagem (IA)": "Dado observado: 1 tarefa aberta parecida ('Carrossel GLP1TIGHT — Beauty Smile', em produção); tarefas semelhantes ficaram em Social Media. Conclusão: área Social Media · tipo Conteúdo/post · estimativa M (heurística: post = M) · prioridade sugerida P2 · possível duplicata: sim (link t-dup) · aprovação clínica: sim (protocolo) · falta perguntar: para qual canal e se é Fotona ou Beauty Smile. fp:ab12cd",
    "🤖 Analisado em": "2026-09-06",
-   "_fingerprint_texto_atual": "ab12cd"
+   "_fingerprint_texto_atual": "ab12cd",
+   "Entregas pedidas": [
+    "Postagem"
+   ],
+   "Solicitante": "Ana Ramos"
   },
   {
    "url": "t2",
    "Tarefa": "Folder impresso para o stand do CSBD",
    "Objetivo / Por quê": "Material de mão para o congresso; dividimos stand com a Avène e precisamos de peça própria",
-   "Origem": "Eventos",
+   "Origem": null,
    "Canal de entrada": "Form",
    "Empresa": "Fotona",
    "Categoria": "Operacional",
@@ -36,7 +40,13 @@
    "🤖 Resumo (IA)": "Folder impresso para o stand do CSBD (divide stand com a Avène)",
    "🤖 Sugestão de triagem (IA)": "Dado observado: nenhuma tarefa parecida aberta; área das tarefas de congresso: Eventos & Congressos + Design. Conclusão: área Design (execução) com Eventos como envolvida · tipo Impresso · estimativa G (heurística: impresso com aprovação = G) · prioridade P1 · duplicata: não · aprovação clínica: verificar claims · falta perguntar: tiragem e gráfica. fp:99zz01",
    "🤖 Analisado em": "2026-09-05",
-   "_fingerprint_texto_atual": "77yy02"
+   "_fingerprint_texto_atual": "77yy02",
+   "Entregas pedidas": [
+    "Impresso",
+    "Vídeo/Edição"
+   ],
+   "Solicitante": "Marta Moraes",
+   "_obs": "Origem vazia: pedido do próprio MKT (Eventos é área interna); Entregas pedidas traz duas entregas distintas"
   },
   {
    "url": "t3",
@@ -53,13 +63,17 @@
    "Área": [],
    "🤖 Resumo (IA)": "",
    "🤖 Sugestão de triagem (IA)": "",
-   "🤖 Analisado em": null
+   "🤖 Analisado em": null,
+   "Entregas pedidas": [
+    "Web/Site"
+   ],
+   "Solicitante": "Ana Ramos"
   },
   {
    "url": "t4",
    "Tarefa": "Reel com depoimento da Dra. Helena",
    "Objetivo / Por quê": "Prova social para a campanha de setembro do Fotona4GLOW",
-   "Origem": "MKT",
+   "Origem": null,
    "Canal de entrada": "Form",
    "Empresa": "Fotona",
    "Categoria": "Conteúdo",
@@ -70,7 +84,12 @@
    "Área": [],
    "🤖 Resumo (IA)": "",
    "🤖 Sugestão de triagem (IA)": "",
-   "🤖 Analisado em": null
+   "🤖 Analisado em": null,
+   "Entregas pedidas": [
+    "Captação/Gravação",
+    "Vídeo/Edição"
+   ],
+   "Solicitante": "Bia"
   },
   {
    "url": "t5",
@@ -87,7 +106,9 @@
    "Área": [],
    "🤖 Resumo (IA)": "",
    "🤖 Sugestão de triagem (IA)": "",
-   "🤖 Analisado em": null
+   "🤖 Analisado em": null,
+   "Entregas pedidas": [],
+   "Solicitante": ""
   },
   {
    "url": "t6",
@@ -104,7 +125,9 @@
    "Área": [],
    "🤖 Resumo (IA)": "",
    "🤖 Sugestão de triagem (IA)": "",
-   "🤖 Analisado em": null
+   "🤖 Analisado em": null,
+   "Entregas pedidas": [],
+   "Solicitante": ""
   },
   {
    "url": "t7",
@@ -121,7 +144,9 @@
    "Área": [],
    "🤖 Resumo (IA)": "",
    "🤖 Sugestão de triagem (IA)": "",
-   "🤖 Analisado em": null
+   "🤖 Analisado em": null,
+   "Entregas pedidas": [],
+   "Solicitante": ""
   }
  ],
  "time": [

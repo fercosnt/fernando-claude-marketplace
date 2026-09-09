@@ -9,8 +9,8 @@ demanda, pelas duas portas, fecha com o mesmo conjunto de campos.**
 | 0 | — (só na conversa) | `Solicitante` (texto) | **Sim, sempre** | "Quem está pedindo?" — pelo nome; grave o que a pessoa disser |
 | 1 | O que você precisa? (1 frase) | `Tarefa` (título) | Sim | Reescreva o pedido em uma frase objetiva e confirme: "vou chamar de 'Carrossel GLP1TIGHT — resultados 90 dias', ok?" |
 | 2 | Para qual empresa? | `Empresa` | Sim | Só pergunte se o pedido não deixa claro (GLP1TIGHT → Fotona; clareamento → Beauty Smile). Se inferiu, diga que inferiu |
-| 3 | Tipo de entrega | `Tipo de entrega` | Sim | Conteúdo · Design · Tráfego · Evento · Vídeo · Impresso · Outro — quase sempre dá para inferir do pedido; confirme na mesma frase |
-| 4 | Quem está pedindo? (área) | `Origem` | Sim | Comercial · Diretoria · Eventos · Produto · LA&HA · GTS · Beauty Smile · Influencer/Imprensa · MKT — quem pediu **de fato**, não quem está digitando |
+| 3 | O que você precisa que o MKT entregue? | `Entregas pedidas` (multi) | Sim | Roteiro · Design · Vídeo/Edição · Copy · Tráfego/Ads · Captação/Gravação · Web/Site · Impresso · Aula/Workshop · Apresentação · Proposta comercial · Postagem · Outro… — pode ser mais de uma; quase sempre dá para inferir do pedido; confirme na mesma frase. `Tipo de entrega` (uma só) quem define é a triagem — sugira em `🤖` |
+| 4 | Quem está pedindo? (área) | `Origem` | Só se for de fora | LA&HA · Comercial · Diretoria · Financeiro · Assistência técnica · GTS · Beauty Smile · Customer Success · Outra — quem pediu **de fato**, não quem está digitando. Pedido do próprio MKT → deixe **vazio** (vazio = demanda interna; não existe opção "MKT") |
 | 5 | Área responsável (se souber) | `Área` (relação) | Não | Só se a pessoa disser; senão vai como sugestão em `🤖` |
 | 6 | Para quando você precisa? | `Data desejada` | Sim | Data concreta. "Semana que vem" → "que dia?". Sem data → pergunte "tem data ou é sem data?"; "sem data" é resposta válida (grave vazio e anote) |
 | 7 | Por quê? Qual o objetivo? | `Objetivo / Por quê` | Sim | A pergunta que mais importa. Se vier vago, **uma** pergunta de aprofundamento: "para quê — amarra em qual campanha/evento? o que precisa acontecer depois que a peça sair?" |
@@ -20,13 +20,14 @@ demanda, pelas duas portas, fecha com o mesmo conjunto de campos.**
 
 ## Ordem de perguntas quando falta muita coisa
 
-Troca 1: quem pede · confirmação do título · o que falta dos obrigatórios (empresa, tipo, origem, data).
+Troca 1: quem pede · confirmação do título · o que falta dos obrigatórios (empresa, entregas, origem se for de fora, data).
 Troca 2: o "para quê" (se veio vago) · duplicata, se houver.
 Troca 3: cria com o que tem; o que faltou vira "falta: …" na sugestão.
 
 ## O que vai para `🤖 Sugestão de triagem (IA)` (nunca para campo real)
 
 - Área provável e por quê ("carrossel + GLP1TIGHT → Design, com Social Media envolvida").
+- **`Tipo de entrega` principal sugerido** — uma só, a maior ou a que a pessoa citou primeiro ("tipo principal: Impresso"). Se as `Entregas pedidas` forem entregas distintas (folder + vídeo + tráfego), acrescente "quebrar em sub-itens: Impresso · Vídeo/Edição · Tráfego/Ads" — a triagem decide, mas já lê a proposta pronta.
 - Estimativa por heurística de tipo de entrega: story P · post/arte M · reel M–G · vídeo longo G ·
   blog M · e-mail M. Diga "heurística".
 - "Provável aprovação clínica" quando houver linha/produto clínica, protocolo, resultado, indicação
@@ -41,12 +42,12 @@ Troca 3: cria com o que tem; o que faltou vira "falta: …" na sugestão.
 
 **"o comercial pediu um folder do StarWalker pro congresso de outubro"** (quem conversa: Léo)
 → `Solicitante` Léo · `Tarefa` "Folder StarWalker — congresso de outubro" · `Empresa` Fotona ·
-`Tipo de entrega` Impresso · `Origem` Comercial · `Data desejada` (perguntar o dia do congresso) ·
+`Entregas pedidas` Impresso · `Origem` Comercial · `Data desejada` (perguntar o dia do congresso) ·
 `Objetivo / Por quê` (perguntar: "folder para entregar no stand, ou para mandar antes?") ·
 `🤖`: "Design; Impresso costuma pedir 10 dias de gráfica — sugerir prazo interno D-10; heurística G".
 
 **"preciso de 3 stories do sorteio de dia das mães" (Beauty Smile)** (quem conversa: Bia)
 → `Solicitante` Bia · `Tarefa` "3 stories — sorteio Dia das Mães" · `Empresa` Beauty Smile ·
-`Tipo de entrega` Conteúdo · `Origem` MKT · `Data desejada` (perguntar) · `Objetivo` (perguntar:
+`Entregas pedidas` Design · Postagem · `Origem` vazia (é do próprio MKT) · `Data desejada` (perguntar) · `Objetivo` (perguntar:
 "stories para anunciar, para lembrar do prazo, ou para o resultado?") · `🤖`: "Social Media +
 Design; heurística P cada; sem sinal clínico".

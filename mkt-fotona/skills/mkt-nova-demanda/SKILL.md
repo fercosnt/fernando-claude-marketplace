@@ -17,9 +17,11 @@ na mesma semântica do formulário, está em `assets/roteiro-de-perguntas.md`.
 ## O que esta skill escreve — e o que nunca escreve
 
 Cria **uma página** em ✅ Tarefas com `Status = Triagem`, `Canal de entrada = Agente` e os campos
-reais preenchidos **só com o que a pessoa disse**: `Solicitante`, `Tarefa`, `Empresa`, `Tipo de
-entrega`, `Origem`, `Objetivo / Por quê`, `Data desejada`, `Área` (se souber), `Links e
-referências`. É a Classe 3 do `contrato-de-escrita.md`.
+reais preenchidos **só com o que a pessoa disse**: `Solicitante`, `Tarefa`, `Empresa`, `Entregas
+pedidas` (o que a pessoa pediu — pode ser mais de uma), `Origem` (só quando o pedido vem de fora
+do MKT), `Objetivo / Por quê`, `Data desejada`, `Área` (se souber), `Links e referências`. É a
+Classe 3 do `contrato-de-escrita.md`. `Tipo de entrega` (uma só) é decisão da triagem, como no
+formulário: você escreve o pedido em `Entregas pedidas` e sugere o tipo em `🤖`.
 
 Nunca preenche `Tipo de trabalho`, `Prazo`, `Responsável`, `Prioridade`, `Estimativa`. Não é
 capricho: `Tipo de trabalho` é o número que mede quanto do mês foi reativo e justifica contratação;
@@ -35,7 +37,9 @@ A primeira pergunta é sempre **"quem está pedindo?"** — pelo nome. O `Solici
 texto que existe porque a autoria via conector não é confiável para isso; mesmo que você "saiba"
 quem está conversando, pergunte, e grave o que a pessoa disser. Se ela responder "sou eu, a Bia",
 grave "Bia". Se ela estiver abrindo em nome de outro ("o comercial pediu"), o `Solicitante` é quem
-está conversando e a `Origem` é quem pediu de fato (Comercial).
+está conversando e a `Origem` é quem pediu de fato (Comercial). Se o pedido nasceu no próprio MKT
+(a social media quer um post, a coordenadora de eventos quer um banner), `Origem` fica **vazia** —
+vazio significa "demanda do próprio MKT"; a lista de `Origem` só tem áreas de fora.
 
 Junte à mesma mensagem o que já dá para extrair do pedido inicial (título em uma frase, empresa,
 tipo de entrega, data, links) e pergunte **só o que falta** dos obrigatórios. Não repita o que a

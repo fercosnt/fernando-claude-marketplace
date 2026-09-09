@@ -1,4 +1,4 @@
-# Plugin PMO Fotona — v2.0.0
+# Plugin PMO Fotona — v2.1.0
 
 O cérebro do agente de PMO do time de Marketing da Fotona. Cinco skills para a **coordenação**
 (diretor, gerente de MKT, coordenador de criação) sobre o sistema no Notion — e os mesmos arquivos
@@ -60,3 +60,13 @@ número que não veio de consulta.
 `evals/evals.json` — rodados com e sem skill sobre **fixtures fictícias** (`evals/fixtures/`), nunca
 sobre o Notion real. Inclui evals negativos (escrita fora da classe, comparação entre pessoas,
 "aplica tudo") e o de consistência plugin × n8n.
+
+## Histórico
+
+- **2.1.0 (09/09/2026)** — `pmo-triagem` lê `Entregas pedidas` e `Solicitante`, decide `Tipo de entrega`
+  (uma só; entregas distintas viram sub-itens), lê `Origem` vazia como demanda do próprio MKT e propõe
+  `Aprovação clínica = Aguardando` (select; nunca `Aprovada`). `prompts/enriquecimento-entrada.md`
+  reescrito para a Onda A no n8n (`MKT — Enriquecimento na entrada`): mesmos campos, saída só-JSON,
+  e o aviso ao coordenador de MKT por tarefa nova. Eval 0 ganhou 3 asserções.
+- **2.0.0 (06/09/2026)** — primeira versão do cérebro do PMO (5 skills, prompts dos ritos, Log do PMO).
+

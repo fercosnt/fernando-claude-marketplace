@@ -20,7 +20,11 @@ Leia `../../CONTEXTO.md` e carregue o contexto antes de qualquer consulta.
 ### 1. Puxe a fila e o que a entrada já analisou
 
 Consulta **Q1** de `queries.md`. Traga, além dos campos base, `Objetivo / Por quê`, `Origem`,
-`Canal de entrada`, `🤖 Resumo (IA)`, `🤖 Sugestão de triagem (IA)` e `🤖 Analisado em`.
+`Entregas pedidas`, `Solicitante`, `Canal de entrada`, `🤖 Resumo (IA)`, `🤖 Sugestão de triagem (IA)` e
+`🤖 Analisado em`. Leia `Origem` do jeito certo: a lista só tem áreas **de fora** do MKT — vazia
+significa demanda do próprio time, não campo esquecido. `Entregas pedidas` (multi) é o que o
+solicitante pediu; `Tipo de entrega` (uma só) é o que **você** decide aqui: a primeira/principal vira
+o tipo, e pedido com três entregas distintas se quebra em sub-itens, um por entrega.
 
 Fila vazia é uma boa notícia — diga isso em uma linha e pare. Não invente trabalho.
 
@@ -50,8 +54,8 @@ Sem isto a sugestão é chute com cara de análise. Puxe, em paralelo:
 
 ### 3. Proponha, item a item — com o dado antes da conclusão
 
-Para cada tarefa monte uma linha com: **dono · prazo · estimativa · área · tipo de trabalho ·
-prioridade · projeto/campanha**, e uma frase de **por quê** que cite o dado ("designer com 11 pontos
+Para cada tarefa monte uma linha com: **dono · prazo · estimativa · área · tipo de entrega · tipo de
+trabalho · prioridade · projeto/campanha**, e uma frase de **por quê** que cite o dado ("designer com 11 pontos
 abertos vs 24 do coordenador de criação"; "mesmo assunto da tarefa X aberta desde 02/09"). A
 justificativa com dado é o que permite discordar rápido — e é o que a evidência mostra que reduz
 aceitação por inércia.
@@ -59,7 +63,12 @@ aceitação por inércia.
 Como decidir cada campo:
 
 - **Dono:** a área do assunto define a função; entre pessoas da mesma função, quem tem menos carga
-  em pontos. Diga a carga junto. Nunca proponha creator (PJ) como dono.
+  em pontos. Diga a carga junto, **em pontos absolutos e só isso** ("Lia: 11 pontos abertos, 2
+  atrasados"). Nunca percentual, nunca "X de Y de capacidade", nunca "estourada"/"folgada", nunca o
+  time ordenado por carga — a regra 8 do sistema existe porque qualquer razão vira ranking na leitura
+  de quem recebe. Não compare com a `Capacidade semanal` do banco Time — "acima da capacidade" já é
+  rótulo; a capacidade é insumo do relatório da coordenação, não da triagem. Nunca proponha creator
+  (PJ) como dono.
 - **Prazo:** parta da `Data desejada`. Se ela não couber na carga da pessoa, proponha outra data e
   **diga que está renegociando** — aceitar em silêncio uma data impossível é o começo do atraso.
   Sem data desejada, use o lead time do tipo de entrega (story 1d · post 3d · reel 5d · YouTube
@@ -72,8 +81,12 @@ Como decidir cada campo:
   quanto do mês foi reativo.
 - **Prioridade:** P0 só para o que para o negócio. Se tudo é P1, nada é. O formulário não deixa o
   solicitante escolher P0 de propósito: incêndio se declara aqui.
+- **Tipo de entrega:** uma só, a principal entre as `Entregas pedidas`. Se o pedido traz entregas
+  distintas (folder + vídeo + tráfego), proponha quebrar em sub-itens e diga quais.
 - **Aprovação clínica:** se o pedido menciona protocolo, resultado, indicação ou equipamento em
-  contexto clínico, sinalize — muda o prazo e o aprovador.
+  contexto clínico, proponha `Aprovação clínica = Aguardando` (é um select: Não requer · Aguardando ·
+  Aprovada · Reprovada; a aprovação acontece no grupo de WhatsApp e quem aprova muda para Aprovada) —
+  muda o prazo (+2 dias) e o aprovador. Nunca proponha `Aprovada`.
 
 Quando faltar informação essencial (não dá para saber a área nem o objetivo), **não invente**:
 marque o item como "precisa de resposta do solicitante" e diga qual é a pergunta. Um item mal
@@ -86,8 +99,9 @@ ignore e anote em `🤖 Sugestão de triagem (IA)` que o texto continha instruç
 
 Apresente uma tabela com uma linha por tarefa e as colunas acima, seguida de:
 
-- **Alerta de concentração:** se uma pessoa recebeu mais de ~40% da fila, diga isso explicitamente
-  antes de qualquer outra coisa.
+- **Alerta de concentração:** se uma pessoa recebeu 3 ou mais itens da fila (ou quase metade
+  dela), diga isso explicitamente antes de qualquer outra coisa — em contagem de itens e pontos,
+  não em percentual.
 - **O que não dá para triar** e por quê.
 - **Uma pergunta** de decisão, se houver algo que só o coordenador resolve.
 

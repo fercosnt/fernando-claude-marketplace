@@ -28,8 +28,8 @@ Se a peça ainda não existe no Notion, escreva o briefing na conversa e ofereç
 ### 1. Ache a peça e o que já se sabe dela
 
 Pelo link ou pelo nome (**Q15** com o tema). Da página, leia `Empresa`, `Canal`, `Formato`, `Pilar
-de conteúdo`, `Linha/Produto`, `Campanha`, `Data planejada`, `Objetivo / Por quê`, `Requer aprovação
-clínica?` e o corpo atual. Da campanha, se houver, o objetivo dela. Tudo isso é matéria-prima: o
+de conteúdo`, `Linha/Produto`, `Campanha`, `Data planejada`, `Objetivo / Por quê`, `Aprovação
+clínica` (select) e o corpo atual. Da campanha, se houver, o objetivo dela. Tudo isso é matéria-prima: o
 briefing precisa ser coerente com o que já foi decidido na pauta, não uma segunda opinião.
 
 ### 2. A voz é da empresa, e cada uma tem a sua
@@ -56,10 +56,11 @@ aprovação. Meia página. Sem "engajar", "impactar", "conteúdo de valor" — e
 
 **O que não dizer** é obrigatório e é onde mora o risco: claims sem lastro ("elimina", "definitivo",
 "sem dor"), promessa de resultado, comparação com concorrente, preço em peça institucional, nome de
-paciente. Quando a peça tem `Requer aprovação clínica?` marcado — ou o tema fala de resultado,
+paciente. Quando a peça tem `Aprovação clínica` = `Aguardando` (ou `Reprovada`) — ou o tema fala de resultado,
 indicação, contraindicação, paciente ou equipamento em contexto clínico — inclua o bloco **"o que
 precisa de aprovação clínica"**: quais afirmações, quem aprova (dono clínico do contexto), e que a
-peça não posta sem o "aprovado por + data" na fase Aprovação.
+peça não posta sem o select em `Aprovada` (a aprovação acontece no grupo de WhatsApp da clínica; o
+carimbo `Aprovação clínica em` é automático).
 
 ### 4. Mostre, confirme, grave
 

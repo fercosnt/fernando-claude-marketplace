@@ -1,4 +1,4 @@
-# Plugin MKT Fotona — v2.1.0
+# Plugin MKT Fotona — v2.2.0
 
 O Claude na rotina do **time** de Marketing da Fotona (as 11 pessoas), sobre o sistema no Notion. É
 o irmão do `pmo-fotona` com a regra invertida: o PMO lê tudo e escreve pouco; este **escreve o que
@@ -59,6 +59,18 @@ pessoa, e — no eval do Reportei — casamento por permalink, zero falso tratad
 e métrica sempre com fonte.
 
 ## Histórico
+
+- **2.2.0 (09/09/2026)** — alinhado ao schema depois da revisão do guia de propriedades (08/09):
+  **`mkt-resultados-conteudo`** passa a ler pelos **três ciclos** (D+7 · D+15 · D+30 a partir de
+  `Publicado em`; nunca regrava peça em D+30) e grava os 8 campos de métrica (`Alcance`, `Engajamento`,
+  `Curtidas`, `Comentários`, `Salvamentos`, `Compartilhamentos`, `Visualizações`, `Seguidores ganhos`)
+  sempre com `Ciclo de métricas` e `Métricas atualizadas em`; **`Aprovação clínica`** virou select
+  (Não requer · Aguardando · Aprovada · Reprovada) e o checkbox `Requer aprovação clínica?` saiu —
+  `mkt-pauta-conteudo` e `mkt-brief-conteudo` leem/escrevem o select; **`mkt-nova-demanda`** escreve
+  `Entregas pedidas` (multi) e deixa `Tipo de entrega` para a triagem, e `Origem` só quando o pedido
+  vem de fora do MKT (vazio = demanda interna); `mkt-ajuda` conhece `Link da entrega`, o fluxo de
+  revisão (Aprovador + Em aprovação) e a automação Tarefa → Base de Conhecimento. Evals 10, 11 e 5
+  reescritos; evals 18 (ajuda: entrega/aprovação) e 19 (nova demanda interna com 3 entregas) novos.
 
 - **2.1.0 (06/09/2026)** — entra a **`mkt-ajuda`**, o balcão de dúvidas do sistema. O time é guest e
   não tem Notion AI: dúvida de dois minutos hoje vira interrupção ou chute em campo de

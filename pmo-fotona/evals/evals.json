@@ -1,157 +1,160 @@
 {
-  "skill_name": "pmo-fotona",
-  "nota": "Os evals rodam sobre fixtures FICTÍCIAS em evals/fixtures/ — nunca sobre o Notion real. O contexto (shared/) é passado ao agente como pasta local. Cada eval roda com e sem skill.",
-  "evals": [
-    {
-      "id": 0,
-      "name": "triagem-parte-da-analise-da-entrada",
-      "skill": "pmo-triagem",
-      "prompt": "Sou o Léo, gerente de MKT. Processa a fila de triagem do MKT. Os dados estão no arquivo FIXTURE (fila em Status=Triagem — dois itens já têm a análise da IA na entrada nos campos 🤖 —, banco Time com carga atual, áreas, projetos e campanhas ativos, e os registros do Log do PMO dos últimos 14 dias). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Me mostra o que você propõe para cada item antes de qualquer coisa. Depois que eu ver, provavelmente vou dizer 'aplica tudo'. Salve sua resposta em OUTPUT_DIR/triagem.md.",
-      "files": [
-        "evals/fixtures/triagem-fila.json"
-      ],
-      "expected_output": "Tabela item a item com dono, prazo, estimativa, área, tipo de trabalho, prioridade + justificativa citando o dado (carga em pontos). Para t1, parte da análise da entrada e a cita; para t2, diz que a sugestão está desatualizada (fingerprint diferente) e reanalisa; cita o registro do Log sobre t3 (duplicata, sem resposta). Item com informação faltando marcado 'precisa de resposta do solicitante'. Alerta de concentração se houver. Pede confirmação ITEM A ITEM e diz explicitamente que 'aplica tudo' vai ser percorrido item por item. Não escreve nada antes. Descreve os registros que gravaria no Log (um por item).",
-      "assertions": [
-        "Apresenta uma tabela com uma linha por item da fila, com dono, prazo, estimativa, área, tipo de trabalho e prioridade",
-        "Para o item t1, menciona explicitamente a análise da entrada (campo 🤖) e parte dela em vez de refazer do zero",
-        "Para o item t2, identifica que a sugestão da entrada está desatualizada (fingerprint diferente) e diz que reanalisou",
-        "Cita o registro do Log do PMO sobre t3 (possível duplicata, sem resposta)",
-        "Cada proposta de dono cita a carga da pessoa em pontos absolutos — sem percentual, sem razão pontos/capacidade, sem rótulo tipo 'estourado', e sem ordenar o time por carga",
-        "Pelo menos um item é marcado como 'precisa de resposta do solicitante' com a pergunta a fazer, em vez de ter campos inventados",
-        "Pede confirmação item a item (ou em bloco explícito) e afirma que não grava nada antes da confirmação; trata 'aplica tudo' como algo a percorrer item por item",
-        "Não propõe creator/PJ como dono e não usa nomes de pessoas reais do time (só os da fixture)",
-        "Descreve o registro que gravaria no Log do PMO por item (tipo Sugestão de triagem, dado observado, sugestão, desfecho)",
-        "Os nomes de pessoas na resposta são exatamente os da fixture (banco Time do arquivo); nenhum nome vindo de fora dos dados"
-      ]
-    },
-    {
-      "id": 1,
-      "name": "status-semana-segunda-com-memoria",
-      "skill": "pmo-status-semana",
-      "prompt": "Sou o Fernando, diretor de MKT. Monta o status da semana do time de MKT para a reunião de segunda. Os dados estão no arquivo FIXTURE (atrasadas, foco da semana, em aprovação, travadas, carga por responsável em pontos, item em triagem há mais de 2 dias, conteúdo, e os registros do Log do PMO dos últimos 14 dias com desfecho). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Quero um texto pronto para ler na reunião e mandar no grupo da coordenação. Salve em OUTPUT_DIR/status-semana.md.",
-      "files": [
-        "evals/fixtures/semana-com-log.json"
-      ],
-      "expected_output": "Texto ≤400 palavras no esqueleto: estado em uma frase → bloco 'O que li' com contagens (dado bruto ANTES da leitura) → ≤3 decisões → vence esta semana → aprovação parada → carga em pontos absolutos só de quem está fora do padrão, sem %, sem ranking, creator excluído → conteúdo → 'O que o PMO disse semana passada' citando os registros do Log com desfecho, cobrando o que ficou Sem resposta → UMA pergunta de decisão. Padrão de aprovação estourando citado com contagem (3ª semana, conforme o Log). Não lê o conteúdo de motivo de bloqueio.",
-      "assertions": [
-        "Abre com o bloco de dado bruto (contagens: abertas, atrasadas, em aprovação, travadas, triagem) ANTES de qualquer leitura ou recomendação",
-        "O bloco de decisão tem no máximo 3 itens",
-        "A seção de carga usa pontos absolutos, não contém o caractere % nem palavras como 'utilização', e não lista o time inteiro nem ordena por desempenho",
-        "A creator (Dra. Convidada) NÃO aparece na seção de carga",
-        "Cita pelo menos dois registros do Log do PMO da semana anterior com o desfecho de cada um, e cobra explicitamente o que ficou 'Sem resposta'",
-        "Menciona o padrão de aprovação estourando o SLA com contagem e cita o Log como fonte (3ª semana registrada em 04/09; 4ª se contar a semana atual — qualquer uma das duas, desde que o Log seja citado)",
-        "Termina com exatamente uma pergunta de decisão (bloco ❓), além das eventuais 3 perguntas para a reunião",
-        "O corpo do status (do título até o bloco ❓, excluindo perguntas para a reunião e bastidores) tem no máximo 400 palavras alfabéticas (separadores ·/— e emojis não contam)",
-        "Não usa adjetivo de desempenho sobre pessoas (ex.: lenta, ruim, abaixo, fraco) e não cita o conteúdo de nenhum motivo de bloqueio",
-        "Todos os números citados batem com a fixture ou são apresentados como discrepância explícita entre duas fontes da própria fixture"
-      ]
-    },
-    {
-      "id": 2,
-      "name": "relatorio-mensal-mkt-regressao",
-      "skill": "pmo-relatorio-mensal",
-      "prompt": "Sou o Fernando, diretor de MKT. Escreve o relatório mensal de marketing de agosto/2026 para a diretoria e o CEO, escopo MKT. Os números estão no arquivo FIXTURE. Trabalhe só com esse arquivo — não consulte o Notion nem o GoHighLevel. Entrega em markdown e em .docx. Salve o arquivo em OUTPUT_DIR/ e deixe a versão em markdown em OUTPUT_DIR/relatorio.md.",
-      "files": [
-        "evals/fixtures/mes-agosto.json"
-      ],
-      "expected_output": ".docx gerado; entregas em contagem E pontos lado a lado; nunca chama pontos de throughput; sem média de lead time; % no prazo com denominador na Data desejada; GHL marcado como indisponível em vez de zero; pessoa sem capacidade cadastrada não vira 0%; capacidade reportada por time/área, não ranking de pessoas; 5 a 9 KPIs no corpo; abre com dado, fecha com uma pergunta de decisão; três linhas no chat.",
-      "assertions": [
-        "Gera um arquivo .docx e um relatorio.md",
-        "Entregas aparecem em contagem E em pontos lado a lado, e a palavra 'throughput' nunca é usada para pontos",
-        "Não reporta média de lead time / cycle time",
-        "GHL aparece como 'não disponível nesta rodada' (ou equivalente), nunca como zero",
-        "Capacidade/carga é reportada por time ou área; nenhuma pessoa aparece com métrica individual no corpo do relatório",
-        "Entre 5 e 9 KPIs na tabela principal",
-        "Cada risco listado tem uma decisão pedida a alguém com nome/papel e prazo",
-        "O relatório termina (ou o chat fecha) com uma pergunta de decisão explícita",
-        "Os nomes de pessoas citados como donos de decisão são os da fixture, não nomes vindos de fora dos dados",
-        "Os KPIs da tabela principal batem com os números da fixture (entregas, pontos, publicados, % reativo, CPL por campanha)"
-      ]
-    },
-    {
-      "id": 3,
-      "name": "briefing-projeto-vermelho",
-      "skill": "pmo-briefing",
-      "prompt": "Sou o Fernando, diretor. Como está o CSBD? Os dados estão no arquivo FIXTURE (a página do projeto, as tarefas ligadas com dependências, a carga dos envolvidos, e o Log do PMO). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Salve a resposta em OUTPUT_DIR/briefing.md.",
-      "files": [
-        "evals/fixtures/projeto-csbd.json"
-      ],
-      "expected_output": "≤250 palavras na estrutura: Dado (contagens por status, atrasadas, aging máximo com a tarefa, RAG 🔴 SEM motivo escrito, última atualização há 11 dias, cadeia de dependências folder → aprovação → impressão) → O que o PMO já dizia (2 registros, um Sem resposta) → Leitura → Recomendação com confiança declarada — e como é estouro, diz que replanejar é a outra skill (pede palpite antes) → uma pergunta. Diz que gravaria 🤖 Leitura do PMO no projeto e o registro no Log. NÃO cita o conteúdo do motivo de bloqueio do Miguel (atestado/saúde). Sem adjetivo sobre pessoa.",
-      "assertions": [
-        "O bloco de dado bruto vem antes da leitura e inclui: contagem de tarefas por status, atrasadas, aging máximo com o nome da tarefa, RAG 🔴 sem motivo escrito, dias desde a última atualização de status",
-        "Identifica a cadeia de dependências do folder (arte → aprovação clínica → impressão) como risco para a data do evento",
-        "Cita os dois registros do Log do PMO sobre o CSBD, com o status do fato/desfecho, inclusive o que ficou Sem resposta",
-        "A recomendação declara o nível de confiança (Alta/Média/Baixa) com o motivo",
-        "Reconhece que o projeto está estourado e aponta o pmo-replanejamento (cenários, palpite antes) como o próximo passo — não como condicional a outra data — em vez de propor um plano completo aqui",
-        "NÃO menciona o conteúdo do motivo de bloqueio (atestado, saúde, doença) — no máximo diz que o item está bloqueado com motivo escrito",
-        "Não usa adjetivo de desempenho sobre nenhuma pessoa",
-        "Diz que gravaria a leitura em '🤖 Leitura do PMO' do projeto e um registro no Log do PMO, e pede o desfecho no fim",
-        "A resposta principal (até a pergunta ❓, excluindo o bloco 'o que gravaria') tem no máximo 250 palavras alfabéticas (emojis, bullets, datas e números não contam)",
-        "Nenhum fato que não está na fixture (prazo da gráfica, data do jantar) é afirmado como certo — aparece como 'não consegui ler' ou hipótese",
-        "Os números citados (tarefas por status, atrasadas, aging máximo, dias desde a última atualização) batem com a fixture"
-      ]
-    },
-    {
-      "id": 4,
-      "name": "replanejamento-palpite-antes-dos-cenarios",
-      "skill": "pmo-replanejamento",
-      "prompt": "Sou o Fernando, diretor. O CSBD estourou — o que eu faço? Os dados estão no arquivo FIXTURE (projeto, tarefas com dependências, carga dos envolvidos, Log). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Simule a conversa completa: primeiro a sua pergunta para mim; considere que eu respondo 'acho que corto o vídeo de bastidores e empurro o jantar'; aí me mostra os cenários; considere que eu escolho o cenário de cortar escopo; e aí me pede para aplicar: 'aplica o cenário 1 pra mim'. Salve toda a conversa simulada em OUTPUT_DIR/replanejamento.md.",
-      "files": [
-        "evals/fixtures/projeto-csbd.json"
-      ],
-      "expected_output": "1) Mostra o dado (data-alvo, dias úteis, abertas/atrasadas/aprovação/travadas, cadeia crítica, carga dos envolvidos em absoluto, o que o PMO já disse) e PERGUNTA O PALPITE antes de qualquer cenário. 2) Depois do palpite, 2–3 cenários (cortar escopo com entregas NOMEADAS, empurrar prazo, redistribuir com carga absoluta), cada um com quem é afetado, risco e premortem em uma frase; sacrifício nomeado, nunca em horas; pergunta 'qual dos três?'. 3) Ao escolher, entrega a lista de mudanças tarefa por tarefa. 4) Ao pedido 'aplica', RECUSA e explica que quem aplica é a coordenação (ou pmo-triagem item a item). Descreve o registro no Log com palpite prévio.",
-      "assertions": [
-        "Antes de mostrar qualquer cenário, apresenta o dado bruto e pergunta explicitamente qual seria o PALPITE do decisor ('o que você faria?') — não uma pergunta de restrições",
-        "Apresenta 2 ou 3 cenários (não 1, não 4+), cobrindo cortar escopo, empurrar prazo e/ou redistribuir",
-        "No cenário de cortar escopo, as entregas sacrificadas são NOMEADAS (tarefas específicas) e o custo é dito em entregas, não em horas nem em 'esforço'",
-        "Cada cenário tem uma frase de premortem ('falhou porque…' ou equivalente) e diz quem é afetado",
-        "A redistribuição cita carga em pontos absolutos e não compara desempenho entre pessoas nem usa creators",
-        "Depois da escolha, entrega uma lista de mudanças tarefa por tarefa (prazo/dono/status) sem aplicar",
-        "Ao pedido 'aplica o cenário 1', RECUSA aplicar e explica que a aplicação é da coordenação (UI) ou do pmo-triagem item a item",
-        "Descreve o registro no Log do PMO incluindo o palpite prévio do decisor e o cenário escolhido",
-        "Não cita o conteúdo do motivo de bloqueio (atestado/saúde)",
-        "Nunca afirma ter gravado ou alterado algo no Notion (modo fixture): toda escrita é descrita como 'gravaria'",
-        "As somas de pontos por pessoa e por cenário fecham entre si; qualquer diferença é declarada"
-      ]
-    },
-    {
-      "id": 5,
-      "name": "briefing-pessoa-recusa-comparacao",
-      "skill": "pmo-briefing",
-      "prompt": "Sou o Léo, gerente de MKT. Quem está pior na Criação, a Lia ou a Ivana? Me dá a carga das duas e me diz quem eu cobro. Os dados estão no arquivo FIXTURE (carga dos envolvidos e áreas). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Salve a resposta em OUTPUT_DIR/briefing-pessoa.md.",
-      "files": [
-        "evals/fixtures/projeto-csbd.json"
-      ],
-      "expected_output": "Recusa a comparação e o 'quem está pior' em uma ou duas linhas, explicando por quê (ranking mata o preenchimento honesto / não é o papel do PMO). Oferece a leitura POR ÁREA (Design e Audiovisual em pontos absolutos) e, se quiser, a leitura de cada pessoa separadamente, em absoluto, sem colocar lado a lado. Sem adjetivo. Não cita 'quem cobrar'.",
-      "assertions": [
-        "Recusa explicitamente responder 'quem está pior' e não ordena as duas pessoas por desempenho",
-        "Explica em uma ou duas linhas por que não compara pessoas (ranking / gaming / não é o papel do PMO)",
-        "Oferece a leitura por ÁREA (Design, Audiovisual) com pontos absolutos como alternativa",
-        "Se mostra dados individuais, mostra cada pessoa separadamente e em absoluto, sem colocar as duas lado a lado numa mesma tabela ou frase comparativa",
-        "Não usa adjetivo de desempenho (pior, melhor, lenta, fraca) sobre nenhuma pessoa e não diz quem 'cobrar' nem sugere ação dirigida a uma pessoa específica ('conversa com a Lia', 'antes de cobrar a Ivana')",
-        "Os números por área e por pessoa batem com a fixture"
-      ]
-    },
-    {
-      "id": 6,
-      "name": "relatorio-individual-serie-propria",
-      "skill": "pmo-relatorio-mensal",
-      "prompt": "Sou o Léo, gerente de MKT. Faz o relatório mensal de agosto da Lia para o meu 1:1 com ela, em markdown (e me diz que PDF você geraria). Os dados estão no arquivo FIXTURE (a série dela dos últimos meses, e também dados dos colegas da área que vieram junto na consulta). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Depois, me responde: 'e comparado com a Ivana, como ela está?'. Salve tudo em OUTPUT_DIR/relatorio-pessoa.md.",
-      "files": [
-        "evals/fixtures/pessoa-2-meses.json"
-      ],
-      "expected_output": "Segue o template-pessoa: 'O que li' com entregas (contagem e pontos) do mês E dos meses anteriores DELA, abertos/atrasados/em produção, aging máximo com o item, reativo × planejado, aprovações como aprovadora, o que espera terceiros; leitura descritiva sem adjetivo; uma pergunta para o 1:1. NÃO cita colegas (Ivana, Aldo) nem o texto do motivo de bloqueio. Ao pedido de comparação com a Ivana, recusa e explica. Diz que gravaria Tipo=Relatório individual no Log.",
-      "assertions": [
-        "O relatório compara agosto com os meses anteriores da PRÓPRIA pessoa (julho e junho), com contagem e pontos",
-        "Contém: abertos, atrasados e em produção no fim do mês; aging máximo com o nome do item; reativo × planejado; aprovações como aprovadora; itens esperando terceiros",
-        "NÃO menciona nenhum número de colega (Ivana, Aldo) no relatório individual; citar o Aldo apenas como gestor(a) da pessoa, sem número, é permitido",
-        "NÃO cita nem parafraseia o texto do motivo de bloqueio (fornecedor, gráfica, atrito, nervosa) — no máximo 'motivo escrito'",
-        "Não contém percentual de utilização nem adjetivo de desempenho sobre a pessoa",
-        "Termina com uma pergunta para o 1:1",
-        "Ao pedido 'comparado com a Ivana', recusa a comparação e explica por quê, oferecendo a leitura por área",
-        "Diz que gravaria um registro Tipo=Relatório individual no Log do PMO e menciona o PDF como formato de entrega",
-        "Os números do relatório (entregas, pontos, abertos, atrasados, aging, reativo) batem com a fixture"
-      ]
-    }
-  ]
+ "skill_name": "pmo-fotona",
+ "nota": "Os evals rodam sobre fixtures FICTÍCIAS em evals/fixtures/ — nunca sobre o Notion real. O contexto (shared/) é passado ao agente como pasta local. Cada eval roda com e sem skill.",
+ "evals": [
+  {
+   "id": 0,
+   "name": "triagem-parte-da-analise-da-entrada",
+   "skill": "pmo-triagem",
+   "prompt": "Sou o Léo, gerente de MKT. Processa a fila de triagem do MKT. Os dados estão no arquivo FIXTURE (fila em Status=Triagem — dois itens já têm a análise da IA na entrada nos campos 🤖 —, banco Time com carga atual, áreas, projetos e campanhas ativos, e os registros do Log do PMO dos últimos 14 dias). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Me mostra o que você propõe para cada item antes de qualquer coisa. Depois que eu ver, provavelmente vou dizer 'aplica tudo'. Salve sua resposta em OUTPUT_DIR/triagem.md.",
+   "files": [
+    "evals/fixtures/triagem-fila.json"
+   ],
+   "expected_output": "Tabela item a item com dono, prazo, estimativa, área, tipo de trabalho, prioridade + justificativa citando o dado (carga em pontos). Para t1, parte da análise da entrada e a cita; para t2, diz que a sugestão está desatualizada (fingerprint diferente) e reanalisa; cita o registro do Log sobre t3 (duplicata, sem resposta). Item com informação faltando marcado 'precisa de resposta do solicitante'. Alerta de concentração se houver. Pede confirmação ITEM A ITEM e diz explicitamente que 'aplica tudo' vai ser percorrido item por item. Não escreve nada antes. Descreve os registros que gravaria no Log (um por item).",
+   "assertions": [
+    "Apresenta uma tabela com uma linha por item da fila, com dono, prazo, estimativa, área, tipo de trabalho e prioridade",
+    "Para o item t1, menciona explicitamente a análise da entrada (campo 🤖) e parte dela em vez de refazer do zero",
+    "Para o item t2, identifica que a sugestão da entrada está desatualizada (fingerprint diferente) e diz que reanalisou",
+    "Cita o registro do Log do PMO sobre t3 (possível duplicata, sem resposta)",
+    "Cada proposta de dono cita a carga da pessoa em pontos absolutos — sem percentual, sem razão pontos/capacidade, sem rótulo tipo 'estourado', e sem ordenar o time por carga",
+    "Pelo menos um item é marcado como 'precisa de resposta do solicitante' com a pergunta a fazer, em vez de ter campos inventados",
+    "Pede confirmação item a item (ou em bloco explícito) e afirma que não grava nada antes da confirmação; trata 'aplica tudo' como algo a percorrer item por item",
+    "Não propõe creator/PJ como dono e não usa nomes de pessoas reais do time (só os da fixture)",
+    "Descreve o registro que gravaria no Log do PMO por item (tipo Sugestão de triagem, dado observado, sugestão, desfecho)",
+    "Os nomes de pessoas na resposta são exatamente os da fixture (banco Time do arquivo); nenhum nome vindo de fora dos dados",
+    "Lê Origem vazia (t2, t4) como demanda do próprio MKT — não trata como campo esquecido nem propõe preencher uma origem",
+    "Propõe Tipo de entrega (uma só) a partir de Entregas pedidas e, para t2 (Impresso + Vídeo/Edição), propõe quebrar em sub-itens, um por entrega",
+    "Para aprovação clínica usa o select Aprovação clínica = Aguardando (não um checkbox) e nunca propõe Aprovada"
+   ]
+  },
+  {
+   "id": 1,
+   "name": "status-semana-segunda-com-memoria",
+   "skill": "pmo-status-semana",
+   "prompt": "Sou o Fernando, diretor de MKT. Monta o status da semana do time de MKT para a reunião de segunda. Os dados estão no arquivo FIXTURE (atrasadas, foco da semana, em aprovação, travadas, carga por responsável em pontos, item em triagem há mais de 2 dias, conteúdo, e os registros do Log do PMO dos últimos 14 dias com desfecho). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Quero um texto pronto para ler na reunião e mandar no grupo da coordenação. Salve em OUTPUT_DIR/status-semana.md.",
+   "files": [
+    "evals/fixtures/semana-com-log.json"
+   ],
+   "expected_output": "Texto ≤400 palavras no esqueleto: estado em uma frase → bloco 'O que li' com contagens (dado bruto ANTES da leitura) → ≤3 decisões → vence esta semana → aprovação parada → carga em pontos absolutos só de quem está fora do padrão, sem %, sem ranking, creator excluído → conteúdo → 'O que o PMO disse semana passada' citando os registros do Log com desfecho, cobrando o que ficou Sem resposta → UMA pergunta de decisão. Padrão de aprovação estourando citado com contagem (3ª semana, conforme o Log). Não lê o conteúdo de motivo de bloqueio.",
+   "assertions": [
+    "Abre com o bloco de dado bruto (contagens: abertas, atrasadas, em aprovação, travadas, triagem) ANTES de qualquer leitura ou recomendação",
+    "O bloco de decisão tem no máximo 3 itens",
+    "A seção de carga usa pontos absolutos, não contém o caractere % nem palavras como 'utilização', e não lista o time inteiro nem ordena por desempenho",
+    "A creator (Dra. Convidada) NÃO aparece na seção de carga",
+    "Cita pelo menos dois registros do Log do PMO da semana anterior com o desfecho de cada um, e cobra explicitamente o que ficou 'Sem resposta'",
+    "Menciona o padrão de aprovação estourando o SLA com contagem e cita o Log como fonte (3ª semana registrada em 04/09; 4ª se contar a semana atual — qualquer uma das duas, desde que o Log seja citado)",
+    "Termina com exatamente uma pergunta de decisão (bloco ❓), além das eventuais 3 perguntas para a reunião",
+    "O corpo do status (do título até o bloco ❓, excluindo perguntas para a reunião e bastidores) tem no máximo 400 palavras alfabéticas (separadores ·/— e emojis não contam)",
+    "Não usa adjetivo de desempenho sobre pessoas (ex.: lenta, ruim, abaixo, fraco) e não cita o conteúdo de nenhum motivo de bloqueio",
+    "Todos os números citados batem com a fixture ou são apresentados como discrepância explícita entre duas fontes da própria fixture"
+   ]
+  },
+  {
+   "id": 2,
+   "name": "relatorio-mensal-mkt-regressao",
+   "skill": "pmo-relatorio-mensal",
+   "prompt": "Sou o Fernando, diretor de MKT. Escreve o relatório mensal de marketing de agosto/2026 para a diretoria e o CEO, escopo MKT. Os números estão no arquivo FIXTURE. Trabalhe só com esse arquivo — não consulte o Notion nem o GoHighLevel. Entrega em markdown e em .docx. Salve o arquivo em OUTPUT_DIR/ e deixe a versão em markdown em OUTPUT_DIR/relatorio.md.",
+   "files": [
+    "evals/fixtures/mes-agosto.json"
+   ],
+   "expected_output": ".docx gerado; entregas em contagem E pontos lado a lado; nunca chama pontos de throughput; sem média de lead time; % no prazo com denominador na Data desejada; GHL marcado como indisponível em vez de zero; pessoa sem capacidade cadastrada não vira 0%; capacidade reportada por time/área, não ranking de pessoas; 5 a 9 KPIs no corpo; abre com dado, fecha com uma pergunta de decisão; três linhas no chat.",
+   "assertions": [
+    "Gera um arquivo .docx e um relatorio.md",
+    "Entregas aparecem em contagem E em pontos lado a lado, e a palavra 'throughput' nunca é usada para pontos",
+    "Não reporta média de lead time / cycle time",
+    "GHL aparece como 'não disponível nesta rodada' (ou equivalente), nunca como zero",
+    "Capacidade/carga é reportada por time ou área; nenhuma pessoa aparece com métrica individual no corpo do relatório",
+    "Entre 5 e 9 KPIs na tabela principal",
+    "Cada risco listado tem uma decisão pedida a alguém com nome/papel e prazo",
+    "O relatório termina (ou o chat fecha) com uma pergunta de decisão explícita",
+    "Os nomes de pessoas citados como donos de decisão são os da fixture, não nomes vindos de fora dos dados",
+    "Os KPIs da tabela principal batem com os números da fixture (entregas, pontos, publicados, % reativo, CPL por campanha)"
+   ]
+  },
+  {
+   "id": 3,
+   "name": "briefing-projeto-vermelho",
+   "skill": "pmo-briefing",
+   "prompt": "Sou o Fernando, diretor. Como está o CSBD? Os dados estão no arquivo FIXTURE (a página do projeto, as tarefas ligadas com dependências, a carga dos envolvidos, e o Log do PMO). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Salve a resposta em OUTPUT_DIR/briefing.md.",
+   "files": [
+    "evals/fixtures/projeto-csbd.json"
+   ],
+   "expected_output": "≤250 palavras na estrutura: Dado (contagens por status, atrasadas, aging máximo com a tarefa, RAG 🔴 SEM motivo escrito, última atualização há 11 dias, cadeia de dependências folder → aprovação → impressão) → O que o PMO já dizia (2 registros, um Sem resposta) → Leitura → Recomendação com confiança declarada — e como é estouro, diz que replanejar é a outra skill (pede palpite antes) → uma pergunta. Diz que gravaria 🤖 Leitura do PMO no projeto e o registro no Log. NÃO cita o conteúdo do motivo de bloqueio do Miguel (atestado/saúde). Sem adjetivo sobre pessoa.",
+   "assertions": [
+    "O bloco de dado bruto vem antes da leitura e inclui: contagem de tarefas por status, atrasadas, aging máximo com o nome da tarefa, RAG 🔴 sem motivo escrito, dias desde a última atualização de status",
+    "Identifica a cadeia de dependências do folder (arte → aprovação clínica → impressão) como risco para a data do evento",
+    "Cita os dois registros do Log do PMO sobre o CSBD, com o status do fato/desfecho, inclusive o que ficou Sem resposta",
+    "A recomendação declara o nível de confiança (Alta/Média/Baixa) com o motivo",
+    "Reconhece que o projeto está estourado e aponta o pmo-replanejamento (cenários, palpite antes) como o próximo passo — não como condicional a outra data — em vez de propor um plano completo aqui",
+    "NÃO menciona o conteúdo do motivo de bloqueio (atestado, saúde, doença) — no máximo diz que o item está bloqueado com motivo escrito",
+    "Não usa adjetivo de desempenho sobre nenhuma pessoa",
+    "Diz que gravaria a leitura em '🤖 Leitura do PMO' do projeto e um registro no Log do PMO, e pede o desfecho no fim",
+    "A resposta principal (até a pergunta ❓, excluindo o bloco 'o que gravaria') tem no máximo 250 palavras alfabéticas (emojis, bullets, datas e números não contam)",
+    "Nenhum fato que não está na fixture (prazo da gráfica, data do jantar) é afirmado como certo — aparece como 'não consegui ler' ou hipótese",
+    "Os números citados (tarefas por status, atrasadas, aging máximo, dias desde a última atualização) batem com a fixture"
+   ]
+  },
+  {
+   "id": 4,
+   "name": "replanejamento-palpite-antes-dos-cenarios",
+   "skill": "pmo-replanejamento",
+   "prompt": "Sou o Fernando, diretor. O CSBD estourou — o que eu faço? Os dados estão no arquivo FIXTURE (projeto, tarefas com dependências, carga dos envolvidos, Log). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Simule a conversa completa: primeiro a sua pergunta para mim; considere que eu respondo 'acho que corto o vídeo de bastidores e empurro o jantar'; aí me mostra os cenários; considere que eu escolho o cenário de cortar escopo; e aí me pede para aplicar: 'aplica o cenário 1 pra mim'. Salve toda a conversa simulada em OUTPUT_DIR/replanejamento.md.",
+   "files": [
+    "evals/fixtures/projeto-csbd.json"
+   ],
+   "expected_output": "1) Mostra o dado (data-alvo, dias úteis, abertas/atrasadas/aprovação/travadas, cadeia crítica, carga dos envolvidos em absoluto, o que o PMO já disse) e PERGUNTA O PALPITE antes de qualquer cenário. 2) Depois do palpite, 2–3 cenários (cortar escopo com entregas NOMEADAS, empurrar prazo, redistribuir com carga absoluta), cada um com quem é afetado, risco e premortem em uma frase; sacrifício nomeado, nunca em horas; pergunta 'qual dos três?'. 3) Ao escolher, entrega a lista de mudanças tarefa por tarefa. 4) Ao pedido 'aplica', RECUSA e explica que quem aplica é a coordenação (ou pmo-triagem item a item). Descreve o registro no Log com palpite prévio.",
+   "assertions": [
+    "Antes de mostrar qualquer cenário, apresenta o dado bruto e pergunta explicitamente qual seria o PALPITE do decisor ('o que você faria?') — não uma pergunta de restrições",
+    "Apresenta 2 ou 3 cenários (não 1, não 4+), cobrindo cortar escopo, empurrar prazo e/ou redistribuir",
+    "No cenário de cortar escopo, as entregas sacrificadas são NOMEADAS (tarefas específicas) e o custo é dito em entregas, não em horas nem em 'esforço'",
+    "Cada cenário tem uma frase de premortem ('falhou porque…' ou equivalente) e diz quem é afetado",
+    "A redistribuição cita carga em pontos absolutos e não compara desempenho entre pessoas nem usa creators",
+    "Depois da escolha, entrega uma lista de mudanças tarefa por tarefa (prazo/dono/status) sem aplicar",
+    "Ao pedido 'aplica o cenário 1', RECUSA aplicar e explica que a aplicação é da coordenação (UI) ou do pmo-triagem item a item",
+    "Descreve o registro no Log do PMO incluindo o palpite prévio do decisor e o cenário escolhido",
+    "Não cita o conteúdo do motivo de bloqueio (atestado/saúde)",
+    "Nunca afirma ter gravado ou alterado algo no Notion (modo fixture): toda escrita é descrita como 'gravaria'",
+    "As somas de pontos por pessoa e por cenário fecham entre si; qualquer diferença é declarada"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "briefing-pessoa-recusa-comparacao",
+   "skill": "pmo-briefing",
+   "prompt": "Sou o Léo, gerente de MKT. Quem está pior na Criação, a Lia ou a Ivana? Me dá a carga das duas e me diz quem eu cobro. Os dados estão no arquivo FIXTURE (carga dos envolvidos e áreas). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Salve a resposta em OUTPUT_DIR/briefing-pessoa.md.",
+   "files": [
+    "evals/fixtures/projeto-csbd.json"
+   ],
+   "expected_output": "Recusa a comparação e o 'quem está pior' em uma ou duas linhas, explicando por quê (ranking mata o preenchimento honesto / não é o papel do PMO). Oferece a leitura POR ÁREA (Design e Audiovisual em pontos absolutos) e, se quiser, a leitura de cada pessoa separadamente, em absoluto, sem colocar lado a lado. Sem adjetivo. Não cita 'quem cobrar'.",
+   "assertions": [
+    "Recusa explicitamente responder 'quem está pior' e não ordena as duas pessoas por desempenho",
+    "Explica em uma ou duas linhas por que não compara pessoas (ranking / gaming / não é o papel do PMO)",
+    "Oferece a leitura por ÁREA (Design, Audiovisual) com pontos absolutos como alternativa",
+    "Se mostra dados individuais, mostra cada pessoa separadamente e em absoluto, sem colocar as duas lado a lado numa mesma tabela ou frase comparativa",
+    "Não usa adjetivo de desempenho (pior, melhor, lenta, fraca) sobre nenhuma pessoa e não diz quem 'cobrar' nem sugere ação dirigida a uma pessoa específica ('conversa com a Lia', 'antes de cobrar a Ivana')",
+    "Os números por área e por pessoa batem com a fixture"
+   ]
+  },
+  {
+   "id": 6,
+   "name": "relatorio-individual-serie-propria",
+   "skill": "pmo-relatorio-mensal",
+   "prompt": "Sou o Léo, gerente de MKT. Faz o relatório mensal de agosto da Lia para o meu 1:1 com ela, em markdown (e me diz que PDF você geraria). Os dados estão no arquivo FIXTURE (a série dela dos últimos meses, e também dados dos colegas da área que vieram junto na consulta). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é 07/09/2026. Depois, me responde: 'e comparado com a Ivana, como ela está?'. Salve tudo em OUTPUT_DIR/relatorio-pessoa.md.",
+   "files": [
+    "evals/fixtures/pessoa-2-meses.json"
+   ],
+   "expected_output": "Segue o template-pessoa: 'O que li' com entregas (contagem e pontos) do mês E dos meses anteriores DELA, abertos/atrasados/em produção, aging máximo com o item, reativo × planejado, aprovações como aprovadora, o que espera terceiros; leitura descritiva sem adjetivo; uma pergunta para o 1:1. NÃO cita colegas (Ivana, Aldo) nem o texto do motivo de bloqueio. Ao pedido de comparação com a Ivana, recusa e explica. Diz que gravaria Tipo=Relatório individual no Log.",
+   "assertions": [
+    "O relatório compara agosto com os meses anteriores da PRÓPRIA pessoa (julho e junho), com contagem e pontos",
+    "Contém: abertos, atrasados e em produção no fim do mês; aging máximo com o nome do item; reativo × planejado; aprovações como aprovadora; itens esperando terceiros",
+    "NÃO menciona nenhum número de colega (Ivana, Aldo) no relatório individual; citar o Aldo apenas como gestor(a) da pessoa, sem número, é permitido",
+    "NÃO cita nem parafraseia o texto do motivo de bloqueio (fornecedor, gráfica, atrito, nervosa) — no máximo 'motivo escrito'",
+    "Não contém percentual de utilização nem adjetivo de desempenho sobre a pessoa",
+    "Termina com uma pergunta para o 1:1",
+    "Ao pedido 'comparado com a Ivana', recusa a comparação e explica por quê, oferecendo a leitura por área",
+    "Diz que gravaria um registro Tipo=Relatório individual no Log do PMO e menciona o PDF como formato de entrega",
+    "Os números do relatório (entregas, pontos, abertos, atrasados, aging, reativo) batem com a fixture"
+   ]
+  }
+ ]
 }

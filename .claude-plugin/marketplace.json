@@ -87,7 +87,7 @@
     {
       "name": "mkt-fotona",
       "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-ajuda (balcao de duvidas do sistema — projeto ou campanha, em que area entra, o que e esse campo; so explica, nao grava), mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-creator: 100% com skill x 48% sem nas skills que escrevem; 93% x 73% na mkt-ajuda. 17 casos, fixtures ficticias.",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "source": "./mkt-fotona",
       "author": {
         "name": "Fernando Costa"
@@ -112,7 +112,7 @@
     {
       "name": "pmo-fotona",
       "description": "O cerebro do agente de PMO do time de Marketing da Fotona sobre o sistema no Notion: pmo-triagem (fila de Triagem, confirmacao item a item), pmo-status-semana (segunda e sexta, com memoria no Log do PMO), pmo-relatorio-mensal (4 escopos: MKT, area, projeto, pessoa; md/docx/html/pdf), pmo-briefing (como esta X) e pmo-replanejamento (palpite antes dos cenarios). prompts/ alimentam os ritos agendados no n8n a partir dos mesmos arquivos. Nao contem IDs nem nomes: contexto vem do repositorio privado fotona-mkt-contexto (CONTEXTO.md). Evals skill-creator: 98% com skill x 35% sem, 7 casos.",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "source": "./pmo-fotona",
       "author": {
         "name": "Fernando Costa"

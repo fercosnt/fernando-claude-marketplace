@@ -1,17 +1,199 @@
 {
-  "_nota": "Snapshot fictício para a mkt-resultados-conteudo: peças de conteúdo dos últimos 15 dias (Q12) e a série dos 2 meses anteriores para a mediana. Use como resultado das consultas. NÃO consulte o Notion real. NÃO grave: descreva as gravações (campo a campo, por peça) e o registro no Log. O conector do GHL NÃO está disponível neste ambiente. Nomes fictícios.",
-  "hoje": "2026-09-30",
-  "quem_conversa": "Bia (Analista de Social Media)",
-  "pecas_periodo_Q12": [
-    {"url":"pc1","Tarefa":"Carrossel · GLP1TIGHT antes e depois 90 dias","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Educativo/Clínico","Link do post":"https://instagram.com/p/x1","Publicado em":"2026-09-16","Alcance":null,"Engajamento":null,"Cliques/Leads":null},
-    {"url":"pc2","Tarefa":"Reels · 3 dúvidas sobre o Dynamis","Canal":["Instagram"],"Formato":"reels","Pilar de conteúdo":"Produto/Equipamento","Link do post":"https://instagram.com/reel/x2","Publicado em":"2026-09-18","Alcance":null,"Engajamento":null,"Cliques/Leads":null},
-    {"url":"pc3","Tarefa":"Texto · caso de uso StarWalker","Canal":["LinkedIn"],"Formato":"texto autoral","Pilar de conteúdo":"Prova social","Link do post":"https://linkedin.com/posts/x3","Publicado em":"2026-09-18","Alcance":2100,"Engajamento":96,"Cliques/Leads":12, "_obs":"métrica gravada em 20/09 — há menos de 14 dias; não precisa atualizar"},
-    {"url":"pc4","Tarefa":"Carrossel · CSBD: o que levamos","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Institucional","Link do post":"https://instagram.com/p/x4","Publicado em":"2026-09-23","Alcance":null,"Engajamento":null,"Cliques/Leads":null},
-    {"url":"pc5","Tarefa":"Story · enquete melasma (série de 3)","Canal":["Instagram"],"Formato":"story","Pilar de conteúdo":"Tendências","Link do post":"https://instagram.com/stories/x5","Publicado em":"2026-09-25","Alcance":null,"Engajamento":null,"Cliques/Leads":null},
-    {"url":"pc6","Tarefa":"Carrossel · depoimento Dra. Renata","Canal":["Instagram"],"Formato":"carrossel","Pilar de conteúdo":"Prova social","Link do post":"","Publicado em":null,"Alcance":null,"Engajamento":null,"Cliques/Leads":null,"_obs":"Data planejada 24/09, sem Link do post — consta como não publicada"}
-  ],
-  "serie_2_meses_anteriores_por_canal": {
-    "Instagram": {"pecas":14,"mediana_alcance":3100,"mediana_engajamento":210,"por_pilar":{"Educativo/Clínico":{"pecas":5,"mediana_engajamento":290},"Prova social":{"pecas":3,"mediana_engajamento":240},"Institucional":{"pecas":3,"mediana_engajamento":150},"Bastidores":{"pecas":2,"mediana_engajamento":260},"Produto/Equipamento":{"pecas":1,"mediana_engajamento":180}}},
-    "LinkedIn": {"pecas":6,"mediana_alcance":1800,"mediana_engajamento":80}
+ "_nota": "Snapshot fictício para a mkt-resultados-conteudo: peças de conteúdo com Publicado em nos últimos 45 dias (Q12), com os campos de ciclo (Ciclo de métricas · Métricas atualizadas em) e os componentes de métrica e a série dos 2 meses anteriores para a mediana. Use como resultado das consultas. NÃO consulte o Notion real. NÃO grave: descreva as gravações (campo a campo, por peça) e o registro no Log. O conector do GHL NÃO está disponível neste ambiente. Nomes fictícios.",
+ "hoje": "2026-09-30",
+ "quem_conversa": "Bia (Analista de Social Media)",
+ "pecas_periodo_Q12": [
+  {
+   "url": "pc1",
+   "Tarefa": "Carrossel · GLP1TIGHT antes e depois 90 dias",
+   "Canal": [
+    "Instagram"
+   ],
+   "Formato": "carrossel",
+   "Pilar de conteúdo": "Educativo/Clínico",
+   "Link do post": "https://instagram.com/p/x1",
+   "Publicado em": "2026-09-16",
+   "Alcance": null,
+   "Engajamento": null,
+   "Cliques/Leads": null,
+   "Curtidas": null,
+   "Comentários": null,
+   "Salvamentos": null,
+   "Compartilhamentos": null,
+   "Visualizações": null,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": null,
+   "Métricas atualizadas em": null
+  },
+  {
+   "url": "pc2",
+   "Tarefa": "Reels · 3 dúvidas sobre o Dynamis",
+   "Canal": [
+    "Instagram"
+   ],
+   "Formato": "reels",
+   "Pilar de conteúdo": "Produto/Equipamento",
+   "Link do post": "https://instagram.com/reel/x2",
+   "Publicado em": "2026-09-18",
+   "Alcance": null,
+   "Engajamento": null,
+   "Cliques/Leads": null,
+   "Curtidas": null,
+   "Comentários": null,
+   "Salvamentos": null,
+   "Compartilhamentos": null,
+   "Visualizações": null,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": null,
+   "Métricas atualizadas em": null
+  },
+  {
+   "url": "pc3",
+   "Tarefa": "Texto · caso de uso StarWalker",
+   "Canal": [
+    "LinkedIn"
+   ],
+   "Formato": "texto autoral",
+   "Pilar de conteúdo": "Prova social",
+   "Link do post": "https://linkedin.com/posts/x3",
+   "Publicado em": "2026-09-18",
+   "Alcance": 2100,
+   "Engajamento": 96,
+   "Cliques/Leads": 12,
+   "_obs": "lida em D+7 (25/09); o próximo ciclo (D+15) só vence em 03/10 — não relê agora",
+   "Curtidas": null,
+   "Comentários": null,
+   "Salvamentos": null,
+   "Compartilhamentos": null,
+   "Visualizações": null,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": "D+7",
+   "Métricas atualizadas em": "2026-09-25"
+  },
+  {
+   "url": "pc4",
+   "Tarefa": "Carrossel · CSBD: o que levamos",
+   "Canal": [
+    "Instagram"
+   ],
+   "Formato": "carrossel",
+   "Pilar de conteúdo": "Institucional",
+   "Link do post": "https://instagram.com/p/x4",
+   "Publicado em": "2026-09-23",
+   "Alcance": null,
+   "Engajamento": null,
+   "Cliques/Leads": null,
+   "Curtidas": null,
+   "Comentários": null,
+   "Salvamentos": null,
+   "Compartilhamentos": null,
+   "Visualizações": null,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": null,
+   "Métricas atualizadas em": null
+  },
+  {
+   "url": "pc5",
+   "Tarefa": "Story · enquete melasma (série de 3)",
+   "Canal": [
+    "Instagram"
+   ],
+   "Formato": "story",
+   "Pilar de conteúdo": "Tendências",
+   "Link do post": "https://instagram.com/stories/x5",
+   "Publicado em": "2026-09-25",
+   "Alcance": null,
+   "Engajamento": null,
+   "Cliques/Leads": null,
+   "Curtidas": null,
+   "Comentários": null,
+   "Salvamentos": null,
+   "Compartilhamentos": null,
+   "Visualizações": null,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": null,
+   "Métricas atualizadas em": null,
+   "_obs": "publicada há 5 dias — ainda não completou o D+7"
+  },
+  {
+   "url": "pc6",
+   "Tarefa": "Carrossel · depoimento Dra. Renata",
+   "Canal": [
+    "Instagram"
+   ],
+   "Formato": "carrossel",
+   "Pilar de conteúdo": "Prova social",
+   "Link do post": "",
+   "Publicado em": null,
+   "Alcance": null,
+   "Engajamento": null,
+   "Cliques/Leads": null,
+   "_obs": "Data planejada 24/09, sem Link do post — consta como não publicada",
+   "Curtidas": null,
+   "Comentários": null,
+   "Salvamentos": null,
+   "Compartilhamentos": null,
+   "Visualizações": null,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": null,
+   "Métricas atualizadas em": null
+  },
+  {
+   "url": "pc7",
+   "Tarefa": "Reels · ATPReboost: por que a pele muda",
+   "Canal": [
+    "Instagram"
+   ],
+   "Formato": "reels",
+   "Pilar de conteúdo": "Educativo/Clínico",
+   "Link do post": "https://instagram.com/reel/x7",
+   "Publicado em": "2026-08-20",
+   "Alcance": 7600,
+   "Engajamento": 380,
+   "Cliques/Leads": 11,
+   "Curtidas": 300,
+   "Comentários": 30,
+   "Salvamentos": 50,
+   "Compartilhamentos": 12,
+   "Visualizações": 9900,
+   "Seguidores ganhos": null,
+   "Ciclo de métricas": "D+30",
+   "Métricas atualizadas em": "2026-09-20",
+   "_obs": "fechada em D+30 — não se regrava"
   }
+ ],
+ "serie_2_meses_anteriores_por_canal": {
+  "Instagram": {
+   "pecas": 14,
+   "mediana_alcance": 3100,
+   "mediana_engajamento": 210,
+   "por_pilar": {
+    "Educativo/Clínico": {
+     "pecas": 5,
+     "mediana_engajamento": 290
+    },
+    "Prova social": {
+     "pecas": 3,
+     "mediana_engajamento": 240
+    },
+    "Institucional": {
+     "pecas": 3,
+     "mediana_engajamento": 150
+    },
+    "Bastidores": {
+     "pecas": 2,
+     "mediana_engajamento": 260
+    },
+    "Produto/Equipamento": {
+     "pecas": 1,
+     "mediana_engajamento": 180
+    }
+   }
+  },
+  "LinkedIn": {
+   "pecas": 6,
+   "mediana_alcance": 1800,
+   "mediana_engajamento": 80
+  }
+ }
 }

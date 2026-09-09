@@ -1,7 +1,7 @@
 {
   "name": "mkt-fotona",
-  "version": "2.1.0",
-  "description": "O Claude na rotina do time de Marketing da Fotona, sobre o sistema no Notion (teamspace Marketing): tirar duvida de como o sistema funciona (mkt-ajuda), abrir demanda conversando (mkt-nova-demanda), escrever o briefing da peca na voz da marca (mkt-brief-conteudo), montar a pauta do mes e criar as pecas com as fases datadas (mkt-pauta-conteudo), ver o proprio mes (mkt-meu-mes) e registrar resultados de post (mkt-resultados-conteudo). Publico: as 11 pessoas do time. Escreve o que a pessoa disse, sobre o trabalho da propria pessoa; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) vem do repositorio privado fotona-mkt-contexto.",
+  "version": "2.2.0",
+  "description": "O Claude na rotina do time de Marketing da Fotona, sobre o sistema no Notion (teamspace Marketing): tirar duvida de como o sistema funciona (mkt-ajuda), abrir demanda conversando (mkt-nova-demanda), escrever o briefing da peca na voz da marca (mkt-brief-conteudo), montar a pauta do mes e criar as pecas com as fases datadas (mkt-pauta-conteudo), ver o proprio mes (mkt-meu-mes) e registrar resultados de post nos ciclos D+7/D+15/D+30 (mkt-resultados-conteudo). Publico: as 11 pessoas do time. Escreve o que a pessoa disse, sobre o trabalho da propria pessoa; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) vem do repositorio privado fotona-mkt-contexto.",
   "author": {
     "name": "Fernando Costa",
     "email": "fernandinho.costa.neto@gmail.com"
