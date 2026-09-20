@@ -20,7 +20,7 @@ if (!existsSync(tok)) writeFileSync(tok, JSON.stringify({ access_token: "at-fix"
 const srv = await iniciar(join(runDir, "api_log.jsonl"));
 const port = srv.address().port;
 const t = new StdioClientTransport({ command: "node", args: [join(here, "../../servers/conta-azul-mcp.js")], stderr: "ignore",
-  env: { ...process.env, CONTAAZUL_CONFIG_FILE: cfg, CONTAAZUL_STATE_DIR: join(runDir, "state"), CONTAAZUL_BASE_URL: `http://127.0.0.1:${port}`, CONTAAZUL_TOKEN_URL: `http://127.0.0.1:${port}/oauth/token` } });
+  env: { ...process.env, CONTAAZUL_HOJE: "2026-09-20", CONTAAZUL_CONFIG_FILE: cfg, CONTAAZUL_STATE_DIR: join(runDir, "state"), CONTAAZUL_BASE_URL: `http://127.0.0.1:${port}`, CONTAAZUL_TOKEN_URL: `http://127.0.0.1:${port}/oauth/token` } });
 const c = new Client({ name: "ca-cli", version: "1" });
 await c.connect(t);
 const [cmd, arg] = process.argv.slice(2);

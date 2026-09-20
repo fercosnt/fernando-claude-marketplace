@@ -1,6 +1,6 @@
 # Ferramentas do MCP conta-azul
 
-Gerado a partir do servidor (v0.1.0). Tudo em português; datas sempre `YYYY-MM-DD`. O parâmetro `empresa` é opcional quando só há uma empresa configurada.
+Gerado a partir do servidor (v0.1.1). Datas sempre `YYYY-MM-DD`. O parâmetro `empresa` é opcional quando só há uma empresa configurada.
 
 
 ## Conexão
@@ -15,9 +15,9 @@ Gerado a partir do servidor (v0.1.0). Tudo em português; datas sempre `YYYY-MM-
 
 | Tool | O que faz | Parâmetros |
 |---|---|---|
-| `contaazul_contas_receber` | Lista as PARCELAS de contas a receber por intervalo de VENCIMENTO (obrigatorio), com filtros opcionais de status, competencia, pagamento, valor, categoria, centro de custo e conta financeira. | `vencimento_de`, `vencimento_ate`, `status`, `descricao`, `competencia_de`, `competencia_ate`, `pagamento_de`, `pagamento_ate`, `valor_de`, `valor_ate`, `ids_contas_financeiras`, `ids_categorias`, `ids_centros_de_custo`, `ids_clientes`, `limite`, `formato` |
-| `contaazul_contas_pagar` | Lista as PARCELAS de contas a pagar por intervalo de VENCIMENTO (obrigatorio), com filtros opcionais de status, competencia, pagamento, valor, categoria, centro de custo e conta financeira. | `vencimento_de`, `vencimento_ate`, `status`, `descricao`, `competencia_de`, `competencia_ate`, `pagamento_de`, `pagamento_ate`, `valor_de`, `valor_ate`, `ids_contas_financeiras`, `ids_categorias`, `ids_centros_de_custo`, `limite`, `formato` |
-| `contaazul_resumo_financeiro` | Visao consolidada de um periodo em uma chamada: a receber e a pagar com VENCIMENTO no periodo (total, recebido/pago, em aberto, atrasado), resultado previsto, maiores clientes/fornecedores e categorias, e saldo atual de cada conta financeira ativa. | `de`, `ate`, `incluir_saldos` |
+| `contaazul_contas_receber` | Lista as PARCELAS de contas a receber por intervalo de VENCIMENTO (obrigatorio), com filtros opcionais de status, competencia, pagamento, valor, categoria, centro de custo e conta financeira. | `vencimento_de`, `vencimento_ate`, `status`, `descricao`, `competencia_de`, `competencia_ate`, `pagamento_de`, `pagamento_ate`, `valor_de`, `valor_ate`, `ids_contas_financeiras`, `ids_categorias`, `ids_centros_de_custo`, `ids_clientes`, `somente_vencidas`, `limite`, `formato` |
+| `contaazul_contas_pagar` | Lista as PARCELAS de contas a pagar por intervalo de VENCIMENTO (obrigatorio), com filtros opcionais de status, competencia, pagamento, valor, categoria, centro de custo e conta financeira. | `vencimento_de`, `vencimento_ate`, `status`, `descricao`, `competencia_de`, `competencia_ate`, `pagamento_de`, `pagamento_ate`, `valor_de`, `valor_ate`, `ids_contas_financeiras`, `ids_categorias`, `ids_centros_de_custo`, `somente_vencidas`, `limite`, `formato` |
+| `contaazul_resumo_financeiro` | Visao consolidada de um periodo em uma chamada. | `de`, `ate`, `incluir_saldos`, `incluir_categorias` |
 | `contaazul_parcela` | Detalhe de uma parcela (receber ou pagar): evento, rateio por categoria e centro de custo, composicao de valor, status, versao. | `id`, `incluir_baixas` |
 | `contaazul_parcelas_do_evento` | Lista todas as parcelas de um evento financeiro (lancamento de receber ou pagar) pelo id_evento.. | `id_evento` |
 | `contaazul_contas_financeiras` | Lista as contas financeiras (banco, caixa, cartao, cobrancas Conta Azul...) com id, tipo e, opcionalmente, o saldo atual de cada uma.. | `apenas_ativo`, `com_saldo`, `nome` |

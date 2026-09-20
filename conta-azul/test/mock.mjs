@@ -4,7 +4,11 @@ export function iniciarMock(porta) {
   const log = [];
   const st = { validRefresh: new Set(), validAccess: new Map(), refreshCalls: 0, falhar429: 0, falhar500Post: false, proto: 0 };
   const CID = "cid", CSEC = "csec";
-  const receber = Array.from({ length: 1234 }, (_, i) => ({
+  const receber = Array.from({ length: 1234 }, (_, i) => i === 0 ? ({
+    id: "r0", descricao: "Venda com desconto", data_vencimento: "2026-09-10", status_traduzido: "EM_ABERTO",
+    total: 100, pago: 0, nao_pago: 100, cliente: { id: "c0", nome: "Paciente 0" },
+    categorias: [{ id: "kd", nome: "Descontos incondicionais" }, { id: "k1", nome: "Laser" }],
+  }) : ({
     id: `r${i}`, descricao: `Tratamento ${i}`, data_vencimento: i % 2 ? "2026-09-10" : "15/09/2026",
     status_traduzido: i % 3 === 0 ? "RECEBIDO" : i % 3 === 1 ? "EM_ABERTO" : "ATRASADO",
     total: 100, pago: i % 3 === 0 ? 100 : 0, nao_pago: i % 3 === 0 ? 0 : 100,
@@ -54,6 +58,13 @@ export function iniciarMock(porta) {
       return json(202, { protocolo: "pr1", status: "PENDING" });
     }
     if (p === "/v1/protocolo/pr1") return json(200, { id: "pr1", status: ++st.proto > 1 ? "SUCCESS" : "PENDING", evento_financeiro_id: "ev1" });
+    if (p === "/v1/financeiro/eventos-financeiros/parcelas/r0") return json(200, { id: "r0", versao: 1, status: "ATRASADO", evento: { id: "ev0", rateio: [
+      { nome_categoria: "Laser", valor: 100, valor_bruto: 125 }, { nome_categoria: "Descontos incondicionais", valor: 0, valor_bruto: 25 }] } });
+    const mdet = p.match(/^\/v1\/financeiro\/eventos-financeiros\/parcelas\/([^/]+)$/);
+    const item = mdet && [...receber, ...pagar].find((x) => x.id === mdet[1]);
+    if (item) return json(200, { id: item.id, versao: 1, status: "PENDENTE", evento: { id: "ev-" + item.id, rateio: [] },
+      baixas: item.id === "r3" ? [{ data_pagamento: "2026-08-10", valor_composicao: { valor_liquido: 60 } }, { data_pagamento: "2026-09-10", valor_composicao: { valor_liquido: 40 } }]
+        : item.pago ? [{ data_pagamento: "2026-09-05", valor_composicao: { valor_liquido: item.pago } }] : [] });
     if (p.startsWith("/v1/financeiro/eventos-financeiros/parcelas/")) return json(200, { id: "x", versao: 3, status: "PENDENTE", nao_pago: 100, data_vencimento: "2026-09-30", valor_composicao: { valor_bruto: 100 } });
     return json(404, { message: "rota nao simulada " + p });
   });

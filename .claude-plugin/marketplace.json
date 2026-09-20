@@ -86,8 +86,8 @@
     },
     {
       "name": "conta-azul",
-      "description": "Acesso ao ERP Conta Azul (API v2) via MCP local — 38 tools: leitura (resumo financeiro do periodo, contas a receber e a pagar, parcelas e baixas, saldos, categorias, DRE, centros de custo, vendas, orcamentos, contratos, pessoas, NF-e, NFS-e, GET generico) e escrita opcional desligada por padrao, sempre em dois passos (previa -> confirmar) (lancamentos, baixas, alterar parcela, pessoas, vendas, cobrancas). OAuth local com refresh token rotativo protegido por trava de arquivo contra dois processos renovando juntos. Skills conta-azul, conta-azul-setup e conta-azul-escrita. Credenciais em ~/.conta-azul-mcp.json, nenhuma no repositorio. 39 testes contra API simulada; evals skill-creator: 100% com skill x 100% sem (regras ja nas descricoes das tools), -29% de tempo com skill.",
-      "version": "0.1.0",
+      "description": "Acesso ao ERP Conta Azul (API v2) via MCP local — 38 tools: leitura (resumo financeiro do periodo, contas a receber e a pagar, parcelas e baixas, saldos, categorias, DRE, centros de custo, vendas, orcamentos, contratos, pessoas, NF-e, NFS-e, GET generico) e escrita opcional desligada por padrao, sempre em dois passos (previa -> confirmar) (lancamentos, baixas, alterar parcela, pessoas, vendas, cobrancas). OAuth local com refresh token rotativo protegido por trava de arquivo contra dois processos renovando juntos. Skills conta-azul, conta-azul-setup e conta-azul-escrita. Credenciais em ~/.conta-azul-mcp.json, nenhuma no repositorio. Validado na conta real da Beauty Smile; 0.1.1 corrige caixa (soma so as baixas do periodo), atraso (pela data, nao pelo status defasado da API) e categoria (pelo rateio). 45 testes contra API simulada; evals skill-creator em 3 iteracoes, 7 casos, 100%.",
+      "version": "0.1.1",
       "source": "./conta-azul",
       "author": {
         "name": "Fernando Costa"

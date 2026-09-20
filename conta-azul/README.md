@@ -3,7 +3,7 @@
 Plugin para usar o ERP **Conta Azul** (API v2) no Claude Code e no Cowork. O MCP roda **na sua máquina**:
 credenciais e tokens nunca saem do seu computador e não passam por serviço de terceiros.
 
-Pergunte em português, como "como está o financeiro de setembro?", "o que vence essa semana?" ou
+**Versão 0.1.1.** Pergunte em português, como "como está o financeiro de setembro?", "o que vence essa semana?" ou
 "quanto temos em conta hoje?". O Claude consulta a API e responde com número real.
 
 ## O que vem no plugin
@@ -66,12 +66,13 @@ com dois servidores simultâneos.
 ## Validação
 
 - **Estrutura:** `claude plugin validate` passou.
-- **Servidor:** 39 testes contra uma API simulada.
-- **Skill:** evals do skill-creator, 5 casos com a skill e sem a skill. As duas versões acertaram 100%. Com a skill,
-  o modelo foi 29% mais rápido e errou menos chamadas.
-- **API real:** ainda não foi testada com a conta real.
+- **Servidor:** 45 testes contra uma API simulada.
+- **API real:** conectada e consultada na conta da Beauty Smile em 20/09/2026. As três correções da 0.1.1 saíram
+  desse teste (ver [CHANGELOG.md](CHANGELOG.md)).
+- **Skill:** 3 iterações de evals do skill-creator, 7 casos, 100% de acerto. Com a skill, o modelo chega à resposta
+  com metade das chamadas de API em relação à skill antiga ou a nenhuma skill.
 
-Detalhes em [docs/testes.md](docs/testes.md) e [evals/benchmark-iteracao-1.md](evals/benchmark-iteracao-1.md).
+Detalhes em [docs/testes.md](docs/testes.md) e `evals/benchmark-iteracao-*.md`.
 
 ## Estrutura
 

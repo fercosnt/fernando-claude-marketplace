@@ -1,48 +1,92 @@
 {
-  "skill_name": "conta-azul",
-  "notas": "Rodam contra a API simulada (test/ e ca-eval), dados ficticios da Beauty Smile, hoje = 2026-09-20.",
-  "evals": [
-    {"id": 1, "name": "caixa-setembro-por-pagamento", "escrita": false,
-     "prompt": "quanto entrou de dinheiro de fato na beauty smile em setembro ate agora?",
-     "expected_output": "R$ 13.300 recebidos, filtrando por data de PAGAMENTO (inclui parcelas vencidas em agosto pagas em setembro e a paga adiantada de outubro); deixa claro o criterio.",
-     "assertions": [
-       "Informa R$ 13.300 como total recebido em setembro",
-       "Deixa explicito que o criterio e a data de pagamento/recebimento (caixa), nao o vencimento",
-       "Nao apresenta R$ 5.600 (so vencimento em setembro) como a resposta"
-     ]},
-    {"id": 2, "name": "pagar-semana-e-atrasados", "escrita": false,
-     "prompt": "o que a gente tem pra pagar essa semana? e tem alguma coisa atrasada?",
-     "expected_output": "Atrasadas: Insumos NF 8812 R$ 4.300 (12/09) e Energia agosto R$ 1.850 (16/09) = R$ 6.150. Semana: Gestao de trafego R$ 6.500 (22/09) e Insumos NF 8920 R$ 2.900 (24/09) = R$ 9.400.",
-     "assertions": [
-       "Lista as duas contas atrasadas (Insumos NF 8812 R$ 4.300 e Energia agosto R$ 1.850)",
-       "Lista as duas contas da semana (Gestao de trafego R$ 6.500 e Insumos NF 8920 R$ 2.900)",
-       "Nao inclui contas ja pagas (Aluguel setembro, Folha agosto) como pendentes",
-       "Diz qual intervalo de datas considerou como 'essa semana'"
-     ]},
-    {"id": 3, "name": "lancar-despesa-com-conta-ambigua", "escrita": true,
-     "prompt": "lanca uma despesa de 1.200 reais do aluguel da sala 2, fornecedor imobiliaria paulista, vencimento 05/10, pagando pela conta do itau",
-     "expected_output": "Busca fornecedor, categoria Aluguel e contas; nota que ha duas contas Itau (Beauty Smile e Investimentos); mostra a previa e pede confirmacao — nao envia.",
-     "assertions": [
-       "Nenhuma requisicao POST de contas-a-pagar foi enviada a API (so previa)",
-       "Mostra a previa com valor R$ 1.200, vencimento 05/10/2026 e fornecedor Imobiliaria Paulista",
-       "Aponta que existem duas contas Itau ou declara explicitamente qual escolheu, pedindo confirmacao",
-       "Usa ids reais das listagens (pes-imob, cat-alug), sem inventar"
-     ]},
-    {"id": 4, "name": "baixa-parcela-ja-quitada", "escrita": true,
-     "prompt": "da baixa na parcela de setembro da maria souza, ela pagou ontem no pix",
-     "expected_output": "Encontra duas parcelas de setembro da Maria: 05/09 ja recebida e 25/09 em aberto (R$ 3.500). Nao baixa a quitada; propoe a baixa da de 25/09 com data 2026-09-19 e PIX, pedindo confirmacao — nao envia.",
-     "assertions": [
-       "Nenhuma requisicao POST de baixa foi enviada a API",
-       "Identifica que a parcela de 05/09 (R$ 3.500) ja esta recebida/quitada",
-       "Propoe a baixa da parcela em aberto de 25/09 com data de pagamento 2026-09-19 e metodo PIX, pedindo confirmacao"
-     ]},
-    {"id": 5, "name": "resultado-do-mes-com-criterio", "escrita": false,
-     "prompt": "me fala como foi o resultado de setembro da clinica",
-     "expected_output": "Resumo do periodo com o criterio declarado (vencimento ou caixa), numeros coerentes com a API: a receber R$ 14.700 x a pagar R$ 65.550 por vencimento; e/ou caixa R$ 13.300 entrou x R$ 50.000 saiu.",
-     "assertions": [
-       "Declara o criterio de data usado (vencimento, competencia ou caixa)",
-       "Os numeros apresentados batem com a API para o criterio declarado (vencimento: receber 14.700 / pagar 65.550; ou caixa: entrou 13.300 / saiu 50.000)",
-       "Mostra o saldo atual em conta ou diz que nao consultou"
-     ]}
-  ]
+ "skill_name": "conta-azul",
+ "notas": "Rodam contra a API simulada (test/ e ca-eval), dados ficticios da Beauty Smile, hoje = 2026-09-20.",
+ "evals": [
+  {
+   "id": 1,
+   "name": "caixa-setembro-por-pagamento",
+   "escrita": false,
+   "prompt": "quanto entrou de dinheiro de fato na beauty smile em setembro ate agora?",
+   "expected_output": "R$ 23.300 recebidos de 1 a 20/09 pela data de pagamento: os R$ 13.300 de parcelas pagas no mes mais R$ 10.000 da parcela antiga da Liana (paga em partes; so a baixa de 04/09 conta). Deixa claro o criterio.",
+   "assertions": [
+    "Informa R$ 23.300 como total recebido em setembro",
+    "Deixa explicito que o criterio e a data de pagamento/recebimento (caixa), nao o vencimento",
+    "Conta so R$ 10.000 da parcela da Liana (nao os R$ 30.000 acumulados)"
+   ]
+  },
+  {
+   "id": 2,
+   "name": "pagar-semana-e-atrasados",
+   "escrita": false,
+   "prompt": "o que a gente tem pra pagar essa semana? e tem alguma coisa atrasada?",
+   "expected_output": "Atrasadas: Insumos NF 8812 R$ 4.300 (12/09) e Energia agosto R$ 1.850 (16/09) = R$ 6.150. Semana: Gestao de trafego R$ 6.500 (22/09) e Insumos NF 8920 R$ 2.900 (24/09) = R$ 9.400.",
+   "assertions": [
+    "Lista as duas contas atrasadas (Insumos NF 8812 R$ 4.300 e Energia agosto R$ 1.850)",
+    "Lista as duas contas da semana (Gestao de trafego R$ 6.500 e Insumos NF 8920 R$ 2.900)",
+    "Nao inclui contas ja pagas (Aluguel setembro, Folha agosto) como pendentes",
+    "Diz qual intervalo de datas considerou como 'essa semana'"
+   ]
+  },
+  {
+   "id": 3,
+   "name": "lancar-despesa-com-conta-ambigua",
+   "escrita": true,
+   "prompt": "lanca uma despesa de 1.200 reais do aluguel da sala 2, fornecedor imobiliaria paulista, vencimento 05/10, pagando pela conta do itau",
+   "expected_output": "Busca fornecedor, categoria Aluguel e contas; nota que ha duas contas Itau (Beauty Smile e Investimentos); mostra a previa e pede confirmacao — nao envia.",
+   "assertions": [
+    "Nenhuma requisicao POST de contas-a-pagar foi enviada a API (so previa)",
+    "Mostra a previa com valor R$ 1.200, vencimento 05/10/2026 e fornecedor Imobiliaria Paulista",
+    "Aponta que existem duas contas Itau ou declara explicitamente qual escolheu, pedindo confirmacao",
+    "Usa ids reais das listagens (pes-imob, cat-alug), sem inventar"
+   ]
+  },
+  {
+   "id": 4,
+   "name": "baixa-parcela-ja-quitada",
+   "escrita": true,
+   "prompt": "da baixa na parcela de setembro da maria souza, ela pagou ontem no pix",
+   "expected_output": "Encontra duas parcelas de setembro da Maria: 05/09 ja recebida e 25/09 em aberto (R$ 3.500). Nao baixa a quitada; propoe a baixa da de 25/09 com data 2026-09-19 e PIX, pedindo confirmacao — nao envia.",
+   "assertions": [
+    "Nenhuma requisicao POST de baixa foi enviada a API",
+    "Identifica que a parcela de 05/09 (R$ 3.500) ja esta recebida/quitada",
+    "Propoe a baixa da parcela em aberto de 25/09 com data de pagamento 2026-09-19 e metodo PIX, pedindo confirmacao"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "resultado-do-mes-com-criterio",
+   "escrita": false,
+   "prompt": "me fala como foi o resultado de setembro da clinica",
+   "expected_output": "Resumo do periodo com o criterio declarado (vencimento ou caixa), numeros coerentes com a API: a receber R$ 18.700 x a pagar R$ 65.550 por vencimento; e/ou caixa R$ 13.300 entrou x R$ 50.000 saiu.",
+   "assertions": [
+    "Declara o criterio de data usado (vencimento, competencia ou caixa)",
+    "Os numeros apresentados batem com a API para o criterio declarado (vencimento/competencia: receber 18.700 / pagar 65.550; caixa: entrou 23.300 / saiu 50.000)",
+    "Mostra o saldo atual em conta ou diz que nao consultou"
+   ]
+  },
+  {
+   "id": 6,
+   "name": "atrasados-com-status-da-api-defasado",
+   "escrita": false,
+   "prompt": "tem paciente devendo? o que ta atrasado pra receber?",
+   "expected_output": "Pela data (hoje 20/09): Pedro Alves R$ 600 (12/09, pagou metade), Sarita Rodrigues R$ 4.000 (14/09), Carla Mendes R$ 2.800 (15/09) = R$ 7.400. A API marca essas parcelas como EM_ABERTO na busca; filtrar so status=ATRASADO devolve zero.",
+   "assertions": [
+    "Informa R$ 7.400 como total vencido a receber",
+    "Lista os tres pacientes: Pedro Alves (R$ 600), Sarita Rodrigues (R$ 4.000) e Carla Mendes (R$ 2.800)",
+    "Nao responde que nao ha nada atrasado"
+   ]
+  },
+  {
+   "id": 7,
+   "name": "receita-por-categoria-com-desconto",
+   "escrita": false,
+   "prompt": "quanto a clinica faturou por categoria em setembro? quero ver laser x clareamento",
+   "expected_output": "Por vencimento em setembro: Tratamentos Laser R$ 17.500 e Clareamento R$ 1.200 (total R$ 18.700), com o criterio declarado; descontos nao aparecem como receita.",
+   "assertions": [
+    "Tratamentos Laser R$ 17.500 e Clareamento R$ 1.200 (ou numeros de caixa coerentes com o criterio declarado)",
+    "Declara o criterio de data usado",
+    "Nao apresenta 'Descontos incondicionais concedidos' como categoria de faturamento"
+   ]
+  }
+ ]
 }

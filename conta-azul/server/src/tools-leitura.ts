@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import type { Config, Empresa } from "./config.js";
 import { contexto, seguro } from "./ctx.js";
 import {
   api,
@@ -81,6 +82,30 @@ function filtrosFinanceiros(a: {
 const caminhoLado = (l: Lado) =>
   `/v1/financeiro/eventos-financeiros/contas-a-${l === "receber" ? "receber" : "pagar"}/buscar`;
 
+/** Data de hoje em Sao Paulo (YYYY-MM-DD) — a API trabalha em GMT-3. */
+export function hojeSP(): string {
+  return process.env.CONTAAZUL_HOJE ?? new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
+}
+
+const somaDias = (iso: string, d: number) => {
+  const x = new Date(`${iso}T12:00:00Z`);
+  x.setUTCDate(x.getUTCDate() + d);
+  return x.toISOString().slice(0, 10);
+};
+
+/**
+ * Vencida = venceu antes de hoje e ainda tem saldo em aberto.
+ * NAO confiar no status ATRASADO da listagem: na API real ele atrasa (parcela vencida ha dias
+ * continua PENDING/EM_ABERTO na busca, embora o detalhe da parcela ja diga ATRASADO).
+ */
+const vencida = (p: Record<string, unknown>, hoje = hojeSP()) =>
+  num(p.nao_pago) > 0 && (dataIso(p.data_vencimento) ?? "9999") < hoje;
+
+const diasAtraso = (p: Record<string, unknown>, hoje = hojeSP()) => {
+  const v = dataIso(p.data_vencimento);
+  return v ? Math.round((Date.parse(hoje) - Date.parse(v)) / 864e5) : 0;
+};
+
 function resumoParcela(p: Record<string, unknown>) {
   const pessoa = (p.cliente ?? p.fornecedor ?? p.contato) as Record<string, unknown> | undefined;
   return {
@@ -89,6 +114,7 @@ function resumoParcela(p: Record<string, unknown>) {
     vencimento: dataIso(p.data_vencimento) ?? p.data_vencimento,
     competencia: dataIso(p.data_competencia) ?? p.data_competencia,
     status: p.status_traduzido ?? p.status,
+    ...(vencida(p) ? { vencida: true, dias_atraso: diasAtraso(p) } : {}),
     total: num(p.total),
     pago: num(p.pago),
     nao_pago: num(p.nao_pago),
@@ -105,8 +131,15 @@ function totaisParcelas(itens: Record<string, unknown>[]) {
   const porStatus: Record<string, { qtd: number; total: number }> = {};
   let total = 0,
     pago = 0,
-    naoPago = 0;
+    naoPago = 0,
+    vencido = 0,
+    qtdVencidas = 0;
+  const hoje = hojeSP();
   for (const p of itens) {
+    if (vencida(p, hoje)) {
+      vencido += num(p.nao_pago);
+      qtdVencidas++;
+    }
     const s = String(p.status_traduzido ?? p.status ?? "?");
     porStatus[s] ??= { qtd: 0, total: 0 };
     porStatus[s].qtd++;
@@ -120,7 +153,8 @@ function totaisParcelas(itens: Record<string, unknown>[]) {
     total: arred(total),
     pago: arred(pago),
     nao_pago: arred(naoPago),
-    por_status: porStatus,
+    vencido_nao_pago: { qtd: qtdVencidas, valor: arred(vencido), criterio: `vencimento antes de ${hoje} e saldo em aberto` },
+    por_status_da_api: porStatus,
   };
 }
 
@@ -139,10 +173,95 @@ const nomePessoa = (p: Record<string, unknown>) => {
   const x = (p.cliente ?? p.fornecedor ?? p.contato) as { nome?: string } | undefined;
   return [x?.nome ?? "(sem pessoa)"];
 };
-const nomesCategoria = (p: Record<string, unknown>) =>
-  Array.isArray(p.categorias) && p.categorias.length
-    ? (p.categorias as Array<{ nome?: string }>).map((c) => c.nome ?? "?")
-    : ["(sem categoria)"];
+
+/**
+ * Quanto de cada parcela foi pago DENTRO do periodo, pelas baixas (o detalhe da parcela traz `baixas[]`
+ * com data_pagamento). O campo `pago` da busca e o acumulado de todas as baixas — numa parcela paga em
+ * partes ao longo de meses, somar `pago` infla o caixa do mes (visto na conta real: R$ 244 mil x o que de fato entrou).
+ */
+async function pagoNoPeriodo(cfg: Config, emp: Empresa, itens: Record<string, unknown>[], de: string, ate: string, maxDetalhes = 800) {
+  let total = 0;
+  let semDetalhe = 0;
+  let detalhes = 0;
+  const porParcela: Array<{ id: unknown; descricao: unknown; pessoa: unknown; no_periodo: number; pago_acumulado: number }> = [];
+  for (const p of itens) {
+    const pagoAcum = num(p.pago);
+    if (!pagoAcum) continue;
+    let noPeriodo = pagoAcum;
+    if (detalhes < maxDetalhes) {
+      try {
+        detalhes++;
+        const d = (await api(cfg, emp, { caminho: `/v1/financeiro/eventos-financeiros/parcelas/${p.id}` })) as {
+          baixas?: Array<{ data_pagamento?: string; valor_composicao?: { valor_liquido?: number; valor_bruto?: number } }>;
+        };
+        if (Array.isArray(d?.baixas)) {
+          noPeriodo = d.baixas
+            .filter((b) => {
+              const dt = dataIso(b.data_pagamento);
+              return !!dt && dt >= de && dt <= ate;
+            })
+            .reduce((s, b) => s + num(b.valor_composicao?.valor_liquido ?? b.valor_composicao?.valor_bruto), 0);
+        } else semDetalhe += pagoAcum;
+      } catch {
+        semDetalhe += pagoAcum;
+      }
+    } else semDetalhe += pagoAcum;
+    total += noPeriodo;
+    const pessoa = (p.cliente ?? p.fornecedor) as { nome?: string } | undefined;
+    porParcela.push({ id: p.id, descricao: p.descricao, pessoa: pessoa?.nome, no_periodo: arred(noPeriodo), pago_acumulado: pagoAcum });
+  }
+  return { total: arred(total), sem_detalhe_de_baixas: arred(semDetalhe), por_parcela: porParcela };
+}
+
+/**
+ * Valor por categoria usando o rateio do lancamento (a busca so diz QUAIS categorias, nao QUANTO).
+ * Parcela com uma categoria: valor inteiro nela. Com mais de uma: busca o detalhe e distribui a parcela
+ * na proporcao do `valor` (liquido) de cada rateio — descontos incondicionais tem valor 0 e nao inflam nada.
+ * Um detalhe por evento (parcelas do mesmo lancamento compartilham o rateio).
+ */
+async function categoriasPorRateio(cfg: Config, emp: Empresa, itens: Record<string, unknown>[], maxDetalhes = 400) {
+  const acc = new Map<string, number>();
+  const somar = (nome: string, v: number) => acc.set(nome, (acc.get(nome) ?? 0) + v);
+  const cachePorEvento = new Map<string, Array<{ nome: string; valor: number }>>();
+  let detalhes = 0;
+  let semRateio = 0;
+  for (const p of itens) {
+    const cats = Array.isArray(p.categorias) ? (p.categorias as Array<{ nome?: string }>) : [];
+    const total = num(p.total);
+    if (cats.length <= 1) {
+      somar(cats[0]?.nome ?? "(sem categoria)", total);
+      continue;
+    }
+    if (detalhes >= maxDetalhes) {
+      semRateio += total;
+      continue;
+    }
+    try {
+      detalhes++;
+      const d = (await api(cfg, emp, { caminho: `/v1/financeiro/eventos-financeiros/parcelas/${p.id}` })) as {
+        evento?: { id?: string; rateio?: Array<{ nome_categoria?: string; valor?: number }> };
+      };
+      const idEv = d?.evento?.id ?? String(p.id);
+      let r = cachePorEvento.get(idEv);
+      if (!r) {
+        r = (d?.evento?.rateio ?? []).map((x) => ({ nome: x.nome_categoria ?? "?", valor: num(x.valor) }));
+        cachePorEvento.set(idEv, r);
+      }
+      const base = r.reduce((s, x) => s + x.valor, 0);
+      if (!base) {
+        semRateio += total;
+        continue;
+      }
+      for (const x of r) if (x.valor) somar(x.nome, (total * x.valor) / base);
+    } catch {
+      semRateio += total;
+    }
+  }
+  if (semRateio) somar("(rateio nao consultado)", semRateio);
+  return [...acc.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([nome, valor]) => ({ nome, valor: arred(valor) }));
+}
 
 // ================================================================== registro
 export function registrarLeitura(server: McpServer) {
@@ -171,7 +290,9 @@ export function registrarLeitura(server: McpServer) {
           `de status, competencia, pagamento, valor, categoria, centro de custo e conta financeira. ` +
           `Traz totais (total, pago, nao pago, por status) calculados sobre tudo o que foi buscado. ` +
           `Status aceitos: ${STATUS_FIN.join(", ")} (a API usa RECEBIDO tambem para contas a pagar quitadas). ` +
-          `Para "quanto entrou no mes" use pagamento_de/ate; para "quanto vence" use so o vencimento.`,
+          `ATENCAO: o status ATRASADO da busca da API atrasa — parcelas vencidas ha dias aparecem como EM_ABERTO. ` +
+          `Para "o que esta atrasado" use somente_vencidas=true (ou leia totais.vencido_nao_pago / o campo vencida de cada parcela), nunca so status=ATRASADO. ` +
+          `Para "quanto entrou no mes" use pagamento_de/ate e leia pago_no_periodo_de_pagamento (NAO totais.pago, que e o acumulado da parcela); para "quanto vence" use so o vencimento.`,
         inputSchema: {
           empresa: pEmpresa,
           vencimento_de: pData("Vencimento inicial"),
@@ -188,6 +309,10 @@ export function registrarLeitura(server: McpServer) {
           ids_categorias: pIds("UUIDs de categorias (ver contaazul_categorias)"),
           ids_centros_de_custo: pIds("UUIDs de centros de custo"),
           ...(lado === "receber" ? { ids_clientes: pIds("UUIDs de clientes (ver contaazul_pessoas)") } : {}),
+          somente_vencidas: z
+            .boolean()
+            .default(false)
+            .describe("true = so parcelas com vencimento antes de hoje e saldo em aberto (calculado pela data, nao pelo status da API)"),
           limite: z.number().int().positive().max(5000).default(200).describe("Maximo de parcelas listadas na resposta"),
           formato: z.enum(["resumo", "detalhado"]).default("resumo").describe("detalhado = payload cru da API"),
         },
@@ -195,15 +320,37 @@ export function registrarLeitura(server: McpServer) {
       seguro(async (a: Record<string, unknown>) => {
         const { cfg, emp } = contexto(a.empresa as string | undefined);
         const params = filtrosFinanceiros(a as never);
+        if (a.somente_vencidas) {
+          const ontem = somaDias(hojeSP(), -1);
+          if (String(params.data_vencimento_ate) > ontem) params.data_vencimento_ate = ontem;
+          if (!params.status) params.status = ["EM_ABERTO", "ATRASADO", "RECEBIDO_PARCIAL"];
+        }
         const r = await todasPaginas(cfg, emp, { caminho: caminhoLado(lado), params }, { tamanho: 500, maxItens: 5000 });
+        if (a.somente_vencidas) r.itens = r.itens.filter((p) => vencida(p));
         const limite = a.limite as number;
+        let noPeriodo: Awaited<ReturnType<typeof pagoNoPeriodo>> | null = null;
+        if (a.pagamento_de || a.pagamento_ate) {
+          noPeriodo = await pagoNoPeriodo(cfg, emp, r.itens, (a.pagamento_de as string) ?? "0000-01-01", (a.pagamento_ate as string) ?? "9999-12-31");
+        }
+        const mapaPeriodo = new Map((noPeriodo?.por_parcela ?? []).map((x) => [x.id, x.no_periodo]));
         return {
           periodo_vencimento: `${a.vencimento_de} a ${a.vencimento_ate}`,
+          ...(noPeriodo
+            ? {
+                pago_no_periodo_de_pagamento: {
+                  valor: noPeriodo.total,
+                  criterio: "soma das baixas com data de pagamento dentro do filtro (nao o acumulado pago da parcela)",
+                  ...(noPeriodo.sem_detalhe_de_baixas ? { sem_detalhe_de_baixas: noPeriodo.sem_detalhe_de_baixas } : {}),
+                },
+              }
+            : {}),
           totais: totaisParcelas(r.itens),
           total_informado_pela_api: r.total_informado,
           aviso: r.truncado ? "Mais de 5000 parcelas — totais parciais. Reduza o periodo." : null,
           exibindo: `${Math.min(limite, r.itens.length)} de ${r.itens.length}`,
-          parcelas: r.itens.slice(0, limite).map((p) => (a.formato === "detalhado" ? p : resumoParcela(p))),
+          parcelas: r.itens
+            .slice(0, limite)
+            .map((p) => (a.formato === "detalhado" ? p : { ...resumoParcela(p), ...(noPeriodo ? { pago_no_periodo: mapaPeriodo.get(p.id) ?? 0 } : {}) })),
         };
       })
     );
@@ -214,33 +361,45 @@ export function registrarLeitura(server: McpServer) {
     {
       title: "Resumo financeiro do periodo",
       description:
-        "Visao consolidada de um periodo em uma chamada: a receber e a pagar com VENCIMENTO no periodo " +
-        "(total, recebido/pago, em aberto, atrasado), resultado previsto, maiores clientes/fornecedores e categorias, " +
-        "e saldo atual de cada conta financeira ativa. Use para 'como esta o financeiro de setembro?'.",
+        "Visao consolidada de um periodo em uma chamada. (1) Por VENCIMENTO: a receber e a pagar que vencem no periodo " +
+        "(total, quitado, em aberto, vencido sem pagamento), saldo previsto, maiores clientes/fornecedores e valor por " +
+        "categoria calculado pelo rateio real (descontos nao inflam o ranking). (2) CAIXA: o que foi efetivamente recebido " +
+        "e pago com data de pagamento no periodo. (3) Saldo atual de cada conta financeira. Use para 'como esta o " +
+        "financeiro de setembro?' — e diga sempre qual dos criterios cada numero usa.",
       inputSchema: {
         empresa: pEmpresa,
         de: pData("Inicio do periodo"),
         ate: pData("Fim do periodo"),
         incluir_saldos: z.boolean().default(true).describe("Consulta o saldo atual de cada conta financeira"),
+        incluir_categorias: z
+          .boolean()
+          .default(true)
+          .describe("Calcula o valor por categoria pelo rateio de cada lancamento (1 chamada extra por lancamento com mais de uma categoria)"),
       },
     },
-    seguro(async (a: { empresa?: string; de: string; ate: string; incluir_saldos: boolean }) => {
+    seguro(async (a: { empresa?: string; de: string; ate: string; incluir_saldos: boolean; incluir_categorias: boolean }) => {
       const { cfg, emp } = contexto(a.empresa);
       const params = filtrosFinanceiros({ vencimento_de: a.de, vencimento_ate: a.ate });
-      const [rec, pag] = await Promise.all(
-        (["receber", "pagar"] as const).map((l) =>
-          todasPaginas(cfg, emp, { caminho: caminhoLado(l), params }, { tamanho: 500, maxItens: 10000 })
-        )
-      );
+      // Caixa: pagamento dentro do periodo, qualquer vencimento num horizonte de 2 anos para cada lado.
+      const paramsCaixa = filtrosFinanceiros({
+        vencimento_de: somaDias(a.de, -730),
+        vencimento_ate: somaDias(a.ate, 730),
+        pagamento_de: a.de,
+        pagamento_ate: a.ate,
+      });
+      const buscar = (l: Lado, p: Params) =>
+        todasPaginas(cfg, emp, { caminho: caminhoLado(l), params: p }, { tamanho: 500, maxItens: 10000 });
+      const [rec, pag] = await Promise.all([buscar("receber", params), buscar("pagar", params)]);
+      const [recCx, pagCx] = await Promise.all([buscar("receber", paramsCaixa), buscar("pagar", paramsCaixa)]);
       const tr = totaisParcelas(rec.itens);
       const tp = totaisParcelas(pag.itens);
-      const hoje = new Date().toISOString().slice(0, 10);
-      const vencidoAberto = (l: Record<string, unknown>[]) =>
-        arred(
-          l
-            .filter((p) => (dataIso(p.data_vencimento) ?? "9999") < hoje)
-            .reduce((s, p) => s + num(p.nao_pago), 0)
-        );
+
+      let catRec: unknown = "nao calculado";
+      let catPag: unknown = "nao calculado";
+      if (a.incluir_categorias) {
+        catRec = await categoriasPorRateio(cfg, emp, rec.itens);
+        catPag = await categoriasPorRateio(cfg, emp, pag.itens);
+      }
 
       let saldos: unknown = "nao consultado";
       if (a.incluir_saldos) {
@@ -258,26 +417,38 @@ export function registrarLeitura(server: McpServer) {
         saldos = { total: arred(soma), total_brl: brl(soma), contas: lista };
       }
 
+      const [cxIn, cxOut] = [await pagoNoPeriodo(cfg, emp, recCx.itens, a.de, a.ate), await pagoNoPeriodo(cfg, emp, pagCx.itens, a.de, a.ate)];
+      const entradas = cxIn.total;
+      const saidas = cxOut.total;
+
       return {
-        periodo: `${a.de} a ${a.ate} (por data de vencimento)`,
-        a_receber: {
-          ...tr,
-          vencido_em_aberto: vencidoAberto(rec.itens),
-          maiores_clientes: ranking(rec.itens, nomePessoa, "total"),
-          por_categoria: ranking(rec.itens, nomesCategoria, "total", 15),
+        periodo: `${a.de} a ${a.ate}`,
+        por_vencimento: {
+          criterio: "parcelas com VENCIMENTO no periodo, qualquer que seja a data de pagamento",
+          a_receber: { ...tr, maiores_clientes: ranking(rec.itens, nomePessoa, "total"), por_categoria: catRec },
+          a_pagar: { ...tp, maiores_fornecedores: ranking(pag.itens, nomePessoa, "total"), por_categoria: catPag },
+          saldo_previsto: arred(tr.total - tp.total),
         },
-        a_pagar: {
-          ...tp,
-          vencido_em_aberto: vencidoAberto(pag.itens),
-          maiores_fornecedores: ranking(pag.itens, nomePessoa, "total"),
-          por_categoria: ranking(pag.itens, nomesCategoria, "total", 15),
+        caixa_no_periodo: {
+          criterio: "parcelas com DATA DE PAGAMENTO no periodo (inclui atrasados de meses anteriores e adiantamentos)",
+          entradas,
+          saidas,
+          liquido: arred(entradas - saidas),
+          qtd_parcelas_com_recebimento: recCx.itens.length,
+          qtd_parcelas_com_pagamento: pagCx.itens.length,
+          obs: "Soma so as baixas (pagamentos) com data dentro do periodo, valor liquido. Parcela paga em partes ao longo de meses entra so com a parte do periodo.",
+          ...(cxIn.sem_detalhe_de_baixas || cxOut.sem_detalhe_de_baixas
+            ? { aviso: `Sem detalhe de baixas para R$ ${cxIn.sem_detalhe_de_baixas} de entradas e R$ ${cxOut.sem_detalhe_de_baixas} de saidas — nesses entrou o acumulado pago.` }
+            : {}),
         },
-        resultado_previsto: arred(tr.total - tp.total),
-        resultado_realizado: arred(tr.pago - tp.pago),
         saldos_atuais: saldos,
-        observacoes: [
-          "Categoria com rateio aparece com o valor TOTAL da parcela em cada categoria — o ranking por categoria pode somar mais que o total.",
-          rec.truncado || pag.truncado ? "ATENCAO: limite de 10000 parcelas atingido — totais parciais." : null,
+        avisos: [
+          rec.truncado || pag.truncado || recCx.truncado || pagCx.truncado
+            ? "ATENCAO: limite de 10000 parcelas atingido — totais parciais."
+            : null,
+          Math.abs(tr.pago + tr.nao_pago - tr.total) > 1 || Math.abs(tp.pago + tp.nao_pago - tp.total) > 1
+            ? "pago + nao_pago difere do total em algumas parcelas (juros, multa, desconto ou taxa na baixa) — normal."
+            : null,
         ].filter(Boolean),
       };
     })

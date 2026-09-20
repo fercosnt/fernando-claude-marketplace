@@ -1,6 +1,6 @@
 {
   "name": "conta-azul",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Acesso ao ERP Conta Azul (API v2) — 38 tools MCP: contas a receber e a pagar, resumo financeiro do periodo, saldos, vendas, orcamentos, contratos, pessoas, notas fiscais, mais escrita opcional (lancamentos, baixas, cadastros, vendas, cobrancas) desligada por padrao e sempre com previa antes de enviar. OAuth local com refresh token rotativo protegido contra corrida.",
   "author": { "name": "Fernando Costa", "email": "fernandinho.costa.neto@gmail.com" },
   "homepage": "https://github.com/fercosnt/fernando-claude-marketplace/tree/main/conta-azul",

@@ -18,9 +18,11 @@ responde cada pergunta e como ler o numero sem errar.
 
 | Pergunta | Tool | Cuidado |
 |---|---|---|
-| "Como esta o financeiro do mes?" / fechamento | `contaazul_resumo_financeiro` | Filtra por **vencimento**. Diga isso na resposta. |
-| "Quanto entrou/saiu de fato no mes?" (caixa) | `contaazul_contas_receber` / `_pagar` com `pagamento_de/ate` **e** um vencimento amplo | O vencimento e obrigatorio na API: use uma janela larga (ex.: 12 meses para tras ate o fim do mes) para nao perder pagamento de parcela vencida antes. |
-| "O que vence essa semana / esta atrasado?" | `contaazul_contas_pagar` ou `_receber` com `status` | `ATRASADO` = vencido e nao pago. |
+| "Como esta o financeiro do mes?" / fechamento | `contaazul_resumo_financeiro` | Traz dois blocos: `por_vencimento` (o que vence no mes) e `caixa_no_periodo` (o que entrou e saiu de fato). Diga qual numero e qual. |
+| "Quanto entrou/saiu de fato no mes?" (caixa) | `contaazul_resumo_financeiro` → `caixa_no_periodo`, ou `contaazul_contas_receber` / `_pagar` com `pagamento_de/ate` **e** um vencimento amplo | Leia `pago_no_periodo_de_pagamento`, **nunca** `totais.pago`: `pago` e o acumulado da parcela, e parcela paga em partes ao longo de meses inflaria o mes. O vencimento e obrigatorio na API: use janela larga. |
+| "O que esta atrasado / vencido?" | `contaazul_contas_receber` / `_pagar` com `somente_vencidas=true` | **Nao filtre so por `status=ATRASADO`**: na API real esse status atrasa, e parcela vencida ha dias continua `EM_ABERTO` na busca. O servidor calcula pela data (`vencida`, `dias_atraso`, `vencido_nao_pago`). |
+| "O que vence essa semana?" | `contaazul_contas_pagar` ou `_receber` com o intervalo da semana | Diga o intervalo de datas que considerou. |
+| "Quanto faturamos / gastamos por categoria?" | `contaazul_resumo_financeiro` → `por_categoria` | Ja vem pelo rateio real: pode somar. |
 | Saldo em conta | `contaazul_contas_financeiras` | Saldo **atual**, nao historico. |
 | Detalhe de uma parcela, rateio, quem pagou | `contaazul_parcela` (`incluir_baixas`) | |
 | Vendas do periodo | `contaazul_vendas` | Os `totais` ja vem por situacao — use-os em vez de somar a pagina. |
@@ -36,7 +38,10 @@ responde cada pergunta e como ler o numero sem errar.
 - `total` = valor da parcela; `pago` = quanto ja entrou/saiu; `nao_pago` = saldo em aberto.
   Parcela `RECEBIDO_PARCIAL` tem as duas coisas.
 - Em contas a pagar a API tambem usa o status `RECEBIDO` para quitado — traduza para "pago".
-- O ranking por categoria repete a parcela inteira em cada categoria do rateio: nao some o ranking.
+- `por_status_da_api` e informativo; para atraso use `vencido_nao_pago`, que e pela data.
+- `por_categoria` distribui cada parcela pelo rateio do lancamento; descontos incondicionais tem valor zero e
+  nao aparecem. Se surgir `(rateio nao consultado)`, parte do valor nao foi detalhada — diga isso.
+- `pago + nao_pago` pode diferir de `total` por juros, multa, desconto ou taxa na baixa. E normal; nao "corrija".
 - Se a resposta vier com `aviso` de truncado, os totais sao parciais — diga e reduza o periodo.
 - Apresente em R$ com separador brasileiro, e mostre o dado bruto antes da interpretacao.
 

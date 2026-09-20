@@ -16,7 +16,7 @@ const check = (nome, cond, info) => { if (cond) { ok++; console.log("  ✓", nom
 async function abrir(extraEnv = {}) {
   const t = new StdioClientTransport({
     command: "node", args: [SERVER], stderr: "pipe",
-    env: { ...process.env, CONTAAZUL_CONFIG_FILE: cfgFile, CONTAAZUL_STATE_DIR: join(dir, "state"),
+    env: { ...process.env, CONTAAZUL_HOJE: "2026-09-20", CONTAAZUL_CONFIG_FILE: cfgFile, CONTAAZUL_STATE_DIR: join(dir, "state"),
       CONTAAZUL_BASE_URL: `http://127.0.0.1:${PORTA}`, CONTAAZUL_TOKEN_URL: `http://127.0.0.1:${PORTA}/oauth/token`, ...extraEnv },
   });
   const c = new Client({ name: "teste", version: "1" });
@@ -61,18 +61,27 @@ check("state reutilizado e recusado", r.err);
 
 console.log("3. leitura");
 r = await c.call("contaazul_resumo_financeiro", { de: "2026-09-01", ate: "2026-09-30" });
-check("resumo pagina todas as 1234 parcelas", r.j?.a_receber?.qtd_parcelas === 1234, r.txt?.slice(0, 300));
-check("total a receber 123400", r.j.a_receber.total === 123400);
-check("recebido = 412 * 100", r.j.a_receber.pago === 41200);
-check("pagar total 10000 / pago 7500", r.j.a_pagar.total === 10000 && r.j.a_pagar.pago === 7500);
+const V = r.j?.por_vencimento;
+check("resumo pagina todas as 1234 parcelas", V?.a_receber?.qtd_parcelas === 1234, r.txt?.slice(0, 300));
+check("total a receber 123400", V.a_receber.total === 123400);
+check("pagar total 10000 / pago 7500", V.a_pagar.total === 10000 && V.a_pagar.pago === 7500);
 check("saldos somados 1200.5", r.j.saldos_atuais.total === 1200.5);
+const lcat = Object.fromEntries(V.a_receber.por_categoria.map((x) => [x.nome, x.valor]));
+check("categoria pelo rateio: desconto nao entra, Laser soma o total", !("Descontos incondicionais" in lcat) && lcat["Laser"] === 123400, JSON.stringify(lcat));
+check("vencido calculado pela data, nao pelo status da API", V.a_receber.vencido_nao_pago.valor > 0 && /2026-09-20/.test(V.a_receber.vencido_nao_pago.criterio));
+check("caixa soma so as baixas do periodo (r3: 40 de 100 pagos)", r.j.caixa_no_periodo.entradas === 411 * 100 - 60, r.j.caixa_no_periodo.entradas);
+check("caixa no periodo separado e com criterio", typeof r.j.caixa_no_periodo.entradas === "number" && /PAGAMENTO/.test(r.j.caixa_no_periodo.criterio));
+check("campo enganoso resultado_realizado removido", !("resultado_realizado" in r.j));
 const buscas = log.filter(l => l.p.endsWith("contas-a-receber/buscar"));
-check("paginas de 500 (3 chamadas)", buscas.length === 3 && buscas.every(b => b.q.includes("tamanho_pagina=500")));
+check("paginas de 500 (3 por busca x 2 buscas: vencimento e caixa)", buscas.length === 6 && buscas.every(b => b.q.includes("tamanho_pagina=500")));
+check("busca de caixa usa data de pagamento", buscas.some(b => b.q.includes("data_pagamento_de=2026-09-01")));
 r = await c.call("contaazul_contas_receber", { vencimento_de: "2026-09-01", vencimento_ate: "2026-09-30", status: ["ATRASADO", "EM_ABERTO"], limite: 5 });
 const ult = log.filter(l => l.p.endsWith("contas-a-receber/buscar")).at(-1);
 check("status vira parametro repetido", ult.q.includes("status=ATRASADO&status=EM_ABERTO"));
-check("data DD/MM/AAAA normalizada", r.j.parcelas[0].vencimento === "2026-09-15");
+check("data DD/MM/AAAA normalizada", r.j.parcelas.find(p => p.id_parcela === "r2")?.vencimento === "2026-09-15");
 check("limite respeitado", r.j.parcelas.length === 5);
+r = await c.call("contaazul_contas_receber", { vencimento_de: "2026-09-01", vencimento_ate: "2026-09-30", somente_vencidas: true, limite: 3 });
+check("somente_vencidas corta vencimento em ontem e marca dias_atraso", /vencimento_ate=2026-09-19/.test(log.filter(l => l.p.endsWith("contas-a-receber/buscar")).at(-1).q) && r.j.parcelas.every(p => p.vencida && p.dias_atraso > 0), r.txt?.slice(0,300));
 r = await c.call("contaazul_contas_receber", { vencimento_de: "01/09/2026", vencimento_ate: "2026-09-30" });
 check("data BR na entrada e rejeitada com mensagem clara", r.err && /YYYY-MM-DD/.test(r.txt));
 r = await c.call("contaazul_notas_servico", { de: "2026-08-01", ate: "2026-09-09" });

@@ -4,7 +4,8 @@ import { appendFileSync } from "node:fs";
 
 const P = (id, descricao, venc, total, pago, pessoa, cat, dataPag, comp) => {
   const hoje = "2026-09-20";
-  const status = pago >= total ? "RECEBIDO" : pago > 0 ? "RECEBIDO_PARCIAL" : venc < hoje ? "ATRASADO" : "EM_ABERTO";
+  // Como na API real: o status da BUSCA atrasa — parcela vencida continua EM_ABERTO (so o detalhe diz ATRASADO).
+  const status = pago >= total ? "RECEBIDO" : pago > 0 ? "RECEBIDO_PARCIAL" : "EM_ABERTO";
   return { id, descricao, data_vencimento: venc, data_competencia: comp ?? venc, status_traduzido: status, total, pago, nao_pago: +(total - pago).toFixed(2),
     _data_pagamento: dataPag ?? null, cliente: pessoa, categorias: [{ id: cat.id, nome: cat.nome }] };
 };
@@ -27,8 +28,13 @@ export const RECEBER = [
   P("par-r06", "Protocolo Melasma 1/3", "2026-09-15", 2800, 0, CARLA, CAT.laser),
   P("par-r07", "Protocolo NightLase 2/3", "2026-09-25", 3500, 0, MARIA, CAT.laser),
   P("par-r08", "Laser TMJ", "2026-09-28", 2200, 0, JOAO, CAT.laser),
+  // venda com desconto: duas categorias na busca, rateio real so no detalhe
+  { ...P("par-r11", "Venda 235 - NightLase", "2026-09-14", 4000, 0, pes("pes-sarita", "Sarita Rodrigues"), CAT.laser), categorias: [{ id: "cat-desc", nome: "Descontos incondicionais concedidos" }, { id: CAT.laser.id, nome: CAT.laser.nome }] },
   // outubro (pago adiantado em setembro)
   P("par-r09", "Protocolo NightLase 3/3", "2026-10-05", 3500, 3500, MARIA, CAT.laser, "2026-09-18"),
+  // parcela antiga paga em partes ao longo de meses: so R$ 10.000 entraram em setembro (pago acumulado = 30.000)
+  { ...P("par-r12", "Recebimento procedimentos anteriores", "2025-05-29", 35000, 30000, pes("pes-liana", "Liana Saldanha"), CAT.laser, "2026-09-04"),
+    _baixas: [["2026-05-11", 10000], ["2026-06-22", 10000], ["2026-09-04", 10000]] },
   // agosto pago em agosto (nao conta no caixa de setembro)
   P("par-r10", "Laser TMJ entrada", "2026-08-10", 2000, 2000, JOAO, CAT.laser, "2026-08-10"),
 ];
@@ -43,7 +49,7 @@ export const PAGAR = [
   P("par-p06", "Insumos NF 8920", "2026-09-24", 2900, 0, DENTAL, CAT.insumos),
   P("par-p07", "Aluguel outubro", "2026-10-05", 12000, 0, IMOB, CAT.aluguel),
   P("par-p08", "Energia setembro", "2026-10-16", 1900, 0, ENEL, CAT.energia),
-].map(({ cliente, ...x }) => ({ ...x, fornecedor: cliente }));
+].map(({ cliente, ...x }) => ({ ...x, fornecedor: cliente, ...(x.id === "par-p03" ? { status_traduzido: "ATRASADO" } : {}) }));
 
 const CONTAS = [
   { id: "cf-itau-bs", nome: "Itau Beauty Smile", tipo: "CONTA_CORRENTE", banco: "ITAU", ativo: true, conta_padrao: true, _saldo: 48210.37 },
@@ -52,6 +58,8 @@ const CONTAS = [
   { id: "cf-cobr", nome: "Cobrancas Conta Azul", tipo: "COBRANCAS_CONTA_AZUL", ativo: true, conta_padrao: false, _saldo: 0 },
 ];
 const PESSOAS = [
+  { id: "pes-liana", nome: "Liana Saldanha", documento: "77788899900", perfis: ["Cliente"], tipo_pessoa: "Física" },
+  { id: "pes-sarita", nome: "Sarita Rodrigues", documento: "66677788899", perfis: ["Cliente"], tipo_pessoa: "Física" },
   { ...MARIA, documento: "11122233344", perfis: ["Cliente"], tipo_pessoa: "Física" },
   { ...JOAO, documento: "22233344455", perfis: ["Cliente"], tipo_pessoa: "Física" },
   { ...ANA, documento: "33344455566", perfis: ["Cliente"], tipo_pessoa: "Física" },
@@ -84,7 +92,7 @@ export function iniciar(logFile) {
       (!q.get("descricao") || fold(x.descricao).includes(fold(q.get("descricao")))) &&
       (!q.getAll("ids_categorias").length || q.getAll("ids_categorias").includes(x.categorias[0].id)) &&
       (!q.getAll("ids_clientes").length || q.getAll("ids_clientes").includes(x.cliente?.id))
-    ).map(({ _data_pagamento, ...x }) => x);
+    ).map(({ _data_pagamento, _baixas, ...x }) => x);
     if (req.method === "GET") {
       if (p === "/v1/pessoas/conta-conectada") return json(200, { id_empresa: "777", razao_social: "Beauty Smile Odontologia Ltda", nome_fantasia: "Beauty Smile", documento: "00111222000133" });
       if (p.endsWith("contas-a-receber/buscar")) { if (!q.get("data_vencimento_de") || !q.get("data_vencimento_ate")) return json(400, { message: "data_vencimento_de e data_vencimento_ate sao obrigatorios" }); return json(200, pagina(filtrar(RECEBER))); }
@@ -104,9 +112,13 @@ export function iniciar(logFile) {
       if (mp) {
         const x = [...RECEBER, ...PAGAR].find((i) => i.id === mp[1]); if (!x) return json(404, { message: "parcela nao encontrada" });
         if (mp[2]) return json(200, { itens: x.pago ? [{ id: "bx-" + x.id, data_pagamento: x._data_pagamento, valor: x.pago, conta_financeira: "cf-itau-bs" }] : [] });
-        const st = { RECEBIDO: "QUITADO", EM_ABERTO: "PENDENTE" }[x.status_traduzido] ?? x.status_traduzido;
+        const st = x.pago >= x.total ? "QUITADO" : x.data_vencimento < "2026-09-20" ? "ATRASADO" : x.pago > 0 ? "RECEBIDO_PARCIAL" : "PENDENTE";
+        const rateio = x.id === "par-r11"
+          ? [{ id_categoria: CAT.laser.id, nome_categoria: CAT.laser.nome, valor: 4000, valor_bruto: 5000 }, { id_categoria: "cat-desc", nome_categoria: "Descontos incondicionais concedidos", valor: 0, valor_bruto: 1000 }]
+          : [{ id_categoria: x.categorias[0].id, nome_categoria: x.categorias[0].nome, valor: x.total }];
         return json(200, { id: x.id, versao: 2, status: st, descricao: x.descricao, data_vencimento: x.data_vencimento, valor_pago: x.pago, nao_pago: x.nao_pago,
-          valor_composicao: { valor_bruto: x.total, valor_liquido: x.total }, id_conta_financeira: "cf-itau-bs", evento: { tipo: RECEBER.includes(x) ? "RECEITA" : "DESPESA", rateio: [{ id_categoria: x.categorias[0].id, nome_categoria: x.categorias[0].nome, valor: x.total }] } });
+          baixas: (x._baixas ?? (x.pago ? [[x._data_pagamento, x.pago]] : [])).map(([d, v], i) => ({ id: `bx-${x.id}-${i}`, data_pagamento: d, valor_composicao: { valor_bruto: v, valor_liquido: v }, conta_financeira: { id: "cf-itau-bs", nome: "Itau Beauty Smile" } })),
+          valor_composicao: { valor_bruto: x.total, valor_liquido: x.total }, id_conta_financeira: "cf-itau-bs", evento: { id: "ev-" + x.id, tipo: RECEBER.includes(x) ? "RECEITA" : "DESPESA", rateio } });
       }
       if (p === "/v1/financeiro/categorias-dre") return json(200, [{ nome: "Receita bruta", filhos: ["Tratamentos Laser", "Clareamento"] }, { nome: "Despesas operacionais", filhos: ["Aluguel", "Salarios", "Insumos odontologicos", "Energia", "Marketing"] }]);
       if (p === "/v1/venda/busca") return json(200, { totais: { total: 0, aprovado: 0 }, quantidades: { total: 0 }, total_itens: 0, itens: [] });

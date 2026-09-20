@@ -17,7 +17,7 @@ import { escritaLigada } from "./escrita.js";
 import { registrarLeitura } from "./tools-leitura.js";
 import { registrarEscrita } from "./tools-escrita.js";
 
-const VERSAO = "0.1.0";
+const VERSAO = "0.1.1";
 
 const server = new McpServer(
   { name: "conta-azul", version: VERSAO },
