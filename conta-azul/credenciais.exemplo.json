@@ -1,0 +1,9 @@
+{
+  "escrita": false,
+  "client_id": "COLE_AQUI",
+  "client_secret": "COLE_AQUI",
+  "redirect_uri": "COLE_AQUI — identico ao cadastrado no Portal do Desenvolvedor",
+  "empresas": [
+    { "nome": "Beauty Smile" }
+  ]
+}

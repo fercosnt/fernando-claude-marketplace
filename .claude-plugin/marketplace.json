@@ -85,6 +85,27 @@
       ]
     },
     {
+      "name": "conta-azul",
+      "description": "Acesso ao ERP Conta Azul (API v2) via MCP local — 38 tools: leitura (resumo financeiro do periodo, contas a receber e a pagar, parcelas e baixas, saldos, categorias, DRE, centros de custo, vendas, orcamentos, contratos, pessoas, NF-e, NFS-e, GET generico) e escrita opcional desligada por padrao, sempre em dois passos (previa -> confirmar) (lancamentos, baixas, alterar parcela, pessoas, vendas, cobrancas). OAuth local com refresh token rotativo protegido por trava de arquivo contra dois processos renovando juntos. Skills conta-azul, conta-azul-setup e conta-azul-escrita. Credenciais em ~/.conta-azul-mcp.json, nenhuma no repositorio. 39 testes contra API simulada; evals skill-creator: 100% com skill x 100% sem (regras ja nas descricoes das tools), -29% de tempo com skill.",
+      "version": "0.1.0",
+      "source": "./conta-azul",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": [
+        "conta-azul",
+        "erp",
+        "financeiro",
+        "contas-a-pagar",
+        "contas-a-receber",
+        "fluxo-de-caixa",
+        "mcp",
+        "oauth",
+        "portugues",
+        "brasil"
+      ]
+    },
+    {
       "name": "mkt-fotona",
       "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-ajuda (balcao de duvidas do sistema — projeto ou campanha, em que area entra, o que e esse campo; so explica, nao grava), mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-creator: 100% com skill x 48% sem nas skills que escrevem; 93% x 73% na mkt-ajuda. 17 casos, fixtures ficticias.",
       "version": "2.2.0",

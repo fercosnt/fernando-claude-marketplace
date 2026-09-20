@@ -1,0 +1,5 @@
+server/node_modules/
+test/node_modules
+evals/harness/node_modules
+.conta-azul-mcp.json
+.DS_Store

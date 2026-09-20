@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "conta-azul": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/servers/conta-azul-mcp.js"]
+    }
+  }
+}
