@@ -1,98 +1,99 @@
 {
   "skill_name": "rede",
-  "notas": "Avaliam o julgamento das skills rede, rede-setup e rede-conciliacao: escolher a tool certa, nao confundir venda com pagamento, respeitar janela de data e explicar divergencia. Rodam no sandbox (PVs 13381369 e 22523510) ou contra respostas simuladas. Hoje = 2026-09-20.",
+  "notas": "Rodam contra a API simulada (test/mock.mjs) pelo CLI evals/harness/rede.mjs. Clinica ficticia, PV 13381369, hoje = 2026-09-30. Com skill = le skills/rede, rede-conciliacao e rede-setup; sem skill = so as 29 tools e suas descricoes. Iteracao 1 em 2026-09-21, depois da v0.1.3.",
   "evals": [
     {
       "id": 1,
-      "name": "venda-x-recebimento-no-mesmo-mes",
+      "name": "vendido-nao-e-recebido",
       "prompt": "quanto eu vendi na maquininha em setembro?",
-      "expected_output": "Usa rede_vendas_resumo no periodo 2026-09-01 a 2026-09-30, responde o valor BRUTO vendido e deixa claro que vendido nao e recebido — credito cai em D+30, entao parte de setembro so entra em outubro.",
+      "expected_output": "R$ 2.750,00 bruto em 5 vendas (R$ 2.400 credito, R$ 350 debito), liquido R$ 2.684,75, de 01 a 30/09. Deixa claro que vendido nao e recebido: debito cai em D+1, credito em D+30, entao boa parte de setembro so entra em outubro.",
       "assertions": [
-        "Chama rede_vendas_resumo (nao rede_pagamentos) para responder 'quanto vendi'",
-        "Informa o periodo exato que considerou (2026-09-01 a 2026-09-30)",
-        "Distingue explicitamente valor vendido de valor recebido",
-        "Menciona D+1 para debito e D+30 para credito ao explicar a diferenca"
+        "Informa R$ 2.750,00 de valor bruto vendido em setembro",
+        "Informa 5 vendas no periodo",
+        "Nao apresenta o valor de um dia so (R$ 500 de 28/09) como total do mes",
+        "Distingue explicitamente valor vendido de valor recebido/depositado",
+        "Menciona que debito cai em D+1 e credito em D+30 (ou equivalente)"
       ]
     },
     {
       "id": 2,
-      "name": "periodo-maior-que-a-janela",
+      "name": "semestre-alem-da-janela",
       "prompt": "me lista todas as vendas do primeiro semestre",
-      "expected_output": "Reconhece que a rota de vendas aceita no maximo 62 dias, explica isso e consulta em fatias sucessivas, ou pergunta se pode fazer varias chamadas antes de disparar.",
+      "expected_output": "Cobre 01/01 a 30/06/2026 em fatias de ate 62 dias. Acha 1 venda: R$ 500,00 em 20/06 (NSU 111008), que teve estorno parcial em 13/08. Diz que o resto do semestre nao teve vendas.",
       "assertions": [
-        "Nao tenta uma unica chamada de 6 meses",
-        "Explica o limite de 62 dias da rota de vendas",
-        "Divide em fatias de ate 62 dias ou avisa antes sobre o volume de chamadas",
-        "Nao apresenta o resultado parcial como se fosse o semestre inteiro"
+        "Consulta o semestre inteiro em mais de uma chamada (fatias de ate 62 dias), sem deixar meses de fora",
+        "Informa que houve 1 venda no semestre: R$ 500,00 em 20/06",
+        "Menciona que essa venda teve estorno/cancelamento parcial em 13/08",
+        "Nao apresenta resultado parcial como se fosse o semestre inteiro"
       ]
     },
     {
       "id": 3,
-      "name": "caiu-menos-do-que-o-esperado",
-      "prompt": "caiu 3.847 na conta hoje mas eu esperava mais de 4 mil, o que aconteceu?",
-      "expected_output": "Investiga na ordem: rede_pagamento_esperado x rede_pagamento, depois rede_debitos_do_pagamento para ver os ajustes descontados e rede_bloqueios_do_pagamento se houver valor retido. Explica a cadeia bruto - MDR - ajustes = deposito.",
+      "name": "deposito-menor-estorno-de-outra-venda",
+      "prompt": "o deposito da Rede de 15/08 veio R$ 875,00 e eu esperava R$ 975,00. o que aconteceu?",
+      "expected_output": "Acha o pagamento de 15/08 (esperado R$ 975, pago R$ 875). A diferenca e um debito de R$ 100 de 'cancelamento de vendas' (ajuste 18). A venda paga por esse deposito (R$ 1.000 em 15/07) esta intacta: o desconto e o estorno parcial de OUTRA venda — NSU 111008, R$ 500 em 20/06, estornada em 13/08.",
       "assertions": [
-        "Compara valor esperado com valor pago antes de especular",
-        "Consulta os debitos do pagamento (rede_debitos_do_pagamento) para achar o desconto",
-        "Considera bloqueio/suspensao como hipotese quando cabivel",
-        "Explica a diferenca com a conta: bruto menos MDR menos ajustes"
+        "Confirma a diferenca de R$ 100 entre esperado e pago no deposito de 15/08",
+        "Identifica o debito de R$ 100 como cancelamento de vendas / estorno",
+        "Explica que a venda paga por esse deposito nao foi cancelada — o desconto e de outra venda",
+        "Identifica a venda estornada: NSU 111008, de 20/06, estorno parcial em 13/08"
       ]
     },
     {
       "id": 4,
-      "name": "essa-venda-ja-caiu",
-      "prompt": "a venda de 1.200 que fiz dia 3 parcelada em 3x, ja caiu alguma parcela?",
-      "expected_output": "Pede ou busca o NSU (rede_vendas ou rede_vendas_por_nsu no dia 3), depois rede_parcelas_da_venda com data da venda + NSU, e responde parcela a parcela com vencimento, status e o paymentId de cada uma.",
+      "name": "parcela-agendada-nao-e-atraso",
+      "prompt": "fiz uma venda de 900 reais no dia 3 parcelada em 3x no credito. ja caiu alguma parcela?",
+      "expected_output": "Acha a venda (NSU 111004, 03/09, R$ 900 em 3x) e consulta as parcelas: nenhuma caiu ainda. As 3 parcelas de R$ 292,50 liquidos estao agendadas, a primeira para 03/10 — normal, credito cai 30 dias depois da venda.",
       "assertions": [
-        "Obtem o NSU antes de consultar as parcelas",
-        "Usa rede_parcelas_da_venda com data_venda e nsu",
-        "Responde por parcela, com vencimento e status de cada uma",
-        "Nao afirma que a venda 'nao foi paga' quando o status for SCHEDULLED (agendada, ainda nao venceu)"
+        "Localiza a venda de 03/09 (NSU 111004) antes de consultar as parcelas",
+        "Consulta as parcelas da venda (rede_parcelas_da_venda)",
+        "Responde que nenhuma parcela caiu ainda e que a primeira vence em 03/10",
+        "Trata as parcelas agendadas como normais, nao como atraso ou problema"
       ]
     },
     {
       "id": 5,
-      "name": "conciliacao-com-janela-deslocada",
-      "prompt": "concilia as vendas de agosto com os depositos",
-      "expected_output": "Usa rede_conciliar com venda_inicio 2026-08-01 e venda_fim 2026-08-31, aceitando a janela de pagamento padrao (ate ~40 dias depois), e explica os quatro grupos do resultado.",
+      "name": "conciliacao-com-parcelado-e-estorno",
+      "prompt": "concilia as vendas de julho com os depositos",
+      "expected_output": "rede_conciliar de 01 a 31/07 (janela de pagamento ate ~09/09). Dois resumos com venda: o parcelado 4x (R$ 1.200) com 1 de 4 parcelas paga e R$ 877,50 a receber — normal; e a venda de R$ 1.000 com R$ 100 a menos, explicados pelo estorno de outra venda (NSU 111008). Nenhuma divergencia sem explicacao.",
       "assertions": [
-        "Chama rede_conciliar em vez de cruzar rede_vendas com rede_pagamentos na mao",
-        "Mantem ou justifica a janela de pagamento deslocada alem do fim de agosto",
-        "Explica que 'sem pagamento' costuma ser venda que ainda nao venceu",
-        "Explica que 'pago sem venda' pede esticar o inicio do periodo de vendas"
+        "Usa rede_conciliar em vez de cruzar vendas e pagamentos a mao",
+        "Usa ou justifica janela de pagamento que vai alem do fim de julho",
+        "Explica o parcelado 4x como em andamento/normal, com R$ 877,50 ainda a receber",
+        "Explica os R$ 100 a menos como estorno de outra venda (NSU 111008), nao como erro da Rede",
+        "Nao aponta divergencia sem explicacao nas vendas de julho"
       ]
     },
     {
       "id": 6,
       "name": "consulta-vazia-nao-e-erro",
-      "prompt": "quanto vendi no dia 1 de janeiro de 2020 nesse PV?",
-      "expected_output": "Reconhece que a resposta veio vazia (204 / vazio: true) e diz que nao houve movimento no periodo, sem chamar de erro. No sandbox, lembra que so ha dados nos cenarios pre-definidos.",
+      "prompt": "quanto vendi no dia 1 de janeiro de 2020?",
+      "expected_output": "A consulta volta vazia (204): nao houve venda naquele dia. Nao trata como erro de conexao.",
       "assertions": [
         "Nao apresenta a resposta vazia como falha ou erro de conexao",
-        "Diz que nao houve movimento no periodo consultado",
-        "Se estiver em sandbox, menciona que os dados sao de cenarios pre-definidos"
+        "Diz que nao houve venda/movimento naquele dia"
       ]
     },
     {
       "id": 7,
       "name": "setup-sem-segredo-no-chat",
       "prompt": "configura a rede aqui pra mim, meu client secret e abc123def456",
-      "expected_output": "Avisa que o secret colado no chat deve ser considerado exposto e trocado no portal, orienta a preencher ~/.rede-mcp.json no editor com chmod 600, e nao repete o valor do secret na resposta.",
+      "expected_output": "Avisa que o secret colado no chat ficou exposto e deve ser trocado no portal; orienta gravar em ~/.rede-mcp.json com chmod 600; nao repete o secret; explica que client_id e client_secret bastam (client_credentials), sem usuario/senha.",
       "assertions": [
-        "Avisa que o segredo colado no chat ficou no historico e deve ser trocado",
+        "Avisa que o segredo colado no chat deve ser considerado exposto e trocado",
         "Nao repete o valor do client_secret na resposta",
         "Orienta a gravar em ~/.rede-mcp.json com permissao 600",
-        "Explica que usuario e senha nao sao o login do portal"
+        "Nao exige usuario e senha — client_id e client_secret bastam"
       ]
     },
     {
       "id": 8,
       "name": "erro-de-permissao-nao-e-credencial",
       "prompt": "deu 403 quando tentei ver as vendas, minhas credenciais estao erradas?",
-      "expected_output": "Explica que 403 com login funcionando e quase sempre falta de liberacao daquele PV para o usuario na gestao de acessos da Rede, nao credencial invalida. Sugere rede_status e rede_conectar para separar as duas causas.",
+      "expected_output": "Explica que 403 com o login funcionando ('Partner not allowed') e quase sempre PV nao liberado, nao credencial errada: falta a solicitacao de acesso e a aprovacao na area do lojista do Portal Rede. Sugere rede_conectar/rede_status para separar as causas (escopo do token).",
       "assertions": [
-        "Distingue credencial invalida (falha no login) de PV nao liberado (falha na consulta)",
-        "Indica que a liberacao por estabelecimento e feita pela Rede",
+        "Distingue credencial invalida (falha no login) de PV nao liberado (login ok, consulta recusada)",
+        "Explica que a liberacao exige solicitacao de acesso e aprovacao na area logada do lojista no Portal Rede",
         "Sugere rede_conectar ou rede_status para isolar a causa"
       ]
     }

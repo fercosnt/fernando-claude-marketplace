@@ -119,6 +119,12 @@ concilia nada. O cruzamento e provado no teste de integracao contra a API simula
 
 ## Ir para producao
 
+**Ao trocar para producao, remova `usuario` e `senha` do arquivo** (a nao ser que a Rede tenha
+mandado um par de producao). Com os dois preenchidos o plugin usa o grant `password`; se forem os
+de sandbox, o login de producao falha com `invalid_grant`. Sem eles, vale o `client_credentials`,
+que e o fluxo documentado. O arquivo de producao fica so com `ambiente`, `client_id`,
+`client_secret` e `pvs`.
+
 O caminho completo — e-mail para pedir credenciais, os 8 itens que a Rede exige, e a liberacao dos
 PVs (que e o passo que costuma travar) — esta em `docs/producao.md`. Dois pontos que economizam
 tempo: o `grant_type=password` do PDF de 2023 esta desatualizado, e ter credencial de producao

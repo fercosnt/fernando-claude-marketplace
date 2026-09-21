@@ -20,6 +20,15 @@ import { z } from "zod";
 import { apenasConfig, contexto, seguro } from "./ctx.js";
 import { api, apiPaginado, juntar, rotaNaoHabilitada, type Params } from "./client.js";
 import { fatiar, somarDias, validarJanela, LIMITE } from "./periodo.js";
+
+/** Teto de resumos divergentes investigados por chamada — cada um custa ao menos uma consulta. */
+const MAX_EXPLICAR = 30;
+
+interface Ajuste {
+  codigo: number;
+  descricao: string;
+  valor: number;
+}
 import { pPv } from "./comum.js";
 import {
   BANDEIRAS, GROUP_BY, MODALIDADES, PRODUTOS, PRODUTO_PT, STATUS_CHARGEBACK, STATUS_PAGAMENTO,
@@ -39,7 +48,9 @@ export function registrarConciliacao(server: McpServer): void {
         "Cruza as vendas do periodo com as ordens de credito pelo numero do resumo de vendas " +
         "(saleSummaryNumber) e diz, resumo a resumo: quanto foi vendido no bruto, quanto entrou de liquido " +
         "e em qual paymentId. Separa o que ainda nao apareceu em nenhum pagamento do que apareceu sem venda " +
-        "correspondente no periodo. Faz o fatiamento das janelas (62 dias para vendas, 30 para ordens) sozinho, " +
+        "correspondente no periodo. Divergencias explicadas por debito do deposito (aluguel, estorno de outra venda) " +
+        "viram 'ajuste no repasse', com o ajuste e, para estorno, a venda de origem. " +
+        "Faz o fatiamento das janelas (62 dias para vendas, 30 para ordens) sozinho, " +
         "entao pode pedir alguns meses de uma vez — leva mais tempo e mais chamadas.",
       inputSchema: {
         pv: pPv,
@@ -58,6 +69,14 @@ export function registrarConciliacao(server: McpServer): void {
           .optional()
           .describe("true = devolve a lista completa de resumos de venda. Padrao: so os totais e uma amostra."),
         limite_amostra: z.number().int().positive().max(200).optional().describe("Tamanho da amostra (padrao 20)."),
+        explicar_divergencias: z
+          .boolean()
+          .optional()
+          .describe(
+            "Padrao true. Para cada resumo divergente, consulta os debitos do deposito; se explicarem a diferenca, " +
+              "reclassifica como 'ajuste no repasse'. Quando o ajuste e estorno, procura a venda estornada nos 6 meses " +
+              "anteriores. Custa chamadas extras so quando ha divergencia."
+          ),
       },
     },
     seguro(async (a: Record<string, any>) => {
@@ -130,6 +149,12 @@ export function registrarConciliacao(server: McpServer): void {
         parcelas: number;
         parcelas_pagas?: number;
         falta_receber?: number;
+        /** Debitos do deposito que explicam a diferenca. */
+        ajustes?: Ajuste[];
+        /** Debitos existentes que NAO fecham a conta — pista, nao explicacao. */
+        ajustes_no_pagamento?: Ajuste[];
+        provavel_origem?: Record<string, unknown>;
+        candidatos_de_origem?: Record<string, unknown>[];
         situacao: string;
       }
       const linhas = new Map<string, Linha>();
@@ -176,12 +201,12 @@ export function registrarConciliacao(server: McpServer): void {
        * multiplos inteiros da parcela; a tolerancia cresce com o numero de parcelas porque cada uma
        * e arredondada separadamente pela Rede.
        */
-      const parcelasPagas = (l: Linha): number | null => {
-        if (l.parcelas < 2 || l.valor_liquido_pago <= 0) return null;
+      const parcelasPagas = (l: Linha, pago = l.valor_liquido_pago): number | null => {
+        if (l.parcelas < 2 || pago <= 0) return null;
         const parcela = l.valor_liquido_previsto / l.parcelas;
-        const k = Math.round(l.valor_liquido_pago / parcela);
+        const k = Math.round(pago / parcela);
         if (k < 1 || k >= l.parcelas) return null;
-        return Math.abs(l.valor_liquido_pago - k * parcela) <= 0.05 * k + TOLERANCIA ? k : null;
+        return Math.abs(pago - k * parcela) <= 0.05 * k + TOLERANCIA ? k : null;
       };
 
       for (const l of linhas.values()) {
@@ -198,6 +223,120 @@ export function registrarConciliacao(server: McpServer): void {
         }
       }
 
+      // ---------------- explicar divergencias pelos debitos do deposito
+      /**
+       * A Rede desconta ajustes (aluguel, estorno, chargeback) do proximo deposito, seja qual for a
+       * venda que ele paga. Entao a diferenca de um resumo quase sempre e um debito — muitas vezes de
+       * OUTRA venda. Caso real que motivou este bloco: deposito R$ 526,32 menor porque levou o estorno
+       * parcial de uma venda 10x de outra data. Aqui a conta e fechada automaticamente.
+       */
+      const explicar = a.explicar_divergencias !== false;
+      const tiposAjuste = new Map<number, string>();
+      const debitosCache = new Map<string, Ajuste[]>();
+      const debitosDoPagamento = async (pid: string): Promise<Ajuste[]> => {
+        if (debitosCache.has(pid)) return debitosCache.get(pid)!;
+        let lista: Ajuste[] = [];
+        try {
+          const r = (await api(cfg, {
+            caminho: `/merchant-statement/v1/payments/charges/${encodeURIComponent(pid)}`,
+            merchantIdHeader: pv.numero,
+            pv: pv.numero,
+          })) as { charges?: Record<string, unknown>[] };
+          lista = (r?.charges ?? []).map((c) => {
+            const codigo = num(c.adjustmentTypeCode);
+            return { codigo, descricao: tiposAjuste.get(codigo) ?? `ajuste ${codigo}`, valor: cent(num(c.debitAmount)) };
+          });
+        } catch {
+          lista = []; // sem debitos legiveis: a linha continua divergente, sem inventar explicacao
+        }
+        debitosCache.set(pid, lista);
+        return lista;
+      };
+
+      const divergentes = [...linhas.values()].filter((l) => l.situacao === "valor divergente");
+      const investigados = divergentes.slice(0, MAX_EXPLICAR);
+      if (explicar && investigados.length) {
+        try {
+          const t = await api(cfg, { caminho: "/merchant-statement/v1/charges/adjustment-types" });
+          if (Array.isArray(t)) for (const x of t as Record<string, unknown>[]) tiposAjuste.set(num(x.code), String(x.description));
+        } catch {
+          /* sem nomes: os ajustes saem so com o codigo */
+        }
+        for (const l of investigados) {
+          const ajustes: Ajuste[] = [];
+          for (const pid of l.payment_ids) ajustes.push(...(await debitosDoPagamento(pid)));
+          if (!ajustes.length) continue;
+          const diferenca = cent(l.valor_liquido_previsto - l.valor_liquido_pago);
+          const total = cent(ajustes.reduce((t, x) => t + x.valor, 0));
+          const fecha = (v: number) => Math.abs(v - diferenca) <= 0.05;
+          const explicam = fecha(total) ? ajustes : ajustes.filter((x) => fecha(x.valor)).slice(0, 1);
+          if (explicam.length) {
+            l.situacao = "ajuste no repasse";
+            l.ajustes = explicam;
+            continue;
+          }
+          // Parcelado pago em parte E com desconto no mesmo deposito.
+          const k = parcelasPagas(l, l.valor_liquido_pago + total);
+          if (k) {
+            l.situacao = "parcelado em andamento";
+            l.parcelas_pagas = k;
+            l.falta_receber = cent(l.valor_liquido_previsto - l.valor_liquido_pago - total);
+            l.ajustes = ajustes;
+            continue;
+          }
+          l.ajustes_no_pagamento = ajustes;
+        }
+      }
+
+      // ---------------- estorno: qual venda foi estornada?
+      /**
+       * O debito de estorno nao diz a venda de origem. O rastreio (tracking) da venda estornada tem
+       * um evento CANCELLED/PARTIAL_CANCELLED dias antes do deposito que levou o desconto. Busca nos 6
+       * meses anteriores — cobre parcelado de ate 6x com folga; parcelado mais longo pode escapar.
+       */
+      const ehEstorno = (x: Ajuste) => x.codigo === 18 || /cancel|estorno/i.test(x.descricao);
+      const comEstorno = [...linhas.values()].filter((l) => (l.ajustes ?? []).some(ehEstorno));
+      if (explicar && comEstorno.length) {
+        const datas = comEstorno.flatMap((l) => l.datas_de_pagamento).filter(Boolean).sort();
+        const historico: Record<string, unknown>[] = [];
+        for (const f of fatiar(somarDias(datas[0], -186), datas[datas.length - 1], LIMITE.vendas!)) {
+          let r;
+          try {
+            r = await buscarVendas(f, versaoVendas === 2);
+          } catch (e) {
+            if (versaoVendas !== 2 || !rotaNaoHabilitada(e)) throw e;
+            versaoVendas = 1;
+            r = await buscarVendas(f, false);
+          }
+          historico.push(...(juntar(r.paginas, "transactions") as Record<string, unknown>[]));
+        }
+        for (const l of comEstorno) {
+          const ate = [...l.datas_de_pagamento].sort().pop()!;
+          const de = somarDias(ate, -7);
+          const candidatos = historico.flatMap((v) => {
+            const ev = ((v.tracking as Record<string, unknown>[]) ?? []).find(
+              (t) => /CANCEL/i.test(String(t.status)) && String(t.date) >= de && String(t.date) <= ate
+            );
+            return ev
+              ? [{
+                  nsu: v.nsu,
+                  data_da_venda: v.saleDate,
+                  valor_da_venda: v.amount,
+                  parcelas: v.installmentQuantity,
+                  bandeira: v.bandeira,
+                  evento: ev.status,
+                  data_do_evento: ev.date,
+                  // No caso verificado em producao (venda de 6.000 com evento de 5.400, parcelas caindo
+                  // para 10%), o valor do evento era o ESTORNADO, nao o que sobrou. Nome neutro de proposito.
+                  valor_do_evento: ev.amount,
+                }]
+              : [];
+          });
+          if (candidatos.length === 1) l.provavel_origem = candidatos[0];
+          else if (candidatos.length > 1) l.candidatos_de_origem = candidatos.slice(0, 5);
+        }
+      }
+
       const todas = [...linhas.values()];
       const por = (s: string) => todas.filter((l) => l.situacao === s);
       const soma = (ls: Linha[], campo: keyof Linha) => cent(ls.reduce((t, l) => t + num(l[campo]), 0));
@@ -205,6 +344,7 @@ export function registrarConciliacao(server: McpServer): void {
       const grupos = {
         conciliado: por("conciliado"),
         parcelado_em_andamento: por("parcelado em andamento"),
+        ajuste_no_repasse: por("ajuste no repasse"),
         valor_divergente: por("valor divergente"),
         sem_pagamento: por("sem pagamento na janela consultada"),
         pago_sem_venda: por("pago, mas a venda esta fora do periodo consultado"),
@@ -237,6 +377,10 @@ export function registrarConciliacao(server: McpServer): void {
             pago_ate_agora: soma(grupos.parcelado_em_andamento, "valor_liquido_pago"),
             falta_receber: soma(grupos.parcelado_em_andamento, "falta_receber"),
           },
+          ajuste_no_repasse: {
+            resumos: grupos.ajuste_no_repasse.length,
+            descontado: cent(grupos.ajuste_no_repasse.reduce((t, l) => t + (l.ajustes ?? []).reduce((u, x) => u + x.valor, 0), 0)),
+          },
           valor_divergente: { resumos: grupos.valor_divergente.length, previsto: soma(grupos.valor_divergente, "valor_liquido_previsto"), pago: soma(grupos.valor_divergente, "valor_liquido_pago") },
           sem_pagamento: { resumos: grupos.sem_pagamento.length, previsto: soma(grupos.sem_pagamento, "valor_liquido_previsto") },
           pago_sem_venda: { resumos: grupos.pago_sem_venda.length, pago: soma(grupos.pago_sem_venda, "valor_liquido_pago") },
@@ -248,13 +392,19 @@ export function registrarConciliacao(server: McpServer): void {
           "por isso pode ser maior que o vendido. " +
           "'sem pagamento' costuma ser venda recente que ainda nao venceu (credito cai em D+30) ou parcela bloqueada — " +
           "confira em rede_parcelas_da_venda. 'pago sem venda' quase sempre e venda anterior ao periodo: estique venda_inicio. " +
-          "'valor divergente' normalmente e debito descontado do pagamento — abra com rede_debitos_do_pagamento.",
+          "'ajuste no repasse' e diferenca ja explicada por um debito do deposito — o campo ajustes diz qual; se for " +
+          "estorno, provavel_origem aponta a venda estornada (pode ser de outra data e outro resumo). " +
+          "'valor divergente' e o que sobrou SEM explicacao nos debitos: esse sim merece olhar humano." +
+          (divergentes.length > MAX_EXPLICAR
+            ? ` Atencao: ${divergentes.length} divergencias, so as ${MAX_EXPLICAR} primeiras foram investigadas.`
+            : ""),
         ...(a.detalhar
           ? { resumos_de_venda: todas }
           : {
               amostra: {
                 valor_divergente: grupos.valor_divergente.slice(0, amostra),
                 parcelado_em_andamento: grupos.parcelado_em_andamento.slice(0, amostra),
+                ajuste_no_repasse: grupos.ajuste_no_repasse.slice(0, amostra),
                 sem_pagamento: grupos.sem_pagamento.slice(0, amostra),
                 pago_sem_venda: grupos.pago_sem_venda.slice(0, amostra),
                 conciliado: grupos.conciliado.slice(0, Math.min(5, amostra)),

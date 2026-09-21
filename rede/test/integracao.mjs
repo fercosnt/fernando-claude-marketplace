@@ -114,6 +114,9 @@ try {
 
   r = await chamar("rede_vendas", { data_inicio: "2020-01-01", data_fim: "2020-01-31" });
   ok("204 vira 'sem registro', nao erro", !r.erro && r.json?.resposta?.vazio === true);
+  r = await chamar("rede_vendas_resumo", { data_inicio: "2020-01-01", data_fim: "2020-01-31" });
+  ok("resumo sem venda devolve total zero, nao null", r.json?.total_do_periodo?.valor_bruto === 0 && r.json?.total_do_periodo?.quantidade_de_vendas === 0, JSON.stringify(r.json?.total_do_periodo));
+  ok("resumo sem venda diz que nao e erro", r.json?.como_ler?.includes("Nao e erro"));
 
   r = await chamar("rede_vendas_resumo", { data_inicio: "2026-09-01", data_fim: "2026-09-30" });
   ok("resumo vem um item por dia com venda", r.json?.resposta?.content?.sales?.length === 4, String(r.json?.resposta?.content?.sales?.length));
@@ -131,7 +134,11 @@ try {
   const parcelas = r.json?.resposta?.content?.installments;
   ok("abre as 3 parcelas da venda parcelada", parcelas?.length === 3, String(parcelas?.length));
   ok("traduz SCHEDULLED (dois L)", parcelas?.[1]?.status_descricao === "Agendada", parcelas?.[1]?.status_descricao);
-  ok("traduz PAID mesmo sendo ambiguo entre pagamento e parcela", parcelas?.[0]?.status_descricao === "Pago" || parcelas?.[0]?.status_descricao === "Paga", parcelas?.[0]?.status_descricao);
+  ok("venda de 03/09 ainda nao tem parcela vencida em 30/09", parcelas?.every((p) => p.status === "SCHEDULLED"));
+  ok("1a parcela vence 30 dias depois da venda", parcelas?.[0]?.expirationDate === "2026-10-03", parcelas?.[0]?.expirationDate);
+  r = await chamar("rede_parcelas_da_venda", { data_venda: "2026-07-10", nsu: 111006 });
+  const antigas = r.json?.resposta?.content?.installments;
+  ok("traduz PAID mesmo sendo ambiguo entre pagamento e parcela", antigas?.[0]?.status_descricao === "Pago" || antigas?.[0]?.status_descricao === "Paga", antigas?.[0]?.status_descricao);
 
   r = await chamar("rede_vendas_parceladas", { data_inicio: "2026-09-01", data_fim: "2026-09-25", paginar_tudo: true });
   ok("vendas parceladas do periodo", r.json?.total_de_parcelas === 4, String(r.json?.total_de_parcelas));
@@ -164,7 +171,7 @@ try {
   r = await chamar("rede_pagamento", { payment_id: "P20261002002" });
   ok("um pagamento pelo id", r.json?.resposta?.content?.payments?.[0]?.paymentId === "P20261002002");
   r = await chamar("rede_pagamento_esperado", { payment_id: "P20261002002" });
-  ok("valor esperado difere do pago", r.json?.resposta?.content?.expectedAmount === 900);
+  ok("valor esperado = pago + debitos (850 + 27,50)", r.json?.resposta?.content?.expectedAmount === 877.5, String(r.json?.resposta?.content?.expectedAmount));
 
   r = await chamar("rede_ordens_de_credito", { data_inicio: "2026-09-01", data_fim: "2026-09-30", paginar_tudo: true });
   ok("ordens de credito de setembro", r.json?.total_de_ordens === 2, String(r.json?.total_de_ordens));
@@ -206,7 +213,7 @@ try {
   r = await chamar("rede_debitos_resumo", { data_inicio: "2026-10-01", data_fim: "2026-10-30" });
   ok("resumo de debitos por tipo de ajuste", r.json?.resposta?.content?.[0]?.debitAmount === 27.5);
   r = await chamar("rede_tipos_de_ajuste");
-  ok("tabela de tipos de ajuste", r.json?.resposta?.length === 3);
+  ok("tabela de tipos de ajuste", r.json?.resposta?.length === 4);
 
   console.log("\nconciliacao (o cruzamento que o sandbox nao permite provar)");
   r = await chamar("rede_conciliar", { venda_inicio: "2026-09-01", venda_fim: "2026-09-30" });
@@ -215,8 +222,11 @@ try {
   ok("leu as 4 ordens de credito", r.json?.totais?.ordens_de_credito_lidas === 4, String(r.json?.totais?.ordens_de_credito_lidas));
   ok("2 resumos conciliados", sit?.conciliado?.resumos === 2, JSON.stringify(sit?.conciliado));
   ok("conciliado soma 1.319,75", sit?.conciliado?.valor_pago === 1319.75, String(sit?.conciliado?.valor_pago));
-  ok("1 resumo com valor divergente (RV 900003)", sit?.valor_divergente?.resumos === 1, JSON.stringify(sit?.valor_divergente));
-  ok("divergencia e de 27,50", Math.round((sit?.valor_divergente?.previsto - sit?.valor_divergente?.pago) * 100) / 100 === 27.5);
+  ok("RV 900003 nao fica mais como divergente", sit?.valor_divergente?.resumos === 0, JSON.stringify(sit?.valor_divergente));
+  ok("vira 'ajuste no repasse' explicado pelo debito", sit?.ajuste_no_repasse?.resumos === 1 && sit?.ajuste_no_repasse?.descontado === 27.5, JSON.stringify(sit?.ajuste_no_repasse));
+  const aj = r.json?.amostra?.ajuste_no_repasse?.[0]?.ajustes?.[0];
+  ok("diz qual ajuste: Aluguel de equipamento, R$ 27,50", aj?.descricao === "Aluguel de equipamento" && aj?.valor === 27.5, JSON.stringify(aj));
+  ok("aluguel nao dispara busca de venda estornada", !r.json?.amostra?.ajuste_no_repasse?.[0]?.provavel_origem);
   ok("1 venda sem pagamento (28/09, D+30)", sit?.sem_pagamento?.resumos === 1, JSON.stringify(sit?.sem_pagamento));
   ok("1 pagamento sem venda no periodo", sit?.pago_sem_venda?.resumos === 1, JSON.stringify(sit?.pago_sem_venda));
   ok("janela de pagamento deslocada 40 dias", r.json?.periodo_de_pagamento?.fim === "2026-11-09", r.json?.periodo_de_pagamento?.fim);
@@ -226,6 +236,13 @@ try {
   ok("vira 'parcelado em andamento'", pa?.resumos === 1, JSON.stringify(pa));
   ok("falta receber 877,50 (3 de 4 parcelas)", pa?.falta_receber === 877.5, String(pa?.falta_receber));
   ok("marca 1 de 4 parcelas pagas", r.json?.amostra?.parcelado_em_andamento?.[0]?.parcelas_pagas === 1 && r.json?.amostra?.parcelado_em_andamento?.[0]?.parcelas === 4);
+  const est = r.json?.amostra?.ajuste_no_repasse?.[0];
+  ok("deposito com estorno de outra venda vira 'ajuste no repasse'", r.json?.situacao?.ajuste_no_repasse?.resumos === 1, JSON.stringify(r.json?.situacao?.ajuste_no_repasse));
+  ok("identifica o ajuste: cancelamento de vendas, R$ 100", est?.ajustes?.[0]?.codigo === 18 && est?.ajustes?.[0]?.valor === 100, JSON.stringify(est?.ajustes));
+  ok("acha a venda estornada de outra data (NSU 111008)", est?.provavel_origem?.nsu === 111008, JSON.stringify(est?.provavel_origem));
+  ok("mostra o evento do estorno", est?.provavel_origem?.evento === "PARTIAL_CANCELLED" && est?.provavel_origem?.data_do_evento === "2026-08-13");
+  r = await chamar("rede_conciliar", { venda_inicio: "2026-07-01", venda_fim: "2026-07-31", explicar_divergencias: false });
+  ok("explicar_divergencias=false deixa como divergente", r.json?.situacao?.valor_divergente?.resumos === 1 && !r.json?.situacao?.ajuste_no_repasse?.resumos);
   r = await chamar("rede_conciliar", { venda_inicio: "2026-09-01", venda_fim: "2026-09-30", detalhar: true });
   ok("detalhar devolve a lista completa", r.json?.resumos_de_venda?.length === 5, String(r.json?.resumos_de_venda?.length));
 
@@ -234,12 +251,12 @@ try {
   invalidarTokens(); // o servidor esquece os tokens: o proximo GET volta 401
   r = await chamar("rede_tipos_de_ajuste");
   const depois = chamadas.filter((c) => c.rota === "/oauth/token").length;
-  ok("401 dispara renovacao e a consulta passa", !r.erro && r.json?.resposta?.length === 3);
+  ok("401 dispara renovacao e a consulta passa", !r.erro && r.json?.resposta?.length === 4);
   ok("houve nova chamada ao /oauth/token", depois > antes, `${antes} -> ${depois}`);
 
   console.log("\nrede_get (escape hatch)");
   r = await chamar("rede_get", { caminho: "/merchant-statement/v1/charges/adjustment-types" });
-  ok("GET livre funciona", !r.erro && r.json?.resposta?.length === 3);
+  ok("GET livre funciona", !r.erro && r.json?.resposta?.length === 4);
   r = await chamar("rede_get", { caminho: "/merchant-statement/v2/payments/summary", params: { startDate: "2026-10-01", endDate: "2026-10-30" } });
   ok("sem Merchant-Id o erro explica o header", r.erro && r.texto.includes("Merchant-Id"));
 

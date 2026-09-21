@@ -172,26 +172,27 @@ export function registrarVendas(server: McpServer): void {
       // producao. Por isso o total vem somado aqui, na frente da lista.
       const itens = ((resposta as { content?: { sales?: Record<string, unknown>[] } })?.content?.sales ?? []);
       const soma = (k: string) => Math.round(itens.reduce((t, x) => t + (Number(x[k]) || 0), 0) * 100) / 100;
-      const total = itens.length
-        ? {
-            valor_bruto: soma("amount"),
-            credito: soma("amountCredit"),
-            debito: soma("amountDebit"),
-            valor_liquido: soma("netAmount"),
-            desconto: soma("discountAmount"),
-            quantidade_de_vendas: soma("quantity"),
-          }
-        : null;
+      // Sem venda no periodo, o total e zero — dito com todas as letras. null deixava a leitura
+      // ambigua ("falhou?"), como os evals mostraram nos dois lados.
+      const total = {
+        valor_bruto: soma("amount"),
+        credito: soma("amountCredit"),
+        debito: soma("amountDebit"),
+        valor_liquido: soma("netAmount"),
+        desconto: soma("discountAmount"),
+        quantidade_de_vendas: soma("quantity"),
+      };
 
       return {
         pv: pv.nome,
         periodo: j,
         versao: usaV1 ? 1 : 2,
         total_do_periodo: total,
-        como_ler:
-          `A lista em resposta.content.sales tem ${itens.length} item(ns), um por ` +
-          `${a.agrupar_por ? String(a.agrupar_por).toLowerCase() : "dia com venda"}. ` +
-          `Use total_do_periodo para o total; nunca o primeiro item.`,
+        como_ler: itens.length
+          ? `A lista em resposta.content.sales tem ${itens.length} item(ns), um por ` +
+            `${a.agrupar_por ? String(a.agrupar_por).toLowerCase() : "dia com venda"}. ` +
+            `Use total_do_periodo para o total; nunca o primeiro item.`
+          : "Nenhuma venda no periodo: a consulta funcionou e o total e zero. Nao e erro de conexao.",
         resposta,
       };
     })

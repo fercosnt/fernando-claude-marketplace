@@ -12,6 +12,9 @@
 import { createServer } from "node:http";
 
 const PV = "13381369";
+/** "Hoje" da API simulada: parcelas vencidas ate aqui aparecem pagas, as demais agendadas. */
+const HOJE = "2026-09-30";
+const maisDias = (data, n) => new Date(Date.parse(`${data}T00:00:00Z`) + n * 864e5).toISOString().slice(0, 10);
 const CLIENT_ID = "id-de-teste";
 const CLIENT_SECRET = "secret-de-teste";
 const USUARIO = "usuario-de-teste";
@@ -64,6 +67,15 @@ const VENDAS = [
   venda(111005, "2026-09-28", 900004, 500.0, 487.5, "CREDIT", "NO_INSTALLMENTS"),
   // Julho, parcelada em 4x: so a primeira parcela cai na janela — nao pode virar "divergente".
   venda(111006, "2026-07-10", 900005, 1200.0, 1170.0, "CREDIT", "IN_INSTALLMENTS_NO_INTEREST", { installmentQuantity: 4 }),
+  // Julho, a vista, intacta — mas o deposito dela leva o estorno da venda abaixo (caso real de producao).
+  venda(111007, "2026-07-15", 900006, 1000.0, 975.0, "CREDIT", "NO_INSTALLMENTS"),
+  // Junho, estornada parcialmente em 13/08: e a origem do debito de R$ 100 no deposito da 111007.
+  venda(111008, "2026-06-20", 900007, 500.0, 487.5, "CREDIT", "NO_INSTALLMENTS", {
+    tracking: [
+      { amount: 500.0, date: "2026-06-20", status: "APPROVED" },
+      { amount: 400.0, date: "2026-08-13", status: "PARTIAL_CANCELLED" },
+    ],
+  }),
 ];
 
 /** RV 900003 paga a menos (debito descontado) e RV 899999 e de venda anterior ao periodo. */
@@ -73,13 +85,23 @@ const ORDENS = [
   { paymentId: "P20261002002", paymentDate: "2026-10-02", creditOrderNumber: 269010649, saleSummaryNumber: 900003, brandCode: 1, companyNumber: PV, amount: 900.0, discountAmount: 50.0, netAmount: 850.0, type: "CREDIT", typeCode: "CRE" },
   { paymentId: "P20260901001", paymentDate: "2026-09-01", creditOrderNumber: 269010640, saleSummaryNumber: 899999, brandCode: 1, companyNumber: PV, amount: 310.0, discountAmount: 10.0, netAmount: 300.0, type: "CREDIT", typeCode: "CRE" },
   { paymentId: "P20260810001", paymentDate: "2026-08-10", creditOrderNumber: 269010630, saleSummaryNumber: 900005, brandCode: 1, companyNumber: PV, amount: 300.0, discountAmount: 7.5, netAmount: 292.5, type: "CREDIT", typeCode: "CRE" },
+  // Deposito da 111007: previsto 975, pago 875 — os R$ 100 sao o estorno da 111008.
+  { paymentId: "P20260815001", paymentDate: "2026-08-15", creditOrderNumber: 269010631, saleSummaryNumber: 900006, brandCode: 1, companyNumber: PV, amount: 1000.0, discountAmount: 25.0, netAmount: 875.0, type: "CREDIT", typeCode: "CRE" },
 ];
 
 const PAGAMENTOS = [
   { paymentId: "P20260902001", paymentDate: "2026-09-02", bankCode: 237, bankBranchCode: 3757, accountNumber: 3697, brandCode: 2, companyNumber: PV, documentNumber: "42010762000380", companyName: "LOJA TESTE", tradeName: "LOJA TESTE LTDA", netAmount: 344.75, status: "PAID", statusCode: 2, type: "DEBIT", typeCode: "DEB" },
   { paymentId: "P20261002001", paymentDate: "2026-10-02", bankCode: 237, bankBranchCode: 3757, accountNumber: 3697, brandCode: 1, companyNumber: PV, documentNumber: "42010762000380", companyName: "LOJA TESTE", tradeName: "LOJA TESTE LTDA", netAmount: 975.0, status: "PAID", statusCode: 2, type: "CREDIT", typeCode: "CRE" },
   { paymentId: "P20261002002", paymentDate: "2026-10-02", bankCode: 237, bankBranchCode: 3757, accountNumber: 3697, brandCode: 1, companyNumber: PV, documentNumber: "42010762000380", companyName: "LOJA TESTE", tradeName: "LOJA TESTE LTDA", netAmount: 850.0, status: "SUSPENDED", statusCode: 8, type: "CREDIT", typeCode: "CRE" },
+  // Deposito da venda 111007 (julho), com o estorno da 111008 descontado.
+  { paymentId: "P20260815001", paymentDate: "2026-08-15", bankCode: 237, bankBranchCode: 3757, accountNumber: 3697, brandCode: 1, companyNumber: PV, documentNumber: "42010762000380", companyName: "LOJA TESTE", tradeName: "LOJA TESTE LTDA", netAmount: 875.0, status: "PAID", statusCode: 2, type: "CREDIT", typeCode: "CRE" },
 ];
+
+/** Debitos descontados de cada deposito — usados pelo "esperado" e pela rota de charges. */
+const DEBITOS = {
+  P20261002002: [{ adjustmentTypeCode: 23, debitAmount: 27.5, debitCompensatedAmount: 27.5, debitToBeCompensatedAmount: 0, quantity: 1 }],
+  P20260815001: [{ adjustmentTypeCode: 18, debitAmount: 100.0, debitCompensatedAmount: 100.0, debitToBeCompensatedAmount: 0, quantity: 1 }],
+};
 
 // ---------------------------------------------------------------- estado do servidor
 const tokens = new Map(); // access_token -> { expira, refresh }
@@ -240,7 +262,11 @@ export function criarMock(porta = 0) {
       const qtd = v.installmentQuantity;
       return json(res, 200, {
         content: {
-          installments: Array.from({ length: qtd }, (_, i) => ({
+          installments: Array.from({ length: qtd }, (_, i) => {
+            // Credito cai 30 dias apos a venda, uma parcela por mes.
+            const vencimento = maisDias(v.saleDate, 30 * (i + 1));
+            const paga = vencimento <= HOJE;
+            return {
             installmentNumber: i + 1, installmentQuantity: qtd,
             amount: Math.round((v.amount / qtd) * 100) / 100,
             saleAmount: v.amount,
@@ -248,9 +274,9 @@ export function criarMock(porta = 0) {
             mdrFee: v.mdrFee, flexAmount: 0, flexFee: 0, flex: false, feeTotal: v.feeTotal,
             brand: v.brandCode === 1 ? "MASTERCARD" : "VISA", brandCode: v.brandCode,
             cardNumber: v.cardNumber, authorizationCode: "0116223",
-            expirationDate: `2026-${String(9 + i + 1).padStart(2, "0")}-30`,
-            status: i === 0 ? "PAID" : "SCHEDULLED",
-            paymentId: i === 0 ? "P20261002002" : "",
+            expirationDate: vencimento,
+            status: paga ? "PAID" : "SCHEDULLED",
+            paymentId: paga ? `P${vencimento.replace(/-/g, "")}9${String(i + 1).padStart(2, "0")}` : "",
             amountInfo: {
               netAmount: Math.round((v.netAmount / qtd) * 100) / 100,
               originalNetAmount: Math.round((v.netAmount / qtd) * 100) / 100,
@@ -260,7 +286,8 @@ export function criarMock(porta = 0) {
               originalDiscountAmount: Math.round((v.discountAmount / qtd) * 100) / 100,
               valueChange: false,
             },
-          })),
+          };
+          }),
         },
       });
     }
@@ -370,7 +397,9 @@ export function criarMock(porta = 0) {
     if (m) {
       const pg = PAGAMENTOS.find((x) => x.paymentId === decodeURIComponent(m[2]));
       if (!pg) return res.writeHead(204).end();
-      return json(res, 200, { content: { expectedAmount: Math.round((pg.netAmount + 50) * 100) / 100 } });
+      // Como na vida real: esperado = pago + o que foi descontado do deposito.
+      const descontado = (DEBITOS[pg.paymentId] ?? []).reduce((t, d) => t + d.debitAmount, 0);
+      return json(res, 200, { content: { expectedAmount: Math.round((pg.netAmount + descontado) * 100) / 100 } });
     }
 
     if (p === "/merchant-statement/v1/payments/credit-orders") {
@@ -384,8 +413,8 @@ export function criarMock(porta = 0) {
     if (m) {
       if (exigeHeader()) return;
       const pid = decodeURIComponent(m[1]);
-      if (pid !== "P20261002002") return res.writeHead(204).end();
-      return json(res, 200, { charges: [{ adjustmentTypeCode: 23, debitAmount: 27.5, debitCompensatedAmount: 27.5, debitToBeCompensatedAmount: 0, quantity: 1 }] });
+      if (!DEBITOS[pid]) return res.writeHead(204).end();
+      return json(res, 200, { charges: DEBITOS[pid] });
     }
 
     m = p.match(/^\/merchant-statement\/v1\/payments\/cashbacks\/(.+)$/);
@@ -457,6 +486,7 @@ export function criarMock(porta = 0) {
     if (p === "/merchant-statement/v1/charges/adjustment-types") {
       return json(res, 200, [
         { code: 1, description: "Pacote ERede" },
+        { code: 18, description: "cancelamento de vendas" },
         { code: 23, description: "Aluguel de equipamento" },
         { code: 211, description: "Cashback" },
       ]);

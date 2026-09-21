@@ -95,7 +95,8 @@ desta venda" — existe "o pagamento que contem a parcela desta venda".
     `parentCompanyNumber` e responde 422 sem ele. As tools mandam os dois. Se usar `rede_get` na v2,
     mande `parentCompanyNumber`.
 12. **`Partner not allowed` = PV nao liberado**, seja 403 ("for this company number") ou 401
-    ("for this merchant", codigo 1001). O login esta certo; falta a solicitacao de acesso e a
+    ("for this merchant", codigo 1001). Nao ensine "401 = credencial errada": na Rede, credencial
+    errada falha **no login** (`Bad credentials`); 401 em consulta com login ok e permissao. O login esta certo; falta a solicitacao de acesso e a
     aprovacao do lojista. Ver `docs/producao.md`.
 13. **Divergencia na conciliacao costuma ser ajuste de OUTRA venda.** A Rede desconta estornos e
     cancelamentos do proximo deposito, seja qual for a venda que ele paga. Caso real: RV com venda

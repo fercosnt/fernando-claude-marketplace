@@ -114,6 +114,9 @@ Trocar duas linhas no `~/.rede-mcp.json`:
 }
 ```
 
+Se o arquivo tinha `usuario` e `senha` do sandbox, **apague os dois**: com eles o plugin usa o grant
+`password`, e com o par de teste o login de produção falha. Sem eles vale o `client_credentials`.
+
 O plugin troca a base sozinho (`https://api.userede.com.br/redelabs`) e guarda o token de produção
 **separado** do de sandbox, então dá para alternar sem embaralhar sessão.
 

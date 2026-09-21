@@ -18,7 +18,7 @@ import { registrarRecebiveis } from "./tools-recebiveis.js";
 import { registrarDebitos } from "./tools-debitos.js";
 import { registrarConciliacao } from "./tools-conciliacao.js";
 
-const VERSAO = "0.1.2";
+const VERSAO = "0.1.3";
 
 const server = new McpServer(
   { name: "rede", version: VERSAO },
@@ -63,6 +63,13 @@ server.registerTool(
       ...(cfg.baseNsu ? { base_vendas_por_nsu: cfg.baseNsu } : {}),
       grant: cfg.grant,
       ...(cfg.usuario ? { usuario: cfg.usuario } : {}),
+      ...(cfg.ambiente === "producao" && cfg.grant === "password"
+        ? {
+            atencao:
+              "Producao com grant password (usuario e senha preenchidos). Se esse par veio do sandbox, o login " +
+              "vai falhar: remova usuario e senha do arquivo para usar client_credentials.",
+          }
+        : {}),
       client_id_final: `...${cfg.clientId.slice(-6)}`,
       pvs: cfg.pvs.map((p) => `${p.nome} (${p.numero})`),
       conexao: t

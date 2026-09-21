@@ -198,7 +198,13 @@ function explicarErroToken(
   if (err === "unsupported_grant_type")
     return `A Rede nao aceitou o grant "${grant}". Este plugin usa grant_type=password, como manda a doc oficial.`;
   if (err === "invalid_grant")
-    return `Usuario ou senha recusados pela Rede (invalid_grant): ${desc}. Confira "usuario" e "senha" no ~/.rede-mcp.json.`;
+    return (
+      `Usuario ou senha recusados pela Rede (invalid_grant): ${desc}. ` +
+      (cfg.ambiente === "producao"
+        ? `Se "usuario" e "senha" no ~/.rede-mcp.json sao do sandbox, apague os dois: sem eles o plugin usa ` +
+          `client_credentials, que e o fluxo de producao.`
+        : `Confira "usuario" e "senha" no ~/.rede-mcp.json.`)
+    );
   return `Servidor de tokens da Rede respondeu ${status}: ${err} ${desc}`.trim();
 }
 

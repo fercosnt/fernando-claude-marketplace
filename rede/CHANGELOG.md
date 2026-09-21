@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.3 — 2026-09-21
+
+- **`rede_conciliar` explica as divergencias sozinha.** Para cada resumo divergente, consulta os
+  debitos do deposito; se fecham a diferenca, o resumo vira **`ajuste_no_repasse`** com o ajuste
+  nomeado (`ajustes`). Para estorno, procura nos 6 meses anteriores a venda estornada e devolve
+  `provavel_origem` (NSU, data, evento). O que continua em `valor_divergente` e o que de fato nao tem
+  explicacao. Novo parametro `explicar_divergencias` (padrao true). Motivado pelo caso real do
+  RV 21230662, que precisou de investigacao manual: estorno de outra venda descontado do deposito.
+- Mock ganhou o cenario de estorno de outra venda; o antigo "divergente" do aluguel de R$ 27,50
+  passa a sair explicado.
+- **Evals rodados pela primeira vez** (8 casos, com skill x sem skill, contra a API simulada):
+  100% x 91%. Ver `evals/benchmark-iteracao-1.md`. Os avaliadores acharam dois defeitos na skill,
+  corrigidos aqui:
+  - a origem de um estorno era dita como fato; e deducao por data (o debito nao traz o NSU) e agora
+    a skill manda dizer assim;
+  - ao ir para producao, a skill mandava trocar so ambiente, credenciais e PV — os `usuario`/`senha`
+    do sandbox ficavam no arquivo e o login de producao cairia no grant password com o par de teste.
+    A skill manda remover os dois, e `rede_status` e o erro `invalid_grant` passam a avisar.
+- `rede_vendas_resumo` sem venda no periodo devolve total zero em vez de `null`.
+- Novo harness de evals (`evals/harness/rede.mjs`), sem dependencias, contra `test/mock.mjs`.
+
 ## 0.1.2 — 2026-09-21
 
 - **`rede_parcelas_da_venda` respondia 415 em producao.** A rota `/v2/payments/installments/{pv}`

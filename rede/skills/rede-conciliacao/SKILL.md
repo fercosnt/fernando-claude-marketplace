@@ -54,7 +54,8 @@ frente. `rede_conciliar` ja faz isso por padrao (fim das vendas + 40 dias); so m
 | `parcelado_em_andamento` | **normal**: venda parcelada com parte das parcelas paga; as outras vencem uma por mes, depois da janela. O pago e multiplo exato da parcela | `parcelas_pagas` de `parcelas` e `falta_receber` ja vem calculados. Nao trate como problema |
 | `sem_pagamento` | venda recente que ainda nao venceu, ou parcela bloqueada/suspensa | `rede_parcelas_da_venda` (data + NSU) mostra vencimento e status de cada parcela |
 | `pago_sem_venda` | a venda e anterior ao periodo consultado | estique `venda_inicio` para tras e rode de novo |
-| `valor_divergente` | debito descontado do repasse, cancelamento parcial ou chargeback | `rede_debitos_do_pagamento` no `paymentId`; para a venda, confira o `statusType` |
+| `ajuste_no_repasse` | diferenca **ja explicada** por um debito do deposito. `ajustes` diz qual (aluguel, estorno...). Se for estorno, `provavel_origem` aponta a venda estornada — que costuma ser de **outra data e outro resumo** | conte a historia. O **valor** do debito e fato; a **venda de origem** e deducao — ver abaixo |
+| `valor_divergente` | o que sobrou **sem explicacao** nos debitos do deposito — esse sim merece olhar humano | `ajustes_no_pagamento` (se vier) mostra debitos que existem mas nao fecham a conta; confira `statusType` da venda e chargeback |
 
 `detalhar: true` devolve a lista completa de resumos de venda em vez da amostra.
 
@@ -62,6 +63,23 @@ frente. `rede_conciliar` ja faz isso por padrao (fim das vendas + 40 dias); so m
 (o grupo `pago_sem_venda`). Numa clinica com muito parcelado ele passa facilmente do valor vendido —
 no primeiro teste real, agosto teve R$ 121 mil vendidos e R$ 265 mil pagos na janela. Nao compare
 os dois totais diretamente; compare grupo a grupo.
+
+### Como `rede_conciliar` explica sozinha
+
+Para cada resumo divergente, ela consulta os debitos do deposito. Se o total (ou um debito so)
+fecha a diferenca com tolerancia de 5 centavos, o resumo vira `ajuste_no_repasse`. Quando o ajuste e
+estorno (codigo 18, "cancelamento de vendas"), ela procura nos 6 meses anteriores a venda com evento
+`CANCELLED`/`PARTIAL_CANCELLED` na semana do deposito. Um candidato vira `provavel_origem`; varios
+viram `candidatos_de_origem`. Parcelado de mais de 6x pode escapar dessa busca.
+
+Caso real que originou o recurso: deposito R$ 526,32 menor numa venda a vista intacta de R$ 7.350.
+Era o estorno de 90% de uma venda 10x de outra data, cuja 1a parcela ja tinha sido paga cheia.
+
+**Como dizer a origem:** o debito da Rede **nao traz** o NSU da venda estornada; a ligacao e feita
+por data de evento. Entao diga "o desconto e de um estorno; a venda que bate e a de 20/06 (NSU
+111008), estornada em 13/08, dois dias antes do deposito — foi a unica encontrada no periodo".
+Apresentar a origem como certeza e errado, mesmo quando ha um candidato so: pode haver estorno de
+venda mais antiga que 6 meses, fora da busca.
 
 ## "Por que caiu menos do que eu esperava?"
 

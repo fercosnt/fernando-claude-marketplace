@@ -53,13 +53,18 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
    R$ 58,48; a diferença (R$ 526,34, arredondada a R$ 526,32) foi recuperada no depósito seguinte,
    ajuste código 18 "cancelamento de vendas", aviso 326244171056281. As 9 parcelas restantes já
    estão reduzidas para R$ 58,48.
-7. **Melhoria candidata na conciliação:** para cada "valor divergente", consultar os débitos do
-   pagamento e, quando eles explicarem a diferença, reclassificar como ajuste no repasse — o caso
-   acima teria saído explicado sozinho.
+7. ~~Conciliação explicar divergência sozinha~~ — **feito na v0.1.3.** Cada resumo divergente tem os
+   débitos do depósito consultados; se fecham a conta, vira `ajuste_no_repasse` com o ajuste nomeado
+   e, para estorno, a venda de origem. Rodado de novo em produção: o RV 21230662 saiu explicado sem
+   ajuda (estorno da NSU 185587562) e agosto ficou com **zero** divergências nas duas unidades.
 
 ### Do plugin em si
 
-4. **Rodar os 8 evals** de `evals/evals.json` (nunca foram executados).
+4. ~~Rodar os 8 evals~~ — **iteração 1 em 2026-09-21: 100% com skill × 91% sem.** Só 2 evals
+   separaram as configurações, porque a inteligência está nas tools. A crítica dos avaliadores achou
+   3 defeitos na skill, já corrigidos na v0.1.3. Ver [evals/benchmark-iteracao-1.md](evals/benchmark-iteracao-1.md).
+   **Próximo:** acertar as incoerências do mock (listadas no benchmark), reforçar os evals que não
+   discriminam e rodar a iteração 2.
 5. ~~Publicar no marketplace~~ — **publicado em 2026-09-21** (v0.1.1), depois da validação em
    produção, e instalado no Claude Code. Este diretório do marketplace é a fonte; o
    `skill-prompt/plugins/rede` é só um symlink.
@@ -70,7 +75,7 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
 
 ### Link de Pagamento
 
-8. **Montar o workflow n8n** — é o destino escolhido. O que importa para montar (credencial OAuth2
+8. **Montar o workflow n8n — próxima sessão** (combinado em 2026-09-21). É o destino escolhido. O que importa para montar (credencial OAuth2
    do n8n, a armadilha da data `MM/DD/YYYY`, polling sem webhook) está em
    [docs/payment-link.md](docs/payment-link.md).
 9. **Credencial separada** de um projeto do pacote *Payment Link* em produção.

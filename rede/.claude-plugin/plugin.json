@@ -1,6 +1,6 @@
 {
   "name": "rede",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Acesso as APIs de Gestao de Vendas da Rede (maquininha de cartao) — 29 tools MCP de leitura: vendas detalhadas e sumarizadas, parcelas, pagamentos, recebiveis, bloqueios, debitos e cashbacks, mais conciliacao venda-pagamento pela cadeia resumo de venda -> ordem de credito -> pagamento. Traduz os codigos da Rede (bandeira, modalidade, status) e valida a janela de datas de cada rota antes de chamar. OAuth local com refresh automatico.",
   "author": { "name": "Fernando Costa", "email": "fernandinho.costa.neto@gmail.com" },
   "homepage": "https://github.com/fercosnt/fernando-claude-marketplace/tree/main/rede",
