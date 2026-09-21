@@ -5,9 +5,9 @@ contexto. Detalhe técnico fica nos docs apontados; aqui é o estado.
 
 ## Em uma linha
 
-O plugin de **conciliação** está **em produção e funcionando** nas duas unidades da clínica
-(Matriz e Hirata) desde 2026-09-21: vendas, resumos, pagamentos, recebíveis e a conciliação
-venda ↔ pagamento, todos com dado real. A API de **Link de
+O plugin de **conciliação** está **em produção, publicado e conferido contra o portal da Rede** nas
+duas unidades da clínica (Matriz e Hirata) desde 2026-09-21: vendas, resumos, pagamentos,
+recebíveis e a conciliação venda ↔ pagamento, todos com dado real. A API de **Link de
 Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar workflow n8n.
 
 ## Pronto e validado
@@ -43,11 +43,19 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
 4. ~~Primeira consulta real~~ — **feita.** Setembro (1 a 20): Matriz R$ 95.750,00 bruto em 11 vendas,
    Hirata R$ 20.000,00 em 3. O resumo somado bate centavo a centavo com a lista detalhada.
    `Insufficient access level` sumiu com a liberação.
-5. **Conferir um número contra o extrato do portal** — ainda não feito. É o que falta para confiar em
-   relatório automático sem olhar.
-6. **Investigar o RV 21230662** (Matriz, agosto): único "valor divergente" que sobrou — previsto
-   R$ 7.221,37, pago R$ 6.695,05, à vista. Candidato a débito descontado; abrir com
-   `rede_debitos_do_pagamento`.
+5. ~~Conferir um número contra o extrato do portal~~ — **conferido pelo Fernando em 2026-09-21.**
+   Setembro (1 a 20) bate em valor e quantidade nas duas unidades: Matriz R$ 95.750,00 em 11 vendas,
+   Hirata R$ 20.000,00 em 3. Os relatórios do plugin podem ser usados sem conferência manual.
+6. ~~Investigar o RV 21230662~~ — **explicado em 2026-09-21, não é erro.** A venda do RV (R$ 7.350,
+   Visa, 03/08) está intacta. O depósito de 03/09 veio R$ 526,32 menor porque a Rede descontou dele
+   um **estorno parcial de outra venda**: NSU 185587562, R$ 6.000 em 10x no Mastercard (24/07),
+   estornada em 90% em 01/09. A 1ª parcela já tinha sido paga cheia (R$ 584,82) e passou a valer
+   R$ 58,48; a diferença (R$ 526,34, arredondada a R$ 526,32) foi recuperada no depósito seguinte,
+   ajuste código 18 "cancelamento de vendas", aviso 326244171056281. As 9 parcelas restantes já
+   estão reduzidas para R$ 58,48.
+7. **Melhoria candidata na conciliação:** para cada "valor divergente", consultar os débitos do
+   pagamento e, quando eles explicarem a diferença, reclassificar como ajuste no repasse — o caso
+   acima teria saído explicado sozinho.
 
 ### Do plugin em si
 

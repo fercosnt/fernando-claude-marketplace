@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 — 2026-09-21
+
+- **`rede_parcelas_da_venda` respondia 415 em producao.** A rota `/v2/payments/installments/{pv}`
+  exige `Content-Type: application/json` mesmo sendo GET, sem corpo. O client agora envia o
+  cabecalho em toda chamada. Achado ao investigar a primeira divergencia real da conciliacao.
+
 ## 0.1.1 — 2026-09-21, primeiro contato com producao
 
 Credenciais de producao recebidas e testadas nos PVs reais. O login funciona (escopo

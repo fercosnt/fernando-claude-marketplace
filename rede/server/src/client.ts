@@ -185,6 +185,9 @@ async function uma(cfg: Config, c: Chamada): Promise<Resposta> {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
+          // Mesmo sem corpo: /v2/payments/installments/{pv} responde 415 sem este cabecalho em
+          // producao (confirmado em 2026-09-21). Nas demais rotas ele e inofensivo.
+          "Content-Type": "application/json",
           ...(c.merchantIdHeader ? { "Merchant-Id": c.merchantIdHeader } : {}),
         },
         signal: AbortSignal.timeout(TIMEOUT_MS),

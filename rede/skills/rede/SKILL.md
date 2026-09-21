@@ -97,7 +97,12 @@ desta venda" — existe "o pagamento que contem a parcela desta venda".
 12. **`Partner not allowed` = PV nao liberado**, seja 403 ("for this company number") ou 401
     ("for this merchant", codigo 1001). O login esta certo; falta a solicitacao de acesso e a
     aprovacao do lojista. Ver `docs/producao.md`.
-13. **A v1 de vendas devolve campos fora do swagger**, como `ard` (numero de referencia do
+13. **Divergencia na conciliacao costuma ser ajuste de OUTRA venda.** A Rede desconta estornos e
+    cancelamentos do proximo deposito, seja qual for a venda que ele paga. Caso real: RV com venda
+    de R$ 7.350 intacta apareceu com R$ 526,32 a menos porque o deposito levou o estorno parcial
+    de uma venda 10x de outra data. Antes de dizer que "a venda X veio errada", abra
+    `rede_debitos_do_pagamento` e procure o estorno com `rede_vendas` (rastreio `PARTIAL_CANCELLED`).
+14. **A v1 de vendas devolve campos fora do swagger**, como `ard` (numero de referencia do
     adquirente). Nao invente significado para campo que a doc nao descreve; mostre o valor como veio.
 
 ## Como responder
