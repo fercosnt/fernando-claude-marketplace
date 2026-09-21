@@ -52,8 +52,9 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
 ### Do plugin em si
 
 4. **Rodar os 8 evals** de `evals/evals.json` (nunca foram executados).
-5. **Publicar no marketplace** — decisão tomada de só publicar depois de validar em conta real.
-   Hoje o plugin vive só em `plugins/rede/`.
+5. ~~Publicar no marketplace~~ — **publicado em 2026-09-21** (v0.1.1), depois da validação em
+   produção, e instalado no Claude Code. Este diretório do marketplace é a fonte; o
+   `skill-prompt/plugins/rede` é só um symlink.
 6. ~~Conciliação em dados reais~~ — **validada em 2026-09-21** com as vendas de agosto: 7 resumos
    conciliados na Matriz, 2 na Hirata. O teste revelou que venda parcelada com parte das parcelas
    paga caía como "divergente"; corrigido com o grupo `parcelado_em_andamento` (v0.1.1).
