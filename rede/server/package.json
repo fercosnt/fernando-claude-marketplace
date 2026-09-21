@@ -1,0 +1,20 @@
+{
+  "name": "rede-mcp-server",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "description": "Fonte do servidor MCP do plugin rede. O artefato distribuido e ../servers/rede-mcp.js (bundle sem dependencias).",
+  "scripts": {
+    "build": "tsc --noEmit && esbuild src/index.ts --bundle --platform=node --target=node18 --format=esm --outfile=../servers/rede-mcp.js --banner:js=\"#!/usr/bin/env node\"",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0"
+  }
+}

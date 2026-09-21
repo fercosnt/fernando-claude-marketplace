@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "rede": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/servers/rede-mcp.js"]
+    }
+  }
+}

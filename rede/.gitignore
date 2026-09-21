@@ -1,0 +1,4 @@
+server/node_modules/
+test/node_modules/
+.rede-mcp.json
+.DS_Store

@@ -1,0 +1,11 @@
+{
+  "ambiente": "sandbox",
+  "client_id": "COLE_AQUI — do projeto no pacote APIs de Conciliacao",
+  "client_secret": "COLE_AQUI",
+  "pvs": [
+    { "nome": "Sandbox A", "numero": "13381369" },
+    { "nome": "Sandbox B", "numero": "22523510" }
+  ],
+  "_comentario_usuario_senha": "Opcionais. Sem eles o plugin usa grant_type=client_credentials, que e o que o sandbox aceita. Preencha 'usuario' e 'senha' apenas se o time de Integracoes da Rede tiver enviado esse par — ai o grant vira password automaticamente.",
+  "_comentario_base_nsu": "Opcional. Preencha so se rede_vendas_por_nsu der 404."
+}
