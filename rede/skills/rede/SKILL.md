@@ -35,8 +35,9 @@ Quando o dinheiro cai:
 - **Debito** → D+1 (proximo dia util apos a venda).
 - **Credito a vista** → D+30, tambem empurrado para o proximo dia util: venda de sabado 12/09 tem
   D+30 no feriado de 12/10, e o credito cai em 13/10.
-- **Credito parcelado** → 30, 60, 90 dias... uma parcela por mes, inclusive no parcelado com juros
-  (quem financia e o emissor; o lojista recebe como se fosse a vista em 30 dias).
+- **Credito parcelado** → uma parcela por mes (30, 60, 90 dias...), cada uma no seu dia util. Nao
+  suponha que o parcelado cai inteiro em 30 dias: isso so acontece com antecipacao contratada, e a
+  clinica nao tem antecipacao. Na duvida, `rede_parcelas_da_venda` mostra a data de cada parcela.
 
 **Consequencia pratica:** venda e pagamento quase nunca estao no mesmo periodo. "Vendi R$ 10 mil em
 setembro" e "recebi R$ 10 mil em setembro" sao perguntas diferentes e respostas diferentes. Se a

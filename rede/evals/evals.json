@@ -1,6 +1,6 @@
 {
   "skill_name": "rede",
-  "notas": "Rodam contra a API simulada (test/mock.mjs) pelo CLI evals/harness/rede.mjs. Clinica ficticia, PV 13381369, hoje = 2026-09-30 (quarta). Com skill = le skills/rede, rede-conciliacao e rede-setup; sem skill = so as 29 tools e suas descricoes. O eval 9 usa tambem evals/harness/conta-azul.mjs (API simulada do plugin conta-azul, empresa Beauty Smile, mesmo hoje) e, com skill, le tambem conta-azul/skills/conta-azul. Iteracao 1 em 2026-09-21 (v0.1.3); iteracao 2 em 2026-09-21, depois do mock coerente: evals 2, 4 e 9 novos, 3, 5, 6, 7 e 8 reforcados, 1 mantido. Depois da iteracao 2: o list do harness passou a mostrar as instructions do servidor MCP (como em producao) e os gabaritos 6, 7 e 8 foram corrigidos pela critica; as assercoes ficaram como foram avaliadas.",
+  "notas": "Rodam contra a API simulada (test/mock.mjs) pelo CLI evals/harness/rede.mjs. Clinica ficticia, PV 13381369, hoje = 2026-09-30 (quarta). Com skill = le skills/rede, rede-conciliacao e rede-setup; sem skill = so as 29 tools e suas descricoes. O eval 9 usa tambem evals/harness/conta-azul.mjs (API simulada do plugin conta-azul, empresa Beauty Smile, mesmo hoje) e, com skill, le tambem conta-azul/skills/conta-azul. Iteracao 1 em 2026-09-21 (v0.1.3); iteracao 2 em 2026-09-21, depois do mock coerente: evals 2, 4 e 9 novos, 3, 5, 6, 7 e 8 reforcados, 1 mantido. Depois da iteracao 2: o list do harness passou a mostrar as instructions do servidor MCP (como em producao) e os gabaritos 6, 7 e 8 foram corrigidos pela critica; as assercoes ficaram como foram avaliadas. Depois da 0.1.5: o debito de estorno passou a liquido (R$ 97,50; evals 3 e 5 atualizados) e o eval 8 roda com REDE_CENARIO=payment-link, que reproduz o 401 de projeto do pacote errado.",
   "evals": [
     {
       "id": 1,
@@ -31,13 +31,13 @@
     {
       "id": 3,
       "name": "deposito-menor-estorno-de-outra-venda",
-      "prompt": "o deposito da Rede de 14/08 veio R$ 875,00 e eu esperava R$ 975,00. o que aconteceu?",
-      "expected_output": "Acha o pagamento de 14/08 (P20260814001, esperado R$ 975, pago R$ 875). A diferenca e um debito de R$ 100 de 'cancelamento de vendas' (ajuste 18). A venda paga por esse deposito (R$ 1.000 em 15/07, NSU 111007) esta intacta: o desconto e o estorno parcial de OUTRA venda — NSU 111008, R$ 500 em 20/06, estornada em R$ 100 em 13/08. A ligacao entre o debito e a venda de origem e deducao: o debito nao traz o NSU; a 111008 e a unica venda com estorno na semana do deposito.",
+      "prompt": "o deposito da Rede de 14/08 veio R$ 877,50 e eu esperava R$ 975,00. o que aconteceu?",
+      "expected_output": "Acha o pagamento de 14/08 (P20260814001, esperado R$ 975, pago R$ 877,50). A diferenca e um debito de R$ 97,50 de cancelamento de vendas (ajuste 18). A venda paga por esse deposito (R$ 1.000 em 15/07, NSU 111007) esta intacta: o desconto e o estorno parcial de R$ 100 de OUTRA venda — NSU 111008, R$ 500 em 20/06, estornada em 13/08 —, descontado liquido (a Rede devolve a taxa proporcional de 2,5%). A ligacao entre o debito e a venda de origem e deducao: o debito nao traz o NSU; a 111008 e a unica venda com estorno na semana do deposito.",
       "assertions": [
-        "Confirma a diferenca de R$ 100 entre esperado e pago no deposito de 14/08",
-        "Identifica o debito de R$ 100 como cancelamento de vendas / estorno",
+        "Confirma a diferenca de R$ 97,50 entre esperado e pago no deposito de 14/08",
+        "Identifica o debito de R$ 97,50 como cancelamento de vendas / estorno",
         "Explica que a venda paga por esse deposito (R$ 1.000 de 15/07) nao foi cancelada — o desconto e de outra venda",
-        "Identifica a venda estornada: NSU 111008, de 20/06, estorno parcial em 13/08",
+        "Identifica a venda estornada: NSU 111008, de 20/06, estorno parcial de R$ 100 em 13/08",
         "Deixa claro que a ligacao entre o debito e a venda de origem e deducao (pela data do estorno), nao um dado que a Rede informa"
       ]
     },
@@ -57,12 +57,12 @@
       "id": 5,
       "name": "conciliacao-com-parcelado-e-estorno",
       "prompt": "concilia as vendas de julho com os depositos",
-      "expected_output": "rede_conciliar de 01 a 31/07, com janela de pagamento ate 09/09 — justificada: credito cai em D+30 e o parcelado uma parcela por mes. Dois resumos com venda: o 4x de R$ 1.200 com 2 de 4 parcelas pagas (10/08 e 08/09) e R$ 585,00 a receber (08/10 e 09/11) — normal; e a venda a vista de R$ 1.000 paga em 14/08 com R$ 100 a menos, explicados pelo estorno de outra venda (NSU 111008, deducao). Os 4 'pagos sem venda' sao depositos de vendas de fora de julho (junho, agosto e setembro). Nenhuma divergencia real: nada para a pessoa fazer.",
+      "expected_output": "rede_conciliar de 01 a 31/07, com janela de pagamento ate 09/09 — justificada: credito cai em D+30 e o parcelado uma parcela por mes. Dois resumos com venda: o 4x de R$ 1.200 com 2 de 4 parcelas pagas (10/08 e 08/09) e R$ 585,00 a receber (08/10 e 09/11) — normal; e a venda a vista de R$ 1.000 paga em 14/08 com R$ 97,50 a menos, explicados pelo estorno de R$ 100 de outra venda (NSU 111008, deducao), descontado liquido. Os 4 'pagos sem venda' sao depositos de vendas de fora de julho (junho, agosto e setembro). Nenhuma divergencia real: nada para a pessoa fazer.",
       "assertions": [
         "Usa rede_conciliar em vez de cruzar vendas e pagamentos a mao",
         "Justifica a janela de pagamento alem do fim de julho (credito em D+30, parcelas mensais), e nao so a usa",
         "Explica o parcelado 4x como em andamento/normal: 2 de 4 parcelas pagas, R$ 585,00 ainda a receber",
-        "Explica os R$ 100 a menos como estorno de outra venda (NSU 111008), nao como erro da Rede",
+        "Explica os R$ 97,50 a menos como estorno de outra venda (NSU 111008), nao como erro da Rede",
         "Explica os pagamentos sem venda no periodo como depositos de vendas de fora de julho, nao como divergencia",
         "Nao pede acao a pessoa (ligar para a Rede, contestar, conferir a mao) sem haver divergencia real"
       ]
@@ -96,13 +96,15 @@
       "id": 8,
       "name": "erro-401-nao-e-credencial",
       "prompt": "a consulta de vendas da rede ta dando 401 unauthorized. vou gerar um client secret novo no portal, resolve?",
-      "expected_output": "Provavelmente nao resolve. Na Rede, credencial errada falha no LOGIN (Bad credentials); erro numa consulta com o login funcionando e permissao ou pacote. Em producao, PV nao liberado da 403 Partner not allowed nas vendas (401 codigo 1001 nos recebiveis v3, 401 Insufficient access level no resumo de pagamentos); 401 em TODA rota, inclusive vendas, aponta para projeto do pacote errado (token com escopo payment-link). Rodar rede_conectar no ambiente em que o erro aconteceu para ver login e escopo, e rede_status para a config. Credencial de producao nao sai do portal: um secret novo de Meus Projetos seria de sandbox.",
+      "expected_output": "Nao resolve. Reproduzindo (REDE_CENARIO=payment-link): o login funciona, mas rede_conectar mostra o token com escopo payment-link e toda rota de extrato da 401 — o projeto e do pacote Payment Link, nao do APIs de Conciliacao. Um secret novo do mesmo projeto sai com o mesmo escopo. Na Rede, credencial errada falha no LOGIN (Bad credentials); aqui o login passa. O caminho e um projeto do pacote APIs de Conciliacao (no sandbox, em Meus Projetos; em producao, a credencial vem da Rede por e-mail) e trocar client_id e client_secret no arquivo, pelo editor, sem colar no chat. Nao e token vencido: o plugin renova sozinho.",
       "assertions": [
-        "Nao recomenda gerar um client_secret novo como solucao para o 401 nem associa o 401 a credencial errada",
-        "Distingue credencial invalida (falha no login, 'Bad credentials') de 401 numa consulta com o login funcionando",
-        "Aponta as causas provaveis do 401 na Rede: PV nao liberado (solicitacao de acesso + aprovacao do lojista) e/ou projeto do pacote errado (escopo payment-link)",
-        "Sugere rede_conectar ou rede_status para isolar a causa"
-      ]
+        "Nao recomenda gerar um client_secret novo do mesmo projeto como solucao para o 401",
+        "Identifica pelo escopo do token (payment-link) que o projeto e do pacote errado",
+        "Distingue credencial invalida (falha no login, Bad credentials) do 401 com o login funcionando",
+        "Orienta usar um projeto do pacote APIs de Conciliacao e trocar client_id e client_secret no arquivo, sem colar no chat",
+        "Nao atribui o 401 a token vencido ou sessao expirada"
+      ],
+      "cenario": "payment-link"
     },
     {
       "id": 9,

@@ -22099,9 +22099,9 @@ function explicarStatus(status, caminho, msg, pv) {
     case 400:
       return `${base} \u2014 requisicao invalida: ${msg}. Quase sempre e um parametro obrigatorio faltando (nas rotas v2/v3 o PV vai no header Merchant-Id) ou data fora de YYYY-MM-DD.`;
     case 401:
-      return `${base} \u2014 nao autorizado: ${msg}. O token foi renovado e ainda assim recusou. Duas causas, nesta ordem: (1) o projeto no Portal da Rede nao e do pacote "APIs de Conciliacao" \u2014 um projeto de Payment Link autentica normalmente, mas o token sai com escopo "payment-link" e TODA rota de extrato responde 401; rode rede_conectar para ver o escopo do token; (2) o usuario nao tem permissao de extrato para o PV${pv ? ` ${pv}` : ""}, liberada pela Rede na gestao de acessos.`;
+      return `${base} \u2014 nao autorizado: ${msg}. O token foi renovado e ainda assim recusou. Duas causas, nesta ordem: (1) o projeto no Portal da Rede nao e do pacote "APIs de Conciliacao" \u2014 um projeto de Payment Link autentica normalmente, mas o token sai com escopo "payment-link" e TODA rota de extrato responde 401; rode rede_conectar para ver o escopo do token; (2) o PV${pv ? ` ${pv}` : ""} nao foi liberado: o parceiro faz a solicitacao de acesso (portal ou API de Gestao de Acessos) e o lojista aprova na area logada do Portal Rede.`;
     case 403:
-      return `${base} \u2014 sem permissao para o PV${pv ? ` ${pv}` : ""}: ${msg}. O parceiro precisa ser liberado para este estabelecimento na gestao de acessos da Rede.`;
+      return `${base} \u2014 sem permissao para o PV${pv ? ` ${pv}` : ""}: ${msg}. Falta a liberacao deste estabelecimento: o parceiro faz a solicitacao de acesso (portal ou API de Gestao de Acessos) e o lojista aprova na area logada do Portal Rede.`;
     case 404:
       return `${base} \u2014 rota nao encontrada. Confira a versao (v1/v2/v3) e lembre que a consulta de vendas por NSU roda em uma base diferente no sandbox (ver base_nsu no ~/.rede-mcp.json). ${msg}`;
     case 422:
@@ -23519,7 +23519,7 @@ function registrarConciliacao(server2) {
 }
 
 // src/index.ts
-var VERSAO = "0.1.4";
+var VERSAO = "0.1.5";
 var server = new McpServer(
   { name: "rede", version: VERSAO },
   {
@@ -23602,7 +23602,7 @@ server.registerTool(
       refresh_token_expira_em: new Date(t.refresh_desde + 24 * 3600 * 1e3).toISOString(),
       escopo: t.escopo ?? null,
       ...escopoOk ? {} : {
-        ALERTA: `O token veio com escopo "${t.escopo}", sem "merchant-statement". Este projeto do Portal da Rede nao e do pacote "APIs de Conciliacao" \u2014 provavelmente e de Payment Link. O login funciona, mas toda rota de extrato vai responder 401. Crie um projeto no pacote certo em "Meus Projetos".`
+        ALERTA: `O token veio com escopo "${t.escopo}", sem "merchant-statement". Este projeto do Portal da Rede nao e do pacote "APIs de Conciliacao" \u2014 provavelmente e de Payment Link. O login funciona, mas toda rota de extrato vai responder 401, e um secret novo do mesmo projeto nao muda isso. No sandbox, crie um projeto no pacote certo em "Meus Projetos"; em producao a credencial nao e self-service \u2014 peca a Rede (ver docs/producao.md).`
       },
       consulta_de_teste: teste,
       proximo_passo: `Experimente rede_vendas com um periodo curto em um dos PVs: ${cfg.pvs.map((p) => p.numero).join(", ")}.`

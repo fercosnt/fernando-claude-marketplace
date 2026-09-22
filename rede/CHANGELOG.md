@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.1.5 — 2026-09-22
+
+- **Parcelado cai parcela a parcela.** A skill dizia que no parcelado com juros "o lojista recebe como
+  se fosse a vista em 30 dias", e a frase se contradizia. Na clinica nao ha antecipacao: cada parcela
+  cai no seu mes. A skill agora diz isso e manda conferir em `rede_parcelas_da_venda`.
+- **Mensagens do servidor alinhadas com a skill.** O ALERTA de escopo `payment-link` dizia para criar
+  projeto em *Meus Projetos*, o que so vale para o sandbox; e o erro 401/403 dizia que a liberacao do
+  PV era "feita pela Rede". Agora: projeto novo no sandbox, pedido a Rede em producao; e o parceiro
+  solicita, o lojista aprova.
+- **Dividas do mock da iteracao 2** (`test/mock.mjs`):
+  - o debito de estorno passa a ser liquido (R$ 97,50 por um estorno de R$ 100 com MDR de 2,5%), como
+    em producao — o deposito de 14/08 fica em R$ 877,50;
+  - PV diferente de 13381369 responde como PV nao liberado, com o erro de producao de cada rota (403
+    nas vendas, 401 codigo 1001 nos recebiveis v3, 401 "Insufficient access level" no resumo de
+    pagamentos), em vez de devolver os dados de outro PV;
+  - credencial de projeto Payment Link: login ok, escopo `payment-link`, 401 em toda rota de extrato.
+- Teste de integracao: 113 → 119 verificacoes (PV nao liberado por rota; cenario Payment Link numa
+  segunda instancia do servidor). Os testes do debito mudaram porque o valor mudou de proposito.
+- Harness: `REDE_CENARIO=payment-link` ou `pv-nao-liberado` muda a config do run. O eval 8 passa a
+  rodar no cenario Payment Link, em que o 401 e real; evals 3 e 5 atualizados para o debito de R$ 97,50.
+
 ## 0.1.4 — 2026-09-22
 
 Correcoes que vieram da critica dos avaliadores na iteracao 2 dos evals (ver

@@ -17,7 +17,9 @@
  *  - parcelado 4x de julho com 2 das 4 parcelas pagas;
  *  - deposito de 14/08 menor pelo estorno parcial de OUTRA venda (a de 20/06, estornada em 13/08);
  *  - deposito de 08/09 que junta parcelas de duas vendas (pagamento e pacote);
- *  - deposito de 28/09 suspenso, sem liberacao ate hoje.
+ *  - deposito de 28/09 suspenso, sem liberacao ate hoje;
+ *  - PV nao liberado (qualquer PV diferente de 13381369): 403/401 por rota, como em producao;
+ *  - credencial de projeto Payment Link: autentica, escopo payment-link, 401 em toda rota de extrato.
  */
 import { createServer } from "node:http";
 
@@ -29,6 +31,11 @@ const cent = (v) => Math.round(v * 100) / 100;
 const soma = (l, f) => cent(l.reduce((t, x) => t + f(x), 0));
 const CLIENT_ID = "id-de-teste";
 const CLIENT_SECRET = "secret-de-teste";
+/** Credencial de um projeto do pacote Payment Link: autentica, mas o token sai com escopo payment-link. */
+const CLIENT_ID_PAYMENT_LINK = "id-payment-link";
+const CLIENT_SECRET_PAYMENT_LINK = "secret-payment-link";
+/** PV que existe mas nao foi liberado para o parceiro. Qualquer PV diferente de PV responde assim. */
+const PV_NAO_LIBERADO = "22523510";
 const USUARIO = "usuario-de-teste";
 const SENHA = "senha-de-teste";
 
@@ -111,8 +118,10 @@ const VENDAS = [
 
 /** Debitos descontados do repasse: compensados no deposito do dia, na ordem de credito do resumo `rv`. */
 const AJUSTES = [
-  // Estorno parcial da 111008 (20/06), feito em 13/08, descontado do deposito seguinte — que paga a 111007.
-  { data: "2026-08-14", rv: 900006, codigo: 18, valor: 100.0, numero: 1234560 },
+  // Estorno parcial de R$ 100 da 111008 (20/06), feito em 13/08, descontado do deposito seguinte — que
+  // paga a 111007. O debito e LIQUIDO: a Rede devolve a taxa proporcional (2,5% de 100), como no caso
+  // real de producao, em que o debito foi 90% da parcela liquida (R$ 526,32).
+  { data: "2026-08-14", rv: 900006, codigo: 18, valor: 97.5, numero: 1234560 },
   { data: "2026-09-02", rv: 900001, codigo: 23, valor: 27.5, numero: 1234567 },
 ];
 /** Resumos de venda cujo deposito esta suspenso em HOJE (bloqueio sem liberacao). */
@@ -208,17 +217,18 @@ const statusDaParcela = (p) => (p.data > HOJE ? "SCHEDULLED" : SUSPENSOS.has(p.v
 const hashDoPagamento = (pid) => Buffer.from(pid).toString("base64");
 
 // ---------------------------------------------------------------- estado do servidor
-const tokens = new Map(); // access_token -> { expira, refresh }
-const refreshs = new Map(); // refresh_token -> true
+const tokens = new Map(); // access_token -> { expira, refresh, escopo }
+const refreshs = new Map(); // refresh_token -> escopo
 let contador = 0;
 export const chamadas = [];
 
-const novoToken = () => {
+const ESCOPO_EXTRATO = "merchant-statement feature_merchant_statement";
+const novoToken = (escopo = ESCOPO_EXTRATO) => {
   const access = `access-${++contador}`;
   const refresh = `refresh-${contador}`;
-  tokens.set(access, { expira: Date.now() + 1440 * 1000, refresh });
-  refreshs.set(refresh, true);
-  return { access_token: access, refresh_token: refresh, token_type: "Bearer", expires_in: 1440, scope: "merchant-statement feature_merchant_statement" };
+  tokens.set(access, { expira: Date.now() + 1440 * 1000, refresh, escopo });
+  refreshs.set(refresh, escopo);
+  return { access_token: access, refresh_token: refresh, token_type: "Bearer", expires_in: 1440, scope: escopo };
 };
 
 /** Permite ao teste simular token vencido do lado do servidor. */
@@ -262,26 +272,30 @@ export function criarMock(porta = 0) {
       });
       const auth = req.headers.authorization ?? "";
       const [id, secret] = Buffer.from(auth.replace(/^Basic /i, ""), "base64").toString().split(":");
-      if (id !== CLIENT_ID || secret !== CLIENT_SECRET) {
+      const paymentLink = id === CLIENT_ID_PAYMENT_LINK && secret === CLIENT_SECRET_PAYMENT_LINK;
+      if (!paymentLink && (id !== CLIENT_ID || secret !== CLIENT_SECRET)) {
         return json(res, 401, { error_description: "Bad credentials", status: "UNAUTHORIZED" });
       }
+      const escopo = paymentLink ? "payment-link" : ESCOPO_EXTRATO;
       const grant = corpo.get("grant_type");
       chamadas.push({ rota: "/oauth/token", grant });
       if (grant === "password") {
         if (corpo.get("username") !== USUARIO || corpo.get("password") !== SENHA) {
           return json(res, 400, { error: "invalid_grant", error_description: "usuario ou senha invalidos" });
         }
-        return json(res, 200, novoToken());
+        return json(res, 200, novoToken(escopo));
       }
       if (grant === "refresh_token") {
         if (!refreshs.has(corpo.get("refresh_token"))) {
           return json(res, 401, { error_description: "Bad credentials", status: "UNAUTHORIZED" });
         }
+        const anterior = refreshs.get(corpo.get("refresh_token"));
         refreshs.delete(corpo.get("refresh_token"));
-        return json(res, 200, novoToken());
+        return json(res, 200, novoToken(anterior));
       }
       // Como no sandbox real com projeto de APIs de Conciliacao: o escopo sai merchant-statement.
-      if (grant === "client_credentials") return json(res, 200, novoToken());
+      // Projeto de Payment Link autentica igual, mas o token sai com escopo payment-link.
+      if (grant === "client_credentials") return json(res, 200, novoToken(escopo));
       return json(res, 400, { error: "unsupported_grant_type" });
     }
 
@@ -291,6 +305,18 @@ export function criarMock(porta = 0) {
     if (!t || t.expira < Date.now()) return json(res, 401, { message: "Unauthorized" });
 
     chamadas.push({ rota: p, query: q, merchantId: req.headers["merchant-id"] ?? null });
+
+    // Token de projeto Payment Link: nenhuma rota de extrato abre, todas respondem 401.
+    if (!/merchant-statement/.test(t.escopo)) return json(res, 401, { message: "Unauthorized" });
+
+    // PV nao liberado para o parceiro: como em producao em 2026-09-21, o erro muda com a rota.
+    const pvPedido =
+      req.headers["merchant-id"] ?? q.parentCompanyNumber ?? q.parentMerchantId ?? (p.match(/\/(\d{7,})(?=\/|$)/) ?? [])[1];
+    if (pvPedido && String(pvPedido) !== PV) {
+      if (/\/v3\/receivables\//.test(p)) return json(res, 401, { error_code: "1001", message: "Partner not allowed for this merchant" });
+      if (p === "/merchant-statement/v2/payments/summary") return json(res, 401, { message: "Insufficient access level to access this feature." });
+      return json(res, 403, { message: "Partner not allowed for this company number." });
+    }
 
     const exigeHeader = () => {
       if (!req.headers["merchant-id"]) {
@@ -710,6 +736,6 @@ export function criarMock(porta = 0) {
   return new Promise((r) => servidor.listen(porta, "127.0.0.1", () => r({ servidor, porta: servidor.address().port })));
 }
 
-export const CREDENCIAIS = { CLIENT_ID, CLIENT_SECRET, USUARIO, SENHA, PV };
+export const CREDENCIAIS = { CLIENT_ID, CLIENT_SECRET, USUARIO, SENHA, PV, CLIENT_ID_PAYMENT_LINK, CLIENT_SECRET_PAYMENT_LINK, PV_NAO_LIBERADO };
 /** Exposto para os testes conferirem o cenario (ids de pagamento e hash da rota v3). */
 export const CENARIO = { HOJE, PAGAMENTOS, ORDENS, RECEBIVEIS, hashDoPagamento };

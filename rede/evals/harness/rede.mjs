@@ -7,6 +7,9 @@
  *
  * REDE_RUN_DIR isola cada execucao (config, tokens e o log das chamadas a API em api_log.jsonl).
  * Dados da API simulada: uma clinica ficticia, PV 13381369, hoje = 2026-09-30.
+ * REDE_CENARIO muda a config criada na primeira chamada do run:
+ *   payment-link    -> credencial de projeto Payment Link: login ok, escopo payment-link, 401 em tudo
+ *   pv-nao-liberado -> um segundo PV (Hirata, 22523510) que responde como PV nao liberado
  * Sem dependencias: fala JSON-RPC direto com o servidor por stdio.
  */
 import { spawn } from "node:child_process";
@@ -20,14 +23,27 @@ const runDir = process.env.REDE_RUN_DIR || join(aqui, "run-default");
 mkdirSync(join(runDir, "estado"), { recursive: true });
 const cfgFile = join(runDir, "config.json");
 if (!existsSync(cfgFile)) {
-  writeFileSync(cfgFile, JSON.stringify({
+  const cenario = process.env.REDE_CENARIO ?? "";
+  const cfg = {
     ambiente: "sandbox",
     client_id: CREDENCIAIS.CLIENT_ID,
     client_secret: CREDENCIAIS.CLIENT_SECRET,
     usuario: CREDENCIAIS.USUARIO,
     senha: CREDENCIAIS.SENHA,
     pvs: [{ nome: "Clinica", numero: CREDENCIAIS.PV }],
-  }, null, 2));
+  };
+  if (cenario === "payment-link") {
+    // Projeto do pacote errado: so client_id/secret, como vem do portal.
+    Object.assign(cfg, { client_id: CREDENCIAIS.CLIENT_ID_PAYMENT_LINK, client_secret: CREDENCIAIS.CLIENT_SECRET_PAYMENT_LINK });
+    delete cfg.usuario;
+    delete cfg.senha;
+  } else if (cenario === "pv-nao-liberado") {
+    cfg.pvs.push({ nome: "Hirata", numero: CREDENCIAIS.PV_NAO_LIBERADO });
+  } else if (cenario) {
+    console.error(`REDE_CENARIO desconhecido: ${cenario} (use payment-link ou pv-nao-liberado)`);
+    process.exit(2);
+  }
+  writeFileSync(cfgFile, JSON.stringify(cfg, null, 2));
 }
 
 const { servidor, porta } = await criarMock();

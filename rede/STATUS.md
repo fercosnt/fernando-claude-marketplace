@@ -22,7 +22,7 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
 | Fallback automático v2 → v1 em vendas | Pronto. Nasceu do 403 do sandbox |
 | 3 skills + 2 references + 5 docs | Pronto |
 | 54 testes offline | Passando |
-| 113 testes de integração (API simulada) | Passando. Mock coerente desde a v0.1.4: uma fonte só (vendas → cronograma em dia útil → ordens, pagamentos, recebíveis, débitos, bloqueios) |
+| 119 testes de integração (API simulada) | Passando. Mock coerente desde a v0.1.4: uma fonte só (vendas → cronograma em dia útil → ordens, pagamentos, recebíveis, débitos, bloqueios) |
 | `claude plugin validate` | Passando |
 | Produção (Matriz e Hirata) | **Funcionando** desde 2026-09-21 — login, consultas e conciliação com dado real |
 | Teste contra o sandbox real da Rede | Feito. Vendas, parceladas, pagamentos, ordens de crédito e débitos respondendo com dado real |

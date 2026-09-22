@@ -176,7 +176,9 @@ os casos estão no CHANGELOG da 0.1.4.
 
 ## Dívidas novas (corrigir antes da iteração 3)
 
-Apontadas por executores e avaliadores:
+Apontadas por executores e avaliadores. As três primeiras foram resolvidas na 0.1.5 (débito líquido de
+R$ 97,50, PV não liberado com o erro de produção por rota e cenário `REDE_CENARIO=payment-link`, que o
+eval 8 passou a usar):
 
 - **Débito de estorno bruto.** O mock desconta R$ 100 por um estorno de R$ 100 numa venda com MDR de
   2,5%. Em produção, o débito foi o **líquido** (R$ 526,32 = 90% da parcela líquida). Sem skill, a

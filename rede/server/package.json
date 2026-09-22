@@ -1,6 +1,6 @@
 {
   "name": "rede-mcp-server",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "type": "module",
   "description": "Fonte do servidor MCP do plugin rede. O artefato distribuido e ../servers/rede-mcp.js (bundle sem dependencias).",

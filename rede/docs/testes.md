@@ -29,7 +29,7 @@ Rode com `VERBOSE=1` para ver o stderr do servidor.
 node test/integracao.mjs
 ```
 
-113 verificações que sobem o servidor MCP contra o mock de [test/mock.mjs](../test/mock.mjs),
+119 verificações que sobem o servidor MCP contra o mock de [test/mock.mjs](../test/mock.mjs),
 apontado por `REDE_BASE_URL`/`REDE_TOKEN_URL`. Cobrem as 29 tools e provam o que o sandbox da Rede
 **não** permite provar.
 
@@ -43,12 +43,18 @@ existe e o líquido de cada pagamento é a soma das suas ordens.
 - **O cruzamento da conciliação** — setembro em 30/09: nenhum resumo de crédito conciliado ainda
   (D+30), o débito do dia 1 explicado pelo aluguel de R$ 27,50, 3 resumos sem pagamento e 3
   pagamentos de vendas anteriores. Julho: parcelado 4x com 2 de 4 parcelas pagas (R$ 585 a
-  receber) e o depósito de 14/08 com R$ 100 a menos pelo estorno de outra venda (NSU 111008).
+  receber) e o depósito de 14/08 com R$ 97,50 a menos pelo estorno de R$ 100 de outra venda (NSU
+  111008), descontado líquido como em produção.
   Agosto: 2 resumos conciliados e o depósito suspenso de 28/09 como "sem pagamento". No sandbox
   isso é impossível: os `saleSummaryNumber` das vendas (`1749152…`) e os das ordens de crédito
   (`29649108…`) são conjuntos disjuntos, fixtures independentes.
 - **Pagamento é pacote** — o depósito de 08/09 junta a 2ª parcela de uma venda de julho com uma
   venda de agosto cujo D+30 caiu no domingo e no feriado de 07/09.
+- **PV não liberado** — qualquer PV diferente de 13381369 responde como em produção: 403 nas vendas,
+  401 código 1001 nos recebíveis v3 e 401 "Insufficient access level" no resumo de pagamentos.
+- **Projeto do pacote Payment Link** — uma segunda credencial autentica, mas o token sai com escopo
+  `payment-link` e toda rota de extrato dá 401; `rede_conectar` alerta. Roda numa segunda instância
+  do servidor.
 - **Rotas por período** — débitos, bloqueios e recebíveis mudam com a janela pedida (e voltam vazios
   quando não há nada), em vez de devolver sempre o mesmo item.
 - **As rotas que o sandbox não habilita** — v2 de vendas, resumos, recebíveis (v1/v2/v3),

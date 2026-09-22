@@ -81,6 +81,47 @@ const chamar = async (nome, args = {}) => {
   return { erro: !!r.result?.isError, texto, json };
 };
 
+/** Sobe outra instancia do servidor MCP contra o mesmo mock, com outra configuracao. */
+async function outroServidor(config) {
+  const dir = mkdtempSync(join(tmpdir(), "rede-integracao-2-"));
+  writeFileSync(join(dir, "config.json"), JSON.stringify(config));
+  const proc = spawn("node", [join(raiz, "servers", "rede-mcp.js")], {
+    env: { ...process.env, REDE_CONFIG_FILE: join(dir, "config.json"), REDE_STATE_DIR: join(dir, "estado"), REDE_BASE_URL: base, REDE_TOKEN_URL: `${base}/oauth/token`, REDE_INTERVALO_MS: "0" },
+    stdio: ["pipe", "pipe", "pipe"],
+  });
+  let buf = "";
+  const pend = new Map();
+  proc.stdout.on("data", (d) => {
+    buf += d.toString();
+    let i;
+    while ((i = buf.indexOf("\n")) >= 0) {
+      const l = buf.slice(0, i).trim();
+      buf = buf.slice(i + 1);
+      if (!l) continue;
+      try { const m = JSON.parse(l); pend.get(m.id)?.(m); pend.delete(m.id); } catch { /* ruido */ }
+    }
+  });
+  let n = 1;
+  const env = (method, params) => new Promise((ok) => {
+    const id = n++;
+    pend.set(id, ok);
+    proc.stdin.write(JSON.stringify({ jsonrpc: "2.0", id, method, params }) + "\n");
+    setTimeout(() => ok({ timeout: true }), 20000).unref();
+  });
+  await env("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "integracao-2", version: "0" } });
+  proc.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
+  return {
+    chamar: async (nome, args = {}) => {
+      const r = await env("tools/call", { name: nome, arguments: args });
+      const texto = r.result?.content?.[0]?.text ?? JSON.stringify(r);
+      let json = null;
+      try { json = JSON.parse(texto); } catch { /* erro vem como texto */ }
+      return { erro: !!r.result?.isError, texto, json };
+    },
+    fechar: () => proc.kill(),
+  };
+}
+
 let passou = 0, falhou = 0;
 const ok = (nome, cond, detalhe = "") => {
   if (cond) { passou++; console.log(`  ok   ${nome}`); }
@@ -199,7 +240,7 @@ try {
   r = await chamar("rede_pagamento", { payment_id: "P20260928001" });
   ok("um pagamento pelo id", r.json?.resposta?.content?.payments?.[0]?.paymentId === "P20260928001" && r.json?.resposta?.content?.payments?.[0]?.status === "SUSPENDED");
   r = await chamar("rede_pagamento_esperado", { payment_id: "P20260814001" });
-  ok("valor esperado = pago + debitos (875 + 100)", r.json?.resposta?.content?.expectedAmount === 975, String(r.json?.resposta?.content?.expectedAmount));
+  ok("valor esperado = pago + debitos (877,50 + 97,50)", r.json?.resposta?.content?.expectedAmount === 975, String(r.json?.resposta?.content?.expectedAmount));
 
   r = await chamar("rede_ordens_de_credito", { data_inicio: "2026-09-01", data_fim: "2026-09-30", paginar_tudo: true });
   // O deposito suspenso de 28/09 nao gera ordem; o de 08/09 tem duas (uma por resumo de vendas).
@@ -259,7 +300,8 @@ try {
   ok("debitos detalhados de setembro: o aluguel", r.json?.total_de_debitos === 1 && r.json?.debitos?.[0]?.adjustmentTypeCode === 23);
   ok("traduz o tipo de cobranca NET", r.json?.debitos?.[0]?.tipo_descricao?.includes("repasse"), r.json?.debitos?.[0]?.tipo_descricao);
   r = await chamar("rede_debitos", { data_inicio: "2026-08-01", data_fim: "2026-08-30", paginar_tudo: true });
-  ok("debitos de agosto: o estorno de R$ 100", r.json?.total_de_debitos === 1 && r.json?.debitos?.[0]?.adjustmentTypeCode === 18 && r.json?.debitos?.[0]?.debitAmount === 100);
+  // Estorno de R$ 100 numa venda com MDR de 2,5%: o debito e o liquido, como em producao.
+  ok("debitos de agosto: o estorno, liquido (R$ 97,50)", r.json?.total_de_debitos === 1 && r.json?.debitos?.[0]?.adjustmentTypeCode === 18 && r.json?.debitos?.[0]?.debitAmount === 97.5);
   r = await chamar("rede_debitos_resumo", { data_inicio: "2026-09-01", data_fim: "2026-09-30" });
   ok("resumo de debitos por tipo de ajuste", r.json?.resposta?.content?.[0]?.debitAmount === 27.5 && r.json?.resposta?.content?.length === 1);
   r = await chamar("rede_debitos_resumo", { data_inicio: "2026-10-01", data_fim: "2026-10-30" });
@@ -293,7 +335,7 @@ try {
   ok("marca 2 de 4 parcelas pagas", r.json?.amostra?.parcelado_em_andamento?.[0]?.parcelas_pagas === 2 && r.json?.amostra?.parcelado_em_andamento?.[0]?.parcelas === 4);
   const est = r.json?.amostra?.ajuste_no_repasse?.[0];
   ok("deposito com estorno de outra venda vira 'ajuste no repasse'", r.json?.situacao?.ajuste_no_repasse?.resumos === 1, JSON.stringify(r.json?.situacao?.ajuste_no_repasse));
-  ok("identifica o ajuste: cancelamento de vendas, R$ 100", est?.ajustes?.[0]?.codigo === 18 && est?.ajustes?.[0]?.valor === 100, JSON.stringify(est?.ajustes));
+  ok("identifica o ajuste: cancelamento de vendas, R$ 97,50", est?.ajustes?.[0]?.codigo === 18 && est?.ajustes?.[0]?.valor === 97.5, JSON.stringify(est?.ajustes));
   ok("acha a venda estornada de outra data (NSU 111008)", est?.provavel_origem?.nsu === 111008, JSON.stringify(est?.provavel_origem));
   ok("mostra o evento do estorno", est?.provavel_origem?.evento === "PARTIAL_CANCELLED" && est?.provavel_origem?.data_do_evento === "2026-08-13");
   ok("o valor do evento e o valor estornado (R$ 100)", est?.provavel_origem?.valor_do_evento === 100, String(est?.provavel_origem?.valor_do_evento));
@@ -309,6 +351,32 @@ try {
   const depois = chamadas.filter((c) => c.rota === "/oauth/token").length;
   ok("401 dispara renovacao e a consulta passa", !r.erro && r.json?.resposta?.length === 4);
   ok("houve nova chamada ao /oauth/token", depois > antes, `${antes} -> ${depois}`);
+
+  console.log("\nPV nao liberado (erros de producao, por rota)");
+  const naoLiberado = CREDENCIAIS.PV_NAO_LIBERADO;
+  r = await chamar("rede_vendas", { pv: naoLiberado, data_inicio: "2026-09-01", data_fim: "2026-09-30" });
+  ok("vendas: 403 explicado como PV nao liberado", r.erro && r.texto.includes("403") && r.texto.includes("ainda nao esta liberado"), r.texto.slice(0, 160));
+  r = await chamar("rede_recebiveis_resumo", { pv: naoLiberado, data_inicio: "2026-10-01", data_fim: "2026-10-31" });
+  ok("recebiveis v3: 401 codigo 1001 explicado como PV nao liberado", r.erro && r.texto.includes("1001") && r.texto.includes("ainda nao esta liberado"), r.texto.slice(0, 160));
+  r = await chamar("rede_pagamentos_resumo", { pv: naoLiberado, data_inicio: "2026-09-01", data_fim: "2026-09-30" });
+  ok("resumo de pagamentos: 401 Insufficient access level explicado", r.erro && r.texto.includes("nivel de acesso insuficiente"), r.texto.slice(0, 160));
+
+  console.log("\nprojeto do pacote Payment Link (escopo payment-link)");
+  const pl = await outroServidor({
+    ambiente: "sandbox",
+    client_id: CREDENCIAIS.CLIENT_ID_PAYMENT_LINK,
+    client_secret: CREDENCIAIS.CLIENT_SECRET_PAYMENT_LINK,
+    pvs: [{ nome: "Loja Teste", numero: CREDENCIAIS.PV }],
+  });
+  try {
+    r = await pl.chamar("rede_conectar");
+    ok("login funciona com a credencial de Payment Link", r.json?.conectado === true, r.texto.slice(0, 160));
+    ok("rede_conectar mostra o escopo payment-link e alerta", r.json?.escopo === "payment-link" && !!r.json?.ALERTA, JSON.stringify({ escopo: r.json?.escopo, ALERTA: !!r.json?.ALERTA }));
+    r = await pl.chamar("rede_vendas", { data_inicio: "2026-09-01", data_fim: "2026-09-30" });
+    ok("toda rota de extrato da 401 e o erro aponta o pacote", r.erro && r.texto.includes("401") && r.texto.includes("payment-link"), r.texto.slice(0, 160));
+  } finally {
+    pl.fechar();
+  }
 
   console.log("\nrede_get (escape hatch)");
   r = await chamar("rede_get", { caminho: "/merchant-statement/v1/charges/adjustment-types" });

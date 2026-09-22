@@ -18,7 +18,7 @@ import { registrarRecebiveis } from "./tools-recebiveis.js";
 import { registrarDebitos } from "./tools-debitos.js";
 import { registrarConciliacao } from "./tools-conciliacao.js";
 
-const VERSAO = "0.1.4";
+const VERSAO = "0.1.5";
 
 const server = new McpServer(
   { name: "rede", version: VERSAO },
@@ -140,7 +140,9 @@ server.registerTool(
             ALERTA:
               `O token veio com escopo "${t.escopo}", sem "merchant-statement". Este projeto do Portal da Rede ` +
               `nao e do pacote "APIs de Conciliacao" — provavelmente e de Payment Link. O login funciona, mas ` +
-              `toda rota de extrato vai responder 401. Crie um projeto no pacote certo em "Meus Projetos".`,
+              `toda rota de extrato vai responder 401, e um secret novo do mesmo projeto nao muda isso. No sandbox, crie um ` +
+              `projeto no pacote certo em "Meus Projetos"; em producao a credencial nao e self-service — peca a Rede ` +
+              `(ver docs/producao.md).`,
           }),
       consulta_de_teste: teste,
       proximo_passo: `Experimente rede_vendas com um periodo curto em um dos PVs: ${cfg.pvs.map((p) => p.numero).join(", ")}.`,

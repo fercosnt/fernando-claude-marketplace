@@ -132,9 +132,9 @@ function explicarStatus(status: number, caminho: string, msg: string, pv?: strin
     case 400:
       return `${base} — requisicao invalida: ${msg}. Quase sempre e um parametro obrigatorio faltando (nas rotas v2/v3 o PV vai no header Merchant-Id) ou data fora de YYYY-MM-DD.`;
     case 401:
-      return `${base} — nao autorizado: ${msg}. O token foi renovado e ainda assim recusou. Duas causas, nesta ordem: (1) o projeto no Portal da Rede nao e do pacote "APIs de Conciliacao" — um projeto de Payment Link autentica normalmente, mas o token sai com escopo "payment-link" e TODA rota de extrato responde 401; rode rede_conectar para ver o escopo do token; (2) o usuario nao tem permissao de extrato para o PV${pv ? ` ${pv}` : ""}, liberada pela Rede na gestao de acessos.`;
+      return `${base} — nao autorizado: ${msg}. O token foi renovado e ainda assim recusou. Duas causas, nesta ordem: (1) o projeto no Portal da Rede nao e do pacote "APIs de Conciliacao" — um projeto de Payment Link autentica normalmente, mas o token sai com escopo "payment-link" e TODA rota de extrato responde 401; rode rede_conectar para ver o escopo do token; (2) o PV${pv ? ` ${pv}` : ""} nao foi liberado: o parceiro faz a solicitacao de acesso (portal ou API de Gestao de Acessos) e o lojista aprova na area logada do Portal Rede.`;
     case 403:
-      return `${base} — sem permissao para o PV${pv ? ` ${pv}` : ""}: ${msg}. O parceiro precisa ser liberado para este estabelecimento na gestao de acessos da Rede.`;
+      return `${base} — sem permissao para o PV${pv ? ` ${pv}` : ""}: ${msg}. Falta a liberacao deste estabelecimento: o parceiro faz a solicitacao de acesso (portal ou API de Gestao de Acessos) e o lojista aprova na area logada do Portal Rede.`;
     case 404:
       return `${base} — rota nao encontrada. Confira a versao (v1/v2/v3) e lembre que a consulta de vendas por NSU roda em uma base diferente no sandbox (ver base_nsu no ~/.rede-mcp.json). ${msg}`;
     case 422:
