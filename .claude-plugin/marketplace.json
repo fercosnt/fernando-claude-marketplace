@@ -203,8 +203,8 @@
     },
     {
       "name": "rede",
-      "description": "Acesso as APIs de Gestao de Vendas da Rede (maquininha de cartao) via MCP local — 29 tools de leitura: vendas detalhadas e sumarizadas (com total do periodo ja somado), parcelas, pagamentos, recebiveis, bloqueios, debitos e cashbacks, e conciliacao venda-pagamento pela cadeia resumo de venda -> ordem de credito -> pagamento, separando parcelado em andamento de divergencia real. Traduz os codigos da Rede (bandeira, modalidade, status), valida a janela de data de cada rota antes de chamar e cai da v2 para a v1 quando a rota nao esta habilitada. OAuth client_credentials com renovacao automatica. Skills rede, rede-setup e rede-conciliacao. Credenciais em ~/.rede-mcp.json, nenhuma no repositorio. Validado em producao nas duas unidades da clinica; 0.1.1 corrige o nome do PV errado no swagger da v2, o resumo que vem um item por dia e o parcelado lido como divergencia. 127 testes (offline + API simulada).",
-      "version": "0.1.3",
+      "description": "Acesso as APIs de Gestao de Vendas da Rede (maquininha de cartao) via MCP local — 29 tools de leitura: vendas detalhadas e sumarizadas (com total do periodo ja somado), parcelas, pagamentos, recebiveis, bloqueios, debitos e cashbacks, e conciliacao venda-pagamento pela cadeia resumo de venda -> ordem de credito -> pagamento, separando parcelado em andamento de divergencia real. Traduz os codigos da Rede (bandeira, modalidade, status), valida a janela de data de cada rota antes de chamar e cai da v2 para a v1 quando a rota nao esta habilitada. OAuth client_credentials com renovacao automatica. Skills rede, rede-setup e rede-conciliacao. Credenciais em ~/.rede-mcp.json, nenhuma no repositorio. Validado em producao nas duas unidades da clinica; 0.1.1 corrige o nome do PV errado no swagger da v2, o resumo que vem um item por dia e o parcelado lido como divergencia. 167 testes (offline + API simulada coerente).",
+      "version": "0.1.4",
       "source": "./rede",
       "author": {
         "name": "Fernando Costa"
