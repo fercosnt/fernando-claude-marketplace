@@ -29,14 +29,28 @@ Rode com `VERBOSE=1` para ver o stderr do servidor.
 node test/integracao.mjs
 ```
 
-65 verificações que sobem o servidor MCP contra o mock de [test/mock.mjs](../test/mock.mjs),
-apontado por `REDE_BASE_URL`/`REDE_TOKEN_URL`. Cobrem as 29 tools com dados coerentes e provam o
-que o sandbox da Rede **não** permite provar:
+113 verificações que sobem o servidor MCP contra o mock de [test/mock.mjs](../test/mock.mjs),
+apontado por `REDE_BASE_URL`/`REDE_TOKEN_URL`. Cobrem as 29 tools e provam o que o sandbox da Rede
+**não** permite provar.
 
-- **O cruzamento da conciliação** — 2 resumos conciliados, 1 divergente em R$ 27,50, 1 venda sem
-  pagamento (vendida em 28/09, crédito em D+30) e 1 pagamento cuja venda é anterior ao período.
-  No sandbox isso é impossível: os `saleSummaryNumber` das vendas (`1749152…`) e os das ordens de
-  crédito (`29649108…`) são conjuntos disjuntos, fixtures independentes.
+O mock tem uma fonte só: a lista de vendas de uma clínica fictícia (hoje = 2026-09-30). Dela sai o
+cronograma de cada parcela (débito em D+1, crédito em D+30 por parcela, sempre no próximo dia útil,
+com os feriados nacionais), e do cronograma saem ordens de crédito, pagamentos, recebíveis, débitos
+e bloqueios. O que venceu até hoje está pago (ou suspenso); o que vence depois é recebível. Um bloco
+do teste confere essa coerência: nenhum pagamento no futuro, toda ordem aponta para um pagamento que
+existe e o líquido de cada pagamento é a soma das suas ordens.
+
+- **O cruzamento da conciliação** — setembro em 30/09: nenhum resumo de crédito conciliado ainda
+  (D+30), o débito do dia 1 explicado pelo aluguel de R$ 27,50, 3 resumos sem pagamento e 3
+  pagamentos de vendas anteriores. Julho: parcelado 4x com 2 de 4 parcelas pagas (R$ 585 a
+  receber) e o depósito de 14/08 com R$ 100 a menos pelo estorno de outra venda (NSU 111008).
+  Agosto: 2 resumos conciliados e o depósito suspenso de 28/09 como "sem pagamento". No sandbox
+  isso é impossível: os `saleSummaryNumber` das vendas (`1749152…`) e os das ordens de crédito
+  (`29649108…`) são conjuntos disjuntos, fixtures independentes.
+- **Pagamento é pacote** — o depósito de 08/09 junta a 2ª parcela de uma venda de julho com uma
+  venda de agosto cujo D+30 caiu no domingo e no feriado de 07/09.
+- **Rotas por período** — débitos, bloqueios e recebíveis mudam com a janela pedida (e voltam vazios
+  quando não há nada), em vez de devolver sempre o mesmo item.
 - **As rotas que o sandbox não habilita** — v2 de vendas, resumos, recebíveis (v1/v2/v3),
   calendário, diário e bloqueios.
 - **A renovação de token** — o mock esquece os tokens, a consulta seguinte leva 401, o servidor

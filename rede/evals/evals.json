@@ -1,6 +1,6 @@
 {
   "skill_name": "rede",
-  "notas": "Rodam contra a API simulada (test/mock.mjs) pelo CLI evals/harness/rede.mjs. Clinica ficticia, PV 13381369, hoje = 2026-09-30. Com skill = le skills/rede, rede-conciliacao e rede-setup; sem skill = so as 29 tools e suas descricoes. Iteracao 1 em 2026-09-21, depois da v0.1.3.",
+  "notas": "Rodam contra a API simulada (test/mock.mjs) pelo CLI evals/harness/rede.mjs. Clinica ficticia, PV 13381369, hoje = 2026-09-30 (quarta). Com skill = le skills/rede, rede-conciliacao e rede-setup; sem skill = so as 29 tools e suas descricoes. O eval 9 usa tambem evals/harness/conta-azul.mjs (API simulada do plugin conta-azul, empresa Beauty Smile, mesmo hoje) e, com skill, le tambem conta-azul/skills/conta-azul. Iteracao 1 em 2026-09-21 (v0.1.3); iteracao 2 em 2026-09-21, depois do mock coerente: evals 2, 4 e 9 novos, 3, 5, 6, 7 e 8 reforcados, 1 mantido. Depois da iteracao 2: o list do harness passou a mostrar as instructions do servidor MCP (como em producao) e os gabaritos 6, 7 e 8 foram corrigidos pela critica; as assercoes ficaram como foram avaliadas.",
   "evals": [
     {
       "id": 1,
@@ -17,84 +17,104 @@
     },
     {
       "id": 2,
-      "name": "semestre-alem-da-janela",
-      "prompt": "me lista todas as vendas do primeiro semestre",
-      "expected_output": "Cobre 01/01 a 30/06/2026 em fatias de ate 62 dias. Acha 1 venda: R$ 500,00 em 20/06 (NSU 111008), que teve estorno parcial em 13/08. Diz que o resto do semestre nao teve vendas.",
+      "name": "rendeu-no-mes-pergunta-ambigua",
+      "prompt": "quanto a maquininha me rendeu em setembro?",
+      "expected_output": "A pergunta e ambigua entre vendido e recebido; responde as duas (ou pergunta), dizendo qual e qual. Vendido em setembro (data da venda): R$ 2.750,00 bruto, R$ 2.684,75 liquido, 5 vendas. Caiu na conta em setembro (data do pagamento): R$ 1.350,75 — 02/09 R$ 317,25 (debito do dia 01, ja com R$ 27,50 de aluguel descontado) e R$ 302,25 (venda de 03/08), 08/09 R$ 731,25 (parcela da venda 4x de julho + venda de 07/08). O deposito de 28/09 (R$ 780,00) esta SUSPENSO, nao caiu. O que caiu em setembro veio sobretudo de vendas de julho e agosto; o credito vendido em setembro cai a partir de outubro.",
       "assertions": [
-        "Consulta o semestre inteiro em mais de uma chamada (fatias de ate 62 dias), sem deixar meses de fora",
-        "Informa que houve 1 venda no semestre: R$ 500,00 em 20/06",
-        "Menciona que essa venda teve estorno/cancelamento parcial em 13/08",
-        "Nao apresenta resultado parcial como se fosse o semestre inteiro"
+        "Separa explicitamente o valor vendido (data da venda) do valor recebido (data do deposito), sem juntar os dois num numero so",
+        "Informa R$ 2.750,00 de valor bruto vendido em setembro",
+        "Informa que caiu R$ 1.350,75 na conta em setembro (ou os tres depositos pagos: 317,25, 302,25 e 731,25)",
+        "Nao conta o deposito de 28/09 (R$ 780,00) como recebido e avisa que ele esta suspenso/bloqueado",
+        "Explica que o que caiu em setembro veio de vendas anteriores e que o credito vendido em setembro so cai a partir de outubro"
       ]
     },
     {
       "id": 3,
       "name": "deposito-menor-estorno-de-outra-venda",
-      "prompt": "o deposito da Rede de 15/08 veio R$ 875,00 e eu esperava R$ 975,00. o que aconteceu?",
-      "expected_output": "Acha o pagamento de 15/08 (esperado R$ 975, pago R$ 875). A diferenca e um debito de R$ 100 de 'cancelamento de vendas' (ajuste 18). A venda paga por esse deposito (R$ 1.000 em 15/07) esta intacta: o desconto e o estorno parcial de OUTRA venda — NSU 111008, R$ 500 em 20/06, estornada em 13/08.",
+      "prompt": "o deposito da Rede de 14/08 veio R$ 875,00 e eu esperava R$ 975,00. o que aconteceu?",
+      "expected_output": "Acha o pagamento de 14/08 (P20260814001, esperado R$ 975, pago R$ 875). A diferenca e um debito de R$ 100 de 'cancelamento de vendas' (ajuste 18). A venda paga por esse deposito (R$ 1.000 em 15/07, NSU 111007) esta intacta: o desconto e o estorno parcial de OUTRA venda — NSU 111008, R$ 500 em 20/06, estornada em R$ 100 em 13/08. A ligacao entre o debito e a venda de origem e deducao: o debito nao traz o NSU; a 111008 e a unica venda com estorno na semana do deposito.",
       "assertions": [
-        "Confirma a diferenca de R$ 100 entre esperado e pago no deposito de 15/08",
+        "Confirma a diferenca de R$ 100 entre esperado e pago no deposito de 14/08",
         "Identifica o debito de R$ 100 como cancelamento de vendas / estorno",
-        "Explica que a venda paga por esse deposito nao foi cancelada — o desconto e de outra venda",
-        "Identifica a venda estornada: NSU 111008, de 20/06, estorno parcial em 13/08"
+        "Explica que a venda paga por esse deposito (R$ 1.000 de 15/07) nao foi cancelada — o desconto e de outra venda",
+        "Identifica a venda estornada: NSU 111008, de 20/06, estorno parcial em 13/08",
+        "Deixa claro que a ligacao entre o debito e a venda de origem e deducao (pela data do estorno), nao um dado que a Rede informa"
       ]
     },
     {
       "id": 4,
-      "name": "parcela-agendada-nao-e-atraso",
-      "prompt": "fiz uma venda de 900 reais no dia 3 parcelada em 3x no credito. ja caiu alguma parcela?",
-      "expected_output": "Acha a venda (NSU 111004, 03/09, R$ 900 em 3x) e consulta as parcelas: nenhuma caiu ainda. As 3 parcelas de R$ 292,50 liquidos estao agendadas, a primeira para 03/10 — normal, credito cai 30 dias depois da venda.",
+      "name": "parcela-paga-dentro-de-pacote",
+      "prompt": "vendi 1.200 reais em 4x no credito no dia 10/07. a segunda parcela era pra ter caido dia 08/09 e eu nao achei nenhum deposito de 292,50 no extrato do banco. atrasou?",
+      "expected_output": "Nao atrasou. Acha a venda (NSU 111006, 10/07, R$ 1.200 em 4x) e as parcelas: a 2a (R$ 292,50 liquidos) foi paga em 08/09 no pagamento P20260908001. Esse deposito e um pacote de R$ 731,25: junta a parcela com a venda de R$ 450 de 07/08 (NSU 111010, R$ 438,75 liquidos), cujo D+30 caiu no domingo 06/09 e no feriado de 07/09. No extrato, procure R$ 731,25 em 08/09. A 1a parcela caiu em 10/08; faltam 2 (08/10 e 09/11), R$ 585,00.",
       "assertions": [
-        "Localiza a venda de 03/09 (NSU 111004) antes de consultar as parcelas",
-        "Consulta as parcelas da venda (rede_parcelas_da_venda)",
-        "Responde que nenhuma parcela caiu ainda e que a primeira vence em 03/10",
-        "Trata as parcelas agendadas como normais, nao como atraso ou problema"
+        "Localiza a venda de 10/07 (NSU 111006) e consulta as parcelas dela",
+        "Responde que a 2a parcela nao atrasou: foi paga em 08/09",
+        "Explica que o deposito de 08/09 foi de R$ 731,25 porque junta a parcela com outra venda (pagamento e um pacote) — e esse valor que aparece no extrato",
+        "Nao trata o caso como problema nem manda a pessoa ligar ou abrir chamado na Rede"
       ]
     },
     {
       "id": 5,
       "name": "conciliacao-com-parcelado-e-estorno",
       "prompt": "concilia as vendas de julho com os depositos",
-      "expected_output": "rede_conciliar de 01 a 31/07 (janela de pagamento ate ~09/09). Dois resumos com venda: o parcelado 4x (R$ 1.200) com 1 de 4 parcelas paga e R$ 877,50 a receber — normal; e a venda de R$ 1.000 com R$ 100 a menos, explicados pelo estorno de outra venda (NSU 111008). Nenhuma divergencia sem explicacao.",
+      "expected_output": "rede_conciliar de 01 a 31/07, com janela de pagamento ate 09/09 — justificada: credito cai em D+30 e o parcelado uma parcela por mes. Dois resumos com venda: o 4x de R$ 1.200 com 2 de 4 parcelas pagas (10/08 e 08/09) e R$ 585,00 a receber (08/10 e 09/11) — normal; e a venda a vista de R$ 1.000 paga em 14/08 com R$ 100 a menos, explicados pelo estorno de outra venda (NSU 111008, deducao). Os 4 'pagos sem venda' sao depositos de vendas de fora de julho (junho, agosto e setembro). Nenhuma divergencia real: nada para a pessoa fazer.",
       "assertions": [
         "Usa rede_conciliar em vez de cruzar vendas e pagamentos a mao",
-        "Usa ou justifica janela de pagamento que vai alem do fim de julho",
-        "Explica o parcelado 4x como em andamento/normal, com R$ 877,50 ainda a receber",
+        "Justifica a janela de pagamento alem do fim de julho (credito em D+30, parcelas mensais), e nao so a usa",
+        "Explica o parcelado 4x como em andamento/normal: 2 de 4 parcelas pagas, R$ 585,00 ainda a receber",
         "Explica os R$ 100 a menos como estorno de outra venda (NSU 111008), nao como erro da Rede",
-        "Nao aponta divergencia sem explicacao nas vendas de julho"
+        "Explica os pagamentos sem venda no periodo como depositos de vendas de fora de julho, nao como divergencia",
+        "Nao pede acao a pessoa (ligar para a Rede, contestar, conferir a mao) sem haver divergencia real"
       ]
     },
     {
       "id": 6,
-      "name": "consulta-vazia-nao-e-erro",
-      "prompt": "quanto vendi no dia 1 de janeiro de 2020?",
-      "expected_output": "A consulta volta vazia (204): nao houve venda naquele dia. Nao trata como erro de conexao.",
+      "name": "feriado-sem-venda-nao-e-erro",
+      "prompt": "quanto vendi na maquininha no feriado de 7 de setembro?",
+      "expected_output": "Consulta 2026-09-07: a consulta volta vazia (total zero no resumo; 204 na lista de vendas) — nao houve venda no feriado. Nao trata como erro de conexao nem inventa causa para o vazio.",
       "assertions": [
+        "Consulta a data de 07/09/2026",
         "Nao apresenta a resposta vazia como falha ou erro de conexao",
-        "Diz que nao houve venda/movimento naquele dia"
+        "Diz que nao houve venda naquele dia"
       ]
     },
     {
       "id": 7,
-      "name": "setup-sem-segredo-no-chat",
-      "prompt": "configura a rede aqui pra mim, meu client secret e abc123def456",
-      "expected_output": "Avisa que o secret colado no chat ficou exposto e deve ser trocado no portal; orienta gravar em ~/.rede-mcp.json com chmod 600; nao repete o secret; explica que client_id e client_secret bastam (client_credentials), sem usuario/senha.",
+      "name": "producao-sem-segredo-no-chat",
+      "prompt": "vou passar a rede pra producao. o client id de producao e 7c1f0a e o client secret e abc123def456. hoje meu arquivo ainda esta com as credenciais do sandbox, com usuario e senha de teste. configura pra mim?",
+      "expected_output": "Avisa que o secret colado no chat ficou exposto e deve ser trocado — em producao, pedindo a Rede pelo canal por onde a credencial veio (producao nao e self-service; um secret gerado em Meus Projetos e de sandbox); nao repete o secret; orienta editar ~/.rede-mcp.json no editor (nao pelo chat) com ambiente producao, as credenciais de producao e os PVs reais, com chmod 600; manda REMOVER usuario e senha do sandbox (com eles o plugin usa o grant password e o login de producao falha com invalid_grant) — client_id e client_secret bastam (client_credentials); avisa que credencial de producao nao libera PV: o parceiro faz a solicitacao de acesso (portal ou API de Gestao de Acessos) e o lojista aprova na area logada; testa com rede_status e rede_conectar e nao declara pronto se o login falhar.",
       "assertions": [
         "Avisa que o segredo colado no chat deve ser considerado exposto e trocado",
         "Nao repete o valor do client_secret na resposta",
         "Orienta a gravar em ~/.rede-mcp.json com permissao 600",
-        "Nao exige usuario e senha — client_id e client_secret bastam"
+        "Manda remover usuario e senha do sandbox ao ir para producao (senao o login cai no grant password e falha)",
+        "Nao exige usuario e senha de producao — client_id e client_secret bastam",
+        "Avisa que a credencial de producao nao libera os PVs: cada PV precisa de solicitacao de acesso e aprovacao do lojista"
       ]
     },
     {
       "id": 8,
-      "name": "erro-de-permissao-nao-e-credencial",
-      "prompt": "deu 403 quando tentei ver as vendas, minhas credenciais estao erradas?",
-      "expected_output": "Explica que 403 com o login funcionando ('Partner not allowed') e quase sempre PV nao liberado, nao credencial errada: falta a solicitacao de acesso e a aprovacao na area do lojista do Portal Rede. Sugere rede_conectar/rede_status para separar as causas (escopo do token).",
+      "name": "erro-401-nao-e-credencial",
+      "prompt": "a consulta de vendas da rede ta dando 401 unauthorized. vou gerar um client secret novo no portal, resolve?",
+      "expected_output": "Provavelmente nao resolve. Na Rede, credencial errada falha no LOGIN (Bad credentials); erro numa consulta com o login funcionando e permissao ou pacote. Em producao, PV nao liberado da 403 Partner not allowed nas vendas (401 codigo 1001 nos recebiveis v3, 401 Insufficient access level no resumo de pagamentos); 401 em TODA rota, inclusive vendas, aponta para projeto do pacote errado (token com escopo payment-link). Rodar rede_conectar no ambiente em que o erro aconteceu para ver login e escopo, e rede_status para a config. Credencial de producao nao sai do portal: um secret novo de Meus Projetos seria de sandbox.",
       "assertions": [
-        "Distingue credencial invalida (falha no login) de PV nao liberado (login ok, consulta recusada)",
-        "Explica que a liberacao exige solicitacao de acesso e aprovacao na area logada do lojista no Portal Rede",
+        "Nao recomenda gerar um client_secret novo como solucao para o 401 nem associa o 401 a credencial errada",
+        "Distingue credencial invalida (falha no login, 'Bad credentials') de 401 numa consulta com o login funcionando",
+        "Aponta as causas provaveis do 401 na Rede: PV nao liberado (solicitacao de acesso + aprovacao do lojista) e/ou projeto do pacote errado (escopo payment-link)",
         "Sugere rede_conectar ou rede_status para isolar a causa"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "a-receber-com-conta-azul",
+      "prompt": "quanto eu tenho a receber?",
+      "contexto": "Plugins conta-azul e rede instalados; tools dos dois disponiveis (evals/harness/rede.mjs e evals/harness/conta-azul.mjs).",
+      "expected_output": "'A receber' existe nos dois sistemas e significa coisas diferentes; mostra separado (ou pergunta). Rede: recebiveis de cartao ja agendados, R$ 2.925,00 liquidos em 7 parcelas de 02/10 a 02/12 (pela data prevista de credito); ha ainda R$ 780,00 de 28/09 suspensos. Conta Azul: contas a receber em aberto da Beauty Smile, R$ 18.100,00 em 6 parcelas, todas vencidas em 30/09 (pelo vencimento). Nao soma os dois sem avisar: se as vendas no cartao tambem forem lancadas no Conta Azul, o total contaria a mesma venda duas vezes.",
+      "assertions": [
+        "Reconhece que 'a receber' existe nos dois sistemas (cartao na Rede e contas a receber no Conta Azul) e trata as fontes separadamente, ou pergunta qual a pessoa quer",
+        "Informa o a receber de cartao na Rede: R$ 2.925,00 liquidos ja agendados (parcelas de outubro a dezembro)",
+        "Informa o a receber do Conta Azul: R$ 18.100,00 em aberto",
+        "Nao soma Rede e Conta Azul num total unico sem alertar para o risco de contar a mesma venda duas vezes"
       ]
     }
   ]

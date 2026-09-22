@@ -1,6 +1,6 @@
 # Status — o que está pronto e o que falta
 
-Atualizado em **2026-09-21**. Este arquivo existe para retomar o trabalho sem reconstruir o
+Atualizado em **2026-09-22**. Este arquivo existe para retomar o trabalho sem reconstruir o
 contexto. Detalhe técnico fica nos docs apontados; aqui é o estado.
 
 ## Em uma linha
@@ -22,7 +22,7 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
 | Fallback automático v2 → v1 em vendas | Pronto. Nasceu do 403 do sandbox |
 | 3 skills + 2 references + 5 docs | Pronto |
 | 54 testes offline | Passando |
-| 65 testes de integração (API simulada) | Passando |
+| 113 testes de integração (API simulada) | Passando. Mock coerente desde a v0.1.4: uma fonte só (vendas → cronograma em dia útil → ordens, pagamentos, recebíveis, débitos, bloqueios) |
 | `claude plugin validate` | Passando |
 | Produção (Matriz e Hirata) | **Funcionando** desde 2026-09-21 — login, consultas e conciliação com dado real |
 | Teste contra o sandbox real da Rede | Feito. Vendas, parceladas, pagamentos, ordens de crédito e débitos respondendo com dado real |
@@ -60,11 +60,13 @@ Pagamento** foi mapeada e testada, mas por decisão não virou tool: vai virar w
 
 ### Do plugin em si
 
-4. ~~Rodar os 8 evals~~ — **iteração 1 em 2026-09-21: 100% com skill × 91% sem.** Só 2 evals
-   separaram as configurações, porque a inteligência está nas tools. A crítica dos avaliadores achou
-   3 defeitos na skill, já corrigidos na v0.1.3. Ver [evals/benchmark-iteracao-1.md](evals/benchmark-iteracao-1.md).
-   **Próximo:** acertar as incoerências do mock (listadas no benchmark), reforçar os evals que não
-   discriminam e rodar a iteração 2.
+4. ~~Rodar os evals~~ — **iteração 2 em 2026-09-22: 95% com skill × 86% sem** (42 asserções, 9
+   casos). Separaram 3 evals (dedução de estorno, liberação de PV na ida para produção e o 401 que
+   não é credencial), contra 2 na iteração 1. A crítica dos avaliadores achou 13 defeitos no texto
+   da skill, corrigidos na v0.1.4. Ver [evals/benchmark-iteracao-2.md](evals/benchmark-iteracao-2.md)
+   (e o [da iteração 1](evals/benchmark-iteracao-1.md)).
+   **Próximo:** as dívidas novas do mock e os reforços de eval listados no benchmark, com a linha
+   de base vendo as instructions do servidor (o `list` do harness já mostra).
 5. ~~Publicar no marketplace~~ — **publicado em 2026-09-21** (v0.1.1), depois da validação em
    produção, e instalado no Claude Code. Este diretório do marketplace é a fonte; o
    `skill-prompt/plugins/rede` é só um symlink.
@@ -115,6 +117,11 @@ Estas custaram tempo e estão resolvidas no código ou documentadas:
 10. **Parcelado pago pela metade não é divergência** — o crédito parcelado cai uma parcela por mês.
     Corrigido: grupo `parcelado_em_andamento` na conciliação.
 11. **O sandbox só tem dado em novembro de 2022**, nos PVs 13381369 e 22523510 (e 1254405 para NSU).
+12. **"Pago sem venda" não é só venda anterior.** Com a janela de pagamento esticada em 40 dias,
+    débito e crédito do começo do mês seguinte caem nesse grupo. Corrigido na skill e no `como_ler`
+    da conciliação (v0.1.4).
+13. **Na lista de pagamentos vem o que não caiu.** `SUSPENDED`, `BLOCKED` e `RETAINED` aparecem junto
+    dos `PAID`; "quanto caiu" soma só os pagos (v0.1.4).
 
 ## Mapa dos arquivos
 

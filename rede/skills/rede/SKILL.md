@@ -33,7 +33,8 @@ Errar isso e a causa de praticamente toda resposta errada sobre maquininha.
 Quando o dinheiro cai:
 
 - **Debito** → D+1 (proximo dia util apos a venda).
-- **Credito a vista** → D+30.
+- **Credito a vista** → D+30, tambem empurrado para o proximo dia util: venda de sabado 12/09 tem
+  D+30 no feriado de 12/10, e o credito cai em 13/10.
 - **Credito parcelado** → 30, 60, 90 dias... uma parcela por mes, inclusive no parcelado com juros
   (quem financia e o emissor; o lojista recebe como se fosse a vista em 30 dias).
 
@@ -41,8 +42,11 @@ Quando o dinheiro cai:
 setembro" e "recebi R$ 10 mil em setembro" sao perguntas diferentes e respostas diferentes. Se a
 pessoa nao deixou claro qual quer, pergunte ou responda as duas dizendo qual e qual.
 
-Um pagamento e um **pacote**: agrupa parcelas de varias vendas diferentes. Nao existe "o pagamento
-desta venda" — existe "o pagamento que contem a parcela desta venda".
+Um pagamento e um **pacote**: pode juntar parcelas de varias vendas — ou trazer uma parcela so. Nao
+existe "o pagamento desta venda" — existe "o pagamento que contem a parcela desta venda". Por isso o
+valor da parcela quase nunca serve para procurar no extrato: pegue o `paymentId` em
+`rede_parcelas_da_venda` e abra o deposito com `rede_parcelas_do_pagamento`. Para prever o que cai
+num dia, olhe os recebiveis do dia; nao suponha que vai vir somado.
 
 ## Qual tool responde o que
 
@@ -53,15 +57,15 @@ desta venda" — existe "o pagamento que contem a parcela desta venda".
 | "Lista das vendas" / auditar transacoes | `rede_vendas` | Janela de 62 dias. Use `paginar_tudo` para juntar as paginas. |
 | "Essa venda especifica" (tenho o NSU) | `rede_vendas_por_nsu` | Filtra tambem por terminal e TID de e-commerce. |
 | "Quando cai essa venda?" / "ja foi paga?" | `rede_parcelas_da_venda` | Exige data da venda **e** NSU. Devolve vencimento, status e o `paymentId` de cada parcela. |
-| "Quanto tenho a receber?" | `rede_recebiveis_resumo` | v3 por padrao, sem limite de janela. `agrupar_por` aqui e **minusculo**. |
+| "Quanto tenho a receber?" | `rede_recebiveis_resumo` | v3 por padrao, sem limite de janela. `agrupar_por` aqui e **minusculo**. Mostre a parte o que esta suspenso ou bloqueado (`rede_bloqueios_resumo`): nao esta agendado, mas e dinheiro que a pessoa espera. Se houver um ERP instalado (Conta Azul, por exemplo), ver "a receber em dois sistemas" abaixo. |
 | "Calendario de entrada de caixa" | `rede_recebiveis_calendario` | Blocos diario e mensal juntos. Janela de 60 dias. |
-| "Quanto caiu na conta?" | `rede_pagamentos` | Janela de 30 dias, pela data do **pagamento**. |
-| "Resumo dos depositos" (por dia, banco, bandeira...) | `rede_pagamentos_resumo` | 9 agrupamentos, **minusculo**. O corpo da resposta muda conforme o agrupamento. |
+| "Quanto caiu na conta?" | `rede_pagamentos` | Janela de 30 dias, pela data do **pagamento**. **Some so os `PAID`**: a lista traz tambem `SUSPENDED`, `BLOCKED`, `RETAINED`, que nao cairam — mostre-os a parte e veja `rede_bloqueios_do_pagamento`. |
+| "Resumo dos depositos" (por dia, banco, bandeira...) | `rede_pagamentos_resumo` | 9 agrupamentos, **minusculo**. O corpo da resposta muda conforme o agrupamento. Para "quanto caiu", filtre `status: PAID` ou agrupe por `status` — o total sem filtro nao separa o que foi suspenso. |
 | "Detalhe do dia, com pendentes e suspensos" | `rede_pagamentos_diario` | A visao mais rica de pagamento. Sem limite de janela. |
 | "O que tem dentro deste deposito?" | `rede_parcelas_do_pagamento` | Abre o pacote: NSU, resumo de venda e valores de cada parcela. |
 | "Por que caiu menos do que eu esperava?" | `rede_debitos_do_pagamento` + `rede_pagamento_esperado` | Compare esperado x pago e veja os ajustes descontados. |
 | "O que a Rede me cobrou este mes?" | `rede_debitos_resumo` | Somado por tipo de ajuste. Janela de 30 dias. Os nomes dos tipos saem de `rede_tipos_de_ajuste`. |
-| "Meu dinheiro esta preso/bloqueado" | `rede_bloqueios_resumo`, `rede_bloqueios_do_pagamento` | Tipos: SUSPENDED, PAWNED (gravame), RETAINED. O evento diz se foi BLOCK ou RELEASE. |
+| "Meu dinheiro esta preso/bloqueado" | `rede_bloqueios_resumo`, `rede_bloqueios_do_pagamento` | Tipos: SUSPENDED, PAWNED (gravame), RETAINED. O evento diz se foi BLOCK ou RELEASE. A resposta traz tipo, valor e data — nao traz motivo nem prazo de liberacao; nao invente os dois. |
 | "Essa venda caiu em qual deposito?" (em lote) | `rede_conciliar` | Ver a skill `rede-conciliacao`. |
 | Recebiveis dados em garantia / gravame | `rede_parcelas_gravame`, `rede_recebiveis_diario` | Campos de cessao, cessionario e ordem de credito. |
 | Rota sem tool dedicada | `rede_get` | Ultimo recurso — nao valida janela nem posiciona o PV. |
@@ -79,10 +83,11 @@ desta venda" — existe "o pagamento que contem a parcela desta venda".
 4. **Bandeira em rota detalhada.** A doc declara uma bandeira por chamada nas rotas detalhadas e
    lista separada por virgula nos resumos. Se a API recusar varias, repita uma por vez.
 5. **`rede_recebiveis_parcelas` exige bandeira.** Sem ela a Rede recusa.
-6. **204 nao e erro.** Significa "consulta ok, nenhum registro". A resposta vem com `vazio: true` —
-   diga "nao houve movimento no periodo", nunca "deu erro".
+6. **204 nao e erro.** Significa "consulta ok, nenhum registro". Conforme a tool, chega como
+   `vazio: true`, lista vazia ou total zero — diga "nao houve movimento no periodo", nunca "deu erro".
+   Tambem nao invente causa para o vazio ("deve ser outra maquininha"): diga o que foi consultado.
 7. **403 e 401 quase sempre sao permissao de PV**, nao credencial errada. A liberacao por
-   estabelecimento e feita pela Rede (gestao de acessos), nao no codigo.
+   estabelecimento e pedida na gestao de acessos e aprovada pelo lojista (item 12), nao no codigo.
 8. **Vendas por NSU no sandbox roda em outra base.** Se der 404, preencha `base_nsu` no
    `~/.rede-mcp.json` — a skill `rede-setup` explica.
 9. **`401` em TODAS as rotas = projeto do pacote errado**, nao PV sem permissao. Um projeto de
@@ -94,10 +99,18 @@ desta venda" — existe "o pagamento que contem a parcela desta venda".
 11. **O swagger erra o nome do PV na v2 de vendas.** Diz `parentMerchantId`; producao exige
     `parentCompanyNumber` e responde 422 sem ele. As tools mandam os dois. Se usar `rede_get` na v2,
     mande `parentCompanyNumber`.
-12. **`Partner not allowed` = PV nao liberado**, seja 403 ("for this company number") ou 401
-    ("for this merchant", codigo 1001). Nao ensine "401 = credencial errada": na Rede, credencial
-    errada falha **no login** (`Bad credentials`); 401 em consulta com login ok e permissao. O login esta certo; falta a solicitacao de acesso e a
-    aprovacao do lojista. Ver `docs/producao.md`.
+12. **`Partner not allowed` = PV nao liberado.** Nao ensine "401 = credencial errada": na Rede,
+    credencial errada falha **no login** (`Bad credentials`); erro em consulta com login ok e
+    permissao. O que se viu em producao com o PV ainda nao liberado, por rota:
+    - vendas: `403 Partner not allowed for this company number`;
+    - recebiveis v3: `401 Partner not allowed for this merchant` (codigo 1001);
+    - resumo de pagamentos v2: `401 Insufficient access level to access this feature`.
+
+    Entao um 401 **nas vendas** aponta primeiro para o pacote errado (item 9) — confira o escopo com
+    `rede_conectar`. A liberacao: o parceiro pede (no portal ou pela API de Gestao de Acessos, que a
+    mesma credencial alcanca) e o lojista aprova na area logada do Portal Rede. Diagnostique no
+    **ambiente em que o erro aconteceu**: um login ok no sandbox nao diz nada sobre producao.
+    Ver `docs/producao.md`.
 13. **Divergencia na conciliacao costuma ser ajuste de OUTRA venda.** A Rede desconta estornos e
     cancelamentos do proximo deposito, seja qual for a venda que ele paga. Caso real: RV com venda
     de R$ 7.350 intacta apareceu com R$ 526,32 a menos porque o deposito levou o estorno parcial
@@ -113,6 +126,22 @@ desta venda" — existe "o pagamento que contem a parcela desta venda".
 - Se paginou e parou no teto, diga que o numero e parcial — a resposta traz `completo: false`.
 - Nao some valores de rotas diferentes sem checar a data-base: somar venda de setembro com pagamento
   de setembro nao da nada que exista no mundo real.
+
+### "A receber" em dois sistemas
+
+Com um ERP instalado junto (Conta Azul, por exemplo), "quanto tenho a receber?" tem duas respostas
+que nao sao a mesma coisa:
+
+- **Rede:** recebiveis de cartao ja agendados, liquidos, pela data prevista de credito. So sabe da
+  maquininha.
+- **ERP:** contas a receber de clientes em aberto, pelo vencimento — boleto, Pix, cartao lancado a
+  mao, o que a clinica registrar.
+
+Mostre as duas separadas, dizendo o que cada uma e (ou pergunte qual a pessoa quer). **Nao abra com
+um total somado:** se as vendas no cartao tambem forem lancadas no ERP, a mesma venda conta duas
+vezes, e a ausencia de sobreposicao nos dados de hoje nao garante a de amanha. Se quiser dar a soma,
+de depois, como conta condicional ("se o cartao nao e lancado no ERP, o total e X"). Confira tambem
+se a empresa do ERP e o PV da Rede sao o mesmo CNPJ.
 
 ## Referencias
 

@@ -12,3 +12,6 @@ venv/
 __pycache__/
 *.pyc
 .pytest_cache/
+
+# Execucoes do harness de evals sem REDE_RUN_DIR / CA_RUN_DIR (config de teste do mock)
+*/evals/harness/run-default*/

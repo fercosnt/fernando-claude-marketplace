@@ -18,7 +18,7 @@ import { registrarRecebiveis } from "./tools-recebiveis.js";
 import { registrarDebitos } from "./tools-debitos.js";
 import { registrarConciliacao } from "./tools-conciliacao.js";
 
-const VERSAO = "0.1.3";
+const VERSAO = "0.1.4";
 
 const server = new McpServer(
   { name: "rede", version: VERSAO },

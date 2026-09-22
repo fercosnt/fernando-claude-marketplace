@@ -8,10 +8,12 @@ Guie a pessoa na configuracao do acesso as **APIs de Gestao de Vendas da Rede** 
 ## Regras que nao podem ser quebradas
 
 1. **Nunca peca para colar `client_secret`, senha ou token no chat.** Tudo que passa pela conversa
-   fica no historico. Os segredos vao do portal direto para o arquivo local.
+   fica no historico. Os segredos vao do portal (sandbox) ou do e-mail da Rede (producao) direto
+   para o arquivo local.
 2. **Nunca imprima o conteudo de `~/.rede-mcp.json` nem da pasta `~/.rede-mcp/`.**
 3. Se a pessoa colar um segredo no chat assim mesmo, avise que aquele valor deve ser considerado
-   exposto e trocado no portal depois do teste.
+   exposto e trocado depois do teste: no portal, se for de sandbox; pedindo a Rede pelo mesmo canal
+   por onde veio, se for de producao.
 
 ## O arquivo
 
@@ -46,6 +48,10 @@ aponta `https://payments-apisandbox.useredecloud.com.br` para essa rota, diferen
 **diferentes**; se ficarem iguais no arquivo, foi o mesmo valor colado duas vezes e o plugin recusa
 na largada.
 
+Isso vale para o **sandbox**, que e self-service. Em **producao** a credencial nao sai do portal: e
+pedida por e-mail a Rede (ver `docs/producao.md`). Um secret gerado em *Meus Projetos* e de sandbox e
+nao resolve nada em producao.
+
 **O pacote do projeto importa mais que tudo.** Um projeto criado no pacote **Payment Link** gera
 credencial que autentica normalmente, mas o token sai com escopo `payment-link` e **toda** rota de
 extrato responde `401 Unauthorized`. O projeto tem de ser do pacote **APIs de Conciliacao**, cujo
@@ -59,8 +65,10 @@ Linha Direta para atacado) informando: razao social, CNPJ, e-mail, telefone, nic
 do cliente, e quais APIs quer acessar.
 
 **`pvs`** — os Pontos de Venda (estabelecimentos) que a pessoa pode consultar. No sandbox existem
-apenas dois, com dados fixos: **13381369** e **22523510**. Em producao sao os PVs reais, e cada um
-precisa ser liberado para o usuario na gestao de acessos da Rede.
+apenas dois, com dados fixos: **13381369** e **22523510**. Em producao sao os PVs reais (troque os
+do sandbox), e cada um precisa ser liberado: o parceiro faz a solicitacao de acesso (no portal ou
+pela API de Gestao de Acessos, que a mesma credencial alcanca) e o lojista aprova na area logada do
+Portal Rede.
 
 ## Ambientes
 
@@ -90,7 +98,7 @@ sessoes.
 | `Bad credentials` no login | `client_id`/`client_secret` errados, iguais, ou de outro ambiente |
 | `invalid_grant` | `usuario`/`senha` errados (so no grant password) |
 | Login ok, **toda** rota da 401 | projeto do pacote errado no Portal. Rode `rede_conectar` e olhe o escopo: se vier `payment-link`, crie um projeto em *APIs de Conciliacao* |
-| 401 so em algumas rotas | falta liberacao daquele PV para o usuario na gestao de acessos da Rede |
+| 401 ou 403 so em algumas rotas | PV nao liberado. Em producao: 403 "Partner not allowed" nas vendas, 401 codigo 1001 nos recebiveis v3, 401 "Insufficient access level" no resumo de pagamentos. Falta a solicitacao de acesso e a aprovacao do lojista |
 | 403 "Requisicao invalida" | rota nao habilitada para o aplicativo. No sandbox e a resposta normal de recebiveis, bloqueios, resumos de venda e da v2 de vendas |
 | 400 "scenario is not available in the sandbox" | o ambiente de teste nao tem esse caso. Em `/v1/payments`, mande um filtro do roteiro: `size` 1, 5 ou 10, `status=PENDING`, `brands=1`, `types=DEBIT` |
 | 404 so em `rede_vendas_por_nsu` | preencher `base_nsu` |
@@ -128,7 +136,11 @@ que e o fluxo documentado. O arquivo de producao fica so com `ambiente`, `client
 O caminho completo — e-mail para pedir credenciais, os 8 itens que a Rede exige, e a liberacao dos
 PVs (que e o passo que costuma travar) — esta em `docs/producao.md`. Dois pontos que economizam
 tempo: o `grant_type=password` do PDF de 2023 esta desatualizado, e ter credencial de producao
-**nao** da acesso a nenhum PV; cada um precisa de solicitacao e aprovacao na area logada do lojista.
+**nao** da acesso a nenhum PV; cada um precisa de uma solicitacao de acesso (feita pelo parceiro, no
+portal ou por API) e da aprovacao do lojista na area logada do Portal Rede.
+
+Se o login de producao falhar, nao declare a configuracao pronta: diga o que ficou no arquivo e o
+que falta.
 
 ## Instalar o plugin
 

@@ -2,11 +2,11 @@
 /**
  * CLI para os evals: chama as tools do MCP rede contra a API simulada (test/mock.mjs).
  *
- *   node rede.mjs list                     -> lista as tools, descricao e parametros
+ *   node rede.mjs list                     -> instrucoes do servidor MCP e as tools (descricao e parametros)
  *   node rede.mjs <tool> '<json de args>'  -> chama a tool e imprime o resultado
  *
  * REDE_RUN_DIR isola cada execucao (config, tokens e o log das chamadas a API em api_log.jsonl).
- * Dados da API simulada: uma clinica ficticia, PV 13381369, hoje = 2026-09-21.
+ * Dados da API simulada: uma clinica ficticia, PV 13381369, hoje = 2026-09-30.
  * Sem dependencias: fala JSON-RPC direto com o servidor por stdio.
  */
 import { spawn } from "node:child_process";
@@ -71,10 +71,12 @@ const enviar = (method, params) =>
 
 let codigo = 0;
 try {
-  await enviar("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "rede-eval", version: "1" } });
+  const ini = await enviar("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "rede-eval", version: "1" } });
   mcp.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
   const [cmd, arg] = process.argv.slice(2);
   if (!cmd || cmd === "list") {
+    // Em producao o cliente MCP poe as instructions do servidor no contexto, com ou sem skill.
+    if (ini.result?.instructions) console.log(`# Instrucoes do servidor\n${ini.result.instructions}`);
     const r = await enviar("tools/list", {});
     for (const t of r.result.tools) {
       console.log(`\n## ${t.name} — ${t.title ?? ""}\n${t.description}\nparametros: ${JSON.stringify(t.inputSchema?.properties ?? {})}`);

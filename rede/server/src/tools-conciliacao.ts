@@ -388,10 +388,12 @@ export function registrarConciliacao(server: McpServer): void {
         como_ler:
           "'parcelado em andamento' e normal: venda parcelada cujas parcelas seguintes vencem depois da janela " +
           "(uma por mes) — o pago e um multiplo exato da parcela, e falta_receber diz o restante. " +
-          "'valor_liquido_pago' nos totais inclui parcelas de vendas ANTERIORES ao periodo (grupo 'pago sem venda'), " +
-          "por isso pode ser maior que o vendido. " +
+          "'valor_liquido_pago' nos totais inclui depositos de vendas DE FORA do periodo, anteriores e posteriores " +
+          "(grupo 'pago sem venda'), por isso pode ser maior que o vendido. " +
           "'sem pagamento' costuma ser venda recente que ainda nao venceu (credito cai em D+30) ou parcela bloqueada — " +
-          "confira em rede_parcelas_da_venda. 'pago sem venda' quase sempre e venda anterior ao periodo: estique venda_inicio. " +
+          "confira em rede_parcelas_da_venda. 'pago sem venda' e deposito de venda de fora do periodo: anterior (parcela " +
+          "de parcelado antigo) ou posterior (debito e credito do comeco do periodo seguinte, pagos dentro da janela " +
+          "esticada) — nao e divergencia; rede_parcelas_do_pagamento mostra qual venda e. " +
           "'ajuste no repasse' e diferenca ja explicada por um debito do deposito — o campo ajustes diz qual; se for " +
           "estorno, provavel_origem aponta a venda estornada (pode ser de outra data e outro resumo). " +
           "'valor divergente' e o que sobrou SEM explicacao nos debitos: esse sim merece olhar humano." +

@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.1.4 — 2026-09-22
+
+Correcoes que vieram da critica dos avaliadores na iteracao 2 dos evals (ver
+`evals/benchmark-iteracao-2.md`). Nenhuma mudou nota de assercao sozinha; todas estavam no texto da
+skill e levaram a resposta a errar ou a afirmar sem base.
+
+- **"Pago sem venda" nao e so venda anterior.** A skill e o `como_ler` de `rede_conciliar` mandavam
+  esticar `venda_inicio` para tras. Com a janela de pagamento esticada em 40 dias, boa parte desse
+  grupo e venda **posterior** ao periodo (debito e credito do comeco do mes seguinte) — na conciliacao
+  de julho do teste, 3 de 4. Agora os dois dizem "de fora do periodo, anterior ou posterior" e
+  mandam abrir o deposito com `rede_parcelas_do_pagamento`.
+- **"Quanto caiu na conta" soma so os pagos.** A lista de pagamentos traz tambem `SUSPENDED`,
+  `BLOCKED` e `RETAINED`; somar tudo contava dinheiro preso como recebido.
+- **Bloqueio sem motivo inventado.** A API nao traz motivo nem prazo de liberacao; a skill passa a
+  dizer isso.
+- **Pagamento e pacote, mas pode ter uma parcela so.** A skill generalizava ("agrupa parcelas de
+  varias vendas") e a resposta chegou a prever que a proxima parcela viria somada, contra os
+  recebiveis. Agora manda achar o deposito pelo `paymentId` e prever pelos recebiveis do dia.
+- **Credito tambem vai para o proximo dia util.** So o debito dizia isso.
+- **Exemplo de estorno contaminava o eval.** O exemplo de "como dizer a origem" era a propria resposta
+  da API simulada (e com a conta de dias errada). Troca pelo caso real de producao, sem NSU. A skill
+  tambem avisa que o `salesSummaryNumber` do debito e o do resumo em que ele foi compensado, e que a
+  ressalva sobre a origem nao vira tarefa para a pessoa ("confira", "ligue para a Rede") e vale
+  tambem para o resumo no topo da resposta.
+- **Janela da conciliacao: dizer por que.** Alem de declarar a janela, explicar por que ela passa do
+  fim do mes, e declarar a que o cruzamento usou.
+- **Erro por rota com PV nao liberado.** A skill dizia 401 codigo 1001 como regra geral; em producao
+  foi 403 nas vendas, 401 1001 nos recebiveis v3 e 401 "Insufficient access level" no resumo de
+  pagamentos. Um 401 nas vendas aponta primeiro para o pacote errado. Diagnosticar no ambiente em que
+  o erro aconteceu.
+- **Quem pede e quem aprova a liberacao do PV.** O parceiro pede (portal ou API de Gestao de
+  Acessos) e o lojista aprova; a skill dizia "solicitacao e aprovacao na area do lojista".
+- **Credencial de producao nao e self-service.** `rede-setup` mandava pegar e trocar o secret em
+  *Meus Projetos*, que so vale para o sandbox; producao e por e-mail a Rede. E nao declarar a
+  configuracao pronta se o login falhar.
+- **"A receber" em dois sistemas.** Com um ERP instalado (Conta Azul), mostrar Rede e ERP separados,
+  sem abrir com um total somado: a mesma venda pode estar nos dois.
+- **204 conforme a tool.** Chega como `vazio: true`, lista vazia ou total zero; e nao se inventa causa
+  para o vazio.
+
+**API simulada coerente** (`test/mock.mjs`): uma fonte so, a lista de vendas, da qual saem cronograma
+em dia util (com feriados), ordens de credito, pagamentos, recebiveis, debitos e bloqueios. Corrige
+as dividas da iteracao 1: ordem unica de R$ 850 da venda 3x, 2a parcela da 4x paga sem deposito e com
+ids que nao batiam, pagamento `PAID` no futuro, deposito num sabado, rotas de debitos, bloqueios e
+recebiveis que devolviam sempre o mesmo item, evento de estorno com o valor restante (agora o
+estornado, R$ 100) e `client_credentials` com escopo `payment-link`. Novos cenarios: deposito de
+08/09 que junta duas vendas e deposito de 28/09 suspenso. Teste de integracao: 84 → 113 verificacoes,
+com um bloco que confere a coerencia entre as rotas. Testes que mudaram porque o dado mudou de
+proposito: 1a parcela da 3x em 05/10 (o D+30 caia num sabado); vendas parceladas com 6 linhas (uma por
+parcela, como a tool descreve); pagamentos, debitos, bloqueios e recebiveis consultados no mes em que
+existem (outubro e futuro); conciliacao de setembro com 0 conciliados (o credito de setembro vence em
+outubro); julho com 2 de 4 parcelas pagas e R$ 585 a receber (a 2a venceu em 08/09); esperado de
+R$ 975 no deposito de 14/08; cashback vazio (nenhum deposito teve).
+
+**Evals:** iteracao 2 com 9 casos (2, 4 e 9 novos; 3, 5, 6, 7 e 8 reforcados). Com skill 95% (40/42),
+sem skill 86% (36/42). Novo `evals/harness/conta-azul.mjs` para o eval de disputa com o Conta Azul, e
+o `list` do harness passa a mostrar as instructions do servidor MCP, como em producao.
+
 ## 0.1.3 — 2026-09-21
 
 - **`rede_conciliar` explica as divergencias sozinha.** Para cada resumo divergente, consulta os
