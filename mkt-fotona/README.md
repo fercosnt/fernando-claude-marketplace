@@ -60,6 +60,12 @@ e métrica sempre com fonte.
 
 ## Histórico
 
+- **2.3.1 (23/09/2026)** — `mkt-nova-demanda` alinhada ao Notion depois da primeira semana de uso:
+  `Origem = Marketing` para pedido do próprio MKT (antes ficava vazia); pergunta nome **e e-mail** na
+  mesma troca e grava `E-mail do solicitante` (o formulário passou a ter 10 perguntas); `Entregas
+  pedidas` só com as opções próprias do campo (Arte, Gravação de vídeo, Edição de vídeo, Material
+  impresso…), que não são as de `Tipo de entrega` — valor fora da lista criava opção nova em silêncio.
+  Evals (fixture sem a lista de opções, contra o que estava instalado): 29/29 × 17/29.
 - **2.3.0 (21/09/2026)** — o sistema ganhou o status **`Refação`** (entre `Em produção` e `Em aprovação`) e o
   contador **`Refações`** (automação nativa, sem motivo). **`mkt-ajuda`** responde "não aprovaram, e agora?",
   diz que `Refações` não se zera e não é nota de ninguém, e declara quando o Manual está atrás do

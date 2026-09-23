@@ -6,11 +6,12 @@ demanda, pelas duas portas, fecha com o mesmo conjunto de campos.**
 
 | # | No formulário | Campo no Notion | Obrigatório? | Como perguntar em conversa |
 |---|---|---|---|---|
-| 0 | — (só na conversa) | `Solicitante` (texto) | **Sim, sempre** | "Quem está pedindo?" — pelo nome; grave o que a pessoa disser |
+| 0 | Qual é o seu nome? | `Solicitante` (texto) | **Sim, sempre** | "Quem está pedindo — nome e e-mail?" — grave o nome que a pessoa disser |
+| 0b | Seu e-mail | `E-mail do solicitante` (e-mail) | Sim no formulário | Na **mesma** pergunta do nome. Se a pessoa não der, deixe vazio e anote "falta: e-mail" — nunca deduza pelo nome |
 | 1 | O que você precisa? (1 frase) | `Tarefa` (título) | Sim | Reescreva o pedido em uma frase objetiva e confirme: "vou chamar de 'Carrossel GLP1TIGHT — resultados 90 dias', ok?" |
 | 2 | Para qual empresa? | `Empresa` | Sim | Só pergunte se o pedido não deixa claro (GLP1TIGHT → Fotona; clareamento → Beauty Smile). Se inferiu, diga que inferiu |
-| 3 | O que você precisa que o MKT entregue? | `Entregas pedidas` (multi) | Sim | Roteiro · Design · Vídeo/Edição · Copy · Tráfego/Ads · Captação/Gravação · Web/Site · Impresso · Aula/Workshop · Apresentação · Proposta comercial · Postagem · Outro… — pode ser mais de uma; quase sempre dá para inferir do pedido; confirme na mesma frase. `Tipo de entrega` (uma só) quem define é a triagem — sugira em `🤖` |
-| 4 | Quem está pedindo? (área) | `Origem` | Só se for de fora | LA&HA · Comercial · Diretoria · Financeiro · Assistência técnica · GTS · Beauty Smile · Customer Success · Outra — quem pediu **de fato**, não quem está digitando. Pedido do próprio MKT → deixe **vazio** (vazio = demanda interna; não existe opção "MKT") |
+| 3 | Entregas pedidas | `Entregas pedidas` (multi) | Sim | **Só estas opções:** Arte · Gravação de vídeo · Edição de vídeo · Material impresso · Aula/Workshop · Apresentação · Proposta comercial · Reunião com médico · Podcast com médico · Gravação de médico · Apoio na inauguração/evento de clínica · Outro. Pode ser mais de uma; quase sempre dá para inferir do pedido — confirme na mesma frase. Post/carrossel/story/banner → Arte; reel ou vídeo → Gravação de vídeo e/ou Edição de vídeo (se o material já existe, só Edição); folder → Material impresso. Não são as opções de `Tipo de entrega` (Design, Impresso, Postagem…): essas são da triagem — sugira em `🤖` |
+| 4 | Origem | `Origem` | Sim | LA&HA · Comercial · Diretoria · Financeiro · Assistência técnica · Customer Success · Gente e Gestão · **Marketing** · Outra — quem pediu **de fato**, não quem está digitando. Pedido do próprio MKT (qualquer área do time: Eventos, Branding, Social…) → **Marketing**. GTS e Beauty Smile não são Origem: são `Empresa` |
 | 5 | Área responsável (se souber) | `Área` (relação) | Não | Só se a pessoa disser; senão vai como sugestão em `🤖` |
 | 6 | Para quando você precisa? | `Data desejada` | Sim | Data concreta. "Semana que vem" → "que dia?". Sem data → pergunte "tem data ou é sem data?"; "sem data" é resposta válida (grave vazio e anote) |
 | 7 | Por quê? Qual o objetivo? | `Objetivo / Por quê` | Sim | A pergunta que mais importa. Se vier vago, **uma** pergunta de aprofundamento: "para quê — amarra em qual campanha/evento? o que precisa acontecer depois que a peça sair?" |
@@ -20,7 +21,7 @@ demanda, pelas duas portas, fecha com o mesmo conjunto de campos.**
 
 ## Ordem de perguntas quando falta muita coisa
 
-Troca 1: quem pede · confirmação do título · o que falta dos obrigatórios (empresa, entregas, origem se for de fora, data).
+Troca 1: quem pede (nome e e-mail) · confirmação do título · o que falta dos obrigatórios (empresa, entregas, origem, data).
 Troca 2: o "para quê" (se veio vago) · duplicata, se houver.
 Troca 3: cria com o que tem; o que faltou vira "falta: …" na sugestão.
 
@@ -41,13 +42,13 @@ Troca 3: cria com o que tem; o que faltou vira "falta: …" na sugestão.
 ## Exemplos de pedido → campos
 
 **"o comercial pediu um folder do StarWalker pro congresso de outubro"** (quem conversa: Léo)
-→ `Solicitante` Léo · `Tarefa` "Folder StarWalker — congresso de outubro" · `Empresa` Fotona ·
-`Entregas pedidas` Impresso · `Origem` Comercial · `Data desejada` (perguntar o dia do congresso) ·
+→ `Solicitante` Léo · `E-mail do solicitante` (o que ele informar) · `Tarefa` "Folder StarWalker — congresso de outubro" · `Empresa` Fotona ·
+`Entregas pedidas` Material impresso · `Origem` Comercial · `Data desejada` (perguntar o dia do congresso) ·
 `Objetivo / Por quê` (perguntar: "folder para entregar no stand, ou para mandar antes?") ·
 `🤖`: "Design; Impresso costuma pedir 10 dias de gráfica — sugerir prazo interno D-10; heurística G".
 
 **"preciso de 3 stories do sorteio de dia das mães" (Beauty Smile)** (quem conversa: Bia)
-→ `Solicitante` Bia · `Tarefa` "3 stories — sorteio Dia das Mães" · `Empresa` Beauty Smile ·
-`Entregas pedidas` Design · Postagem · `Origem` vazia (é do próprio MKT) · `Data desejada` (perguntar) · `Objetivo` (perguntar:
+→ `Solicitante` Bia · `E-mail do solicitante` (o que ela informar) · `Tarefa` "3 stories — sorteio Dia das Mães" · `Empresa` Beauty Smile ·
+`Entregas pedidas` Arte · `Origem` Marketing (é do próprio MKT) · `Data desejada` (perguntar) · `Objetivo` (perguntar:
 "stories para anunciar, para lembrar do prazo, ou para o resultado?") · `🤖`: "Social Media +
 Design; heurística P cada; sem sinal clínico".

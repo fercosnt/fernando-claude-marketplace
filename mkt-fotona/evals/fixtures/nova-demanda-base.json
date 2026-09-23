@@ -2,30 +2,107 @@
   "_nota": "Snapshot fictício para a mkt-nova-demanda. Use como resultado das consultas (Q15 duplicata, 👥 Time, 🚀 Campanhas). NÃO consulte o Notion real. NÃO grave nada: descreva a página que criaria, campo a campo. Nomes fictícios.",
   "hoje": "2026-09-07",
   "time": [
-    {"Pessoa":"Léo Lima","Cargo":"Gerente de MKT","Área principal":"Performance","papel":"coordenador de MKT (triagem)"},
-    {"Pessoa":"Aldo Almeida","Cargo":"Coordenador de Criação","Área principal":"Design"},
-    {"Pessoa":"Lia","Cargo":"Designer Gráfico","Área principal":"Design"},
-    {"Pessoa":"Ivana Castro","Cargo":"Produtora de Mídia Jr","Área principal":"Audiovisual"},
-    {"Pessoa":"Bia","Cargo":"Analista de Social Media","Área principal":"Social Media"},
-    {"Pessoa":"Sara Alves","Cargo":"Analista de Comunicação e Produto","Área principal":"Produto/Lançamentos"},
-    {"Pessoa":"Marta Moraes","Cargo":"Coordenadora de Eventos","Área principal":"Eventos & Congressos"},
-    {"Pessoa":"Miguel","Cargo":"Assistente de Marketing","Área principal":"Eventos & Congressos"},
-    {"Pessoa":"Marina Cruz","Cargo":"Especialista em Branding e PR","Área principal":"Branding"},
-    {"Pessoa":"Ana Ramos","Cargo":"Especialista de Marketing & Growth","Área principal":"Comercial"}
+    {
+      "Pessoa": "Léo Lima",
+      "Cargo": "Gerente de MKT",
+      "Área principal": "Performance",
+      "papel": "coordenador de MKT (triagem)"
+    },
+    {
+      "Pessoa": "Aldo Almeida",
+      "Cargo": "Coordenador de Criação",
+      "Área principal": "Design"
+    },
+    {
+      "Pessoa": "Lia",
+      "Cargo": "Designer Gráfico",
+      "Área principal": "Design"
+    },
+    {
+      "Pessoa": "Ivana Castro",
+      "Cargo": "Produtora de Mídia Jr",
+      "Área principal": "Audiovisual"
+    },
+    {
+      "Pessoa": "Bia",
+      "Cargo": "Analista de Social Media",
+      "Área principal": "Social Media"
+    },
+    {
+      "Pessoa": "Sara Alves",
+      "Cargo": "Analista de Comunicação e Produto",
+      "Área principal": "Produto/Lançamentos"
+    },
+    {
+      "Pessoa": "Marta Moraes",
+      "Cargo": "Coordenadora de Eventos",
+      "Área principal": "Eventos & Congressos"
+    },
+    {
+      "Pessoa": "Miguel",
+      "Cargo": "Assistente de Marketing",
+      "Área principal": "Eventos & Congressos"
+    },
+    {
+      "Pessoa": "Marina Cruz",
+      "Cargo": "Especialista em Branding e PR",
+      "Área principal": "Branding"
+    },
+    {
+      "Pessoa": "Ana Ramos",
+      "Cargo": "Especialista de Marketing & Growth",
+      "Área principal": "Comercial"
+    }
   ],
-  "areas": ["Design","Audiovisual","Social Media","Produto/Lançamentos","Eventos & Congressos","Branding","Performance","Web","Comercial"],
+  "areas": [
+    "Design",
+    "Audiovisual",
+    "Social Media",
+    "Produto/Lançamentos",
+    "Eventos & Congressos",
+    "Branding",
+    "Performance",
+    "Web",
+    "Comercial"
+  ],
   "campanhas_ativas": [
-    {"url":"camp-glp1","Campanha":"GLP1TIGHT — resultados 90 dias","Empresa":"Fotona","Status":"No ar","Período":"2026-09-01 a 2026-10-31"},
-    {"url":"camp-csbd","Campanha":"CSBD 2026 — stand com a Avène","Empresa":"Fotona","Status":"Produção","Período":"2026-09-01 a 2026-09-27"},
-    {"url":"camp-maes","Campanha":"Dia das Mães Beauty Smile","Empresa":"Beauty Smile","Status":"Planejada","Período":"2027-04-20 a 2027-05-10"}
+    {
+      "url": "camp-glp1",
+      "Campanha": "GLP1TIGHT — resultados 90 dias",
+      "Empresa": "Fotona",
+      "Status": "No ar",
+      "Período": "2026-09-01 a 2026-10-31"
+    },
+    {
+      "url": "camp-csbd",
+      "Campanha": "CSBD 2026 — stand com a Avène",
+      "Empresa": "Fotona",
+      "Status": "Produção",
+      "Período": "2026-09-01 a 2026-09-27"
+    },
+    {
+      "url": "camp-maes",
+      "Campanha": "Dia das Mães Beauty Smile",
+      "Empresa": "Beauty Smile",
+      "Status": "Planejada",
+      "Período": "2027-04-20 a 2027-05-10"
+    }
   ],
   "tarefas_abertas_parecidas_Q15": {
     "_como_usar": "Resultado da Q15 para os termos indicados. Para qualquer outro termo, a consulta volta vazia.",
     "GLP1TIGHT|carrossel": [
-      {"url":"t-glp1-carrossel","Tarefa":"Carrossel GLP1TIGHT — antes e depois 90 dias","Status":"Em produção","Empresa":"Fotona","Responsável":"Lia","Data desejada":"2026-09-15","Canal de entrada":"Form","Solicitante":""}
+      {
+        "url": "t-glp1-carrossel",
+        "Tarefa": "Carrossel GLP1TIGHT — antes e depois 90 dias",
+        "Status": "Em produção",
+        "Empresa": "Fotona",
+        "Responsável": "Lia",
+        "Data desejada": "2026-09-15",
+        "Canal de entrada": "Form",
+        "Solicitante": ""
+      }
     ],
     "folder|StarWalker": [],
     "stories|sorteio": []
-  },
-  "campos_da_pagina_nova_esperados": ["Solicitante","Tarefa","Empresa","Tipo de entrega","Origem","Objetivo / Por quê","Data desejada","Área","Links e referências","Status","Canal de entrada","🤖 Resumo (IA)","🤖 Sugestão de triagem (IA)"]
+  }
 }
