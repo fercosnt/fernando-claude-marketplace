@@ -17,7 +17,7 @@ Arquivos e quando ler cada um:
 
 | Arquivo | Leia quando |
 |---|---|
-| `sistema-mkt.md` | sempre — IDs, campos, as 9 regras, quem é quem |
+| `sistema-mkt.md` | sempre — IDs, campos, as 10 regras, quem é quem |
 | `contrato-de-escrita.md` | antes de gravar qualquer coisa — a Classe 3 é a deste plugin |
 | `conteudo.md` | pauta, briefing, resultados — fases, prazos, pilares, cadência, campos da peça |
 | `queries.md` | ao consultar — cada consulta nas duas sintaxes |

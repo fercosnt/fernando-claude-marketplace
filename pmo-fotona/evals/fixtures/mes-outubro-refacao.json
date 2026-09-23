@@ -1,0 +1,398 @@
+{
+ "_nota": "Snapshot fictício do fechamento de OUTUBRO/2026 (variante de refação). Mesmos agregados do fixture de agosto, relidos como outubro, mais a lista das concluídas do mês com os campos de aprovação. O status Refação e o contador Refações existem desde 21/09/2026 (automação nativa, sem motivo). Contêineres e Canceladas já excluídos. NÃO consulte o Notion nem o GoHighLevel reais.",
+ "periodo": "2026-10-01 a 2026-10-31",
+ "entregas": {
+  "tarefas_concluidas_contagem": 68,
+  "tarefas_concluidas_pontos": 214,
+  "mes_anterior_contagem": 59,
+  "mes_anterior_pontos": 198,
+  "concluidas_com_data_desejada": 51,
+  "concluidas_dentro_da_data_desejada": 42,
+  "concluidas_sem_data_desejada": 17,
+  "concluidas_dentro_do_prazo_interno": 15,
+  "atrasadas_fim_do_mes": 11,
+  "maior_idade_em_producao_dias": 34
+ },
+ "projetos": [
+  {
+   "Projeto": "Stand CSBD 2026",
+   "Status": "Em andamento",
+   "Progresso": 62,
+   "Saúde": "🟡",
+   "Motivo": "orçamento de montagem parado há 9 dias"
+  },
+  {
+   "Projeto": "Campanha Fotona4GLOW agosto",
+   "Status": "Concluído",
+   "Progresso": 100,
+   "Saúde": "🟢",
+   "Motivo": ""
+  },
+  {
+   "Projeto": "Reformulação do site Fotona",
+   "Status": "Em andamento",
+   "Progresso": 31,
+   "Saúde": "🔴",
+   "Motivo": "sem dono dedicado desde a saída do fornecedor"
+  },
+  {
+   "Projeto": "Abertura de canais GTS",
+   "Status": "Em andamento",
+   "Progresso": 18,
+   "Saúde": "🟡",
+   "Motivo": "Ana entrou há pouco tempo"
+  },
+  {
+   "Projeto": "Workshop USP Torezan",
+   "Status": "Concluído",
+   "Progresso": 100,
+   "Saúde": "🟢",
+   "Motivo": ""
+  }
+ ],
+ "conteudo": {
+  "publicados_total": 41,
+  "mes_anterior": 33,
+  "por_canal": {
+   "Instagram": 26,
+   "Blog": 5,
+   "E-mail": 6,
+   "LinkedIn": 4
+  },
+  "por_pilar": {
+   "Educativo/Clínico": 14,
+   "Prova social": 9,
+   "Produto/Equipamento": 8,
+   "Institucional": 6,
+   "Bastidores": 4
+  },
+  "planejadas_no_mes": 47,
+  "publicadas_ate_a_data_planejada": 38,
+  "melhor_peca": {
+   "Tarefa": "Carrossel — o que o GLP1 faz com a pele",
+   "Alcance": 38400,
+   "Engajamento": 2960
+  }
+ },
+ "campanhas": [
+  {
+   "Campanha": "Fotona4GLOW — agosto",
+   "Investimento": 42000,
+   "Leads": 118,
+   "Conversões": 9,
+   "Receita influenciada": 760000
+  },
+  {
+   "Campanha": "CSBD 2026 (pré-evento)",
+   "Investimento": 18500,
+   "Leads": 37,
+   "Conversões": 2,
+   "Receita influenciada": null
+  },
+  {
+   "Campanha": "Meu Primeiro Fotona",
+   "Investimento": 9000,
+   "Leads": 44,
+   "Conversões": 3,
+   "Receita influenciada": 240000
+  }
+ ],
+ "ghl": {
+  "_status": "indisponível nesta rodada — API do GoHighLevel fora do ar durante a coleta"
+ },
+ "capacidade": [
+  {
+   "Responsável": "Léo Lima",
+   "Pontos abertos": 19,
+   "Pontos atrasados": 6,
+   "Capacidade semanal": 8
+  },
+  {
+   "Responsável": "Aldo Almeida",
+   "Pontos abertos": 24,
+   "Pontos atrasados": 9,
+   "Capacidade semanal": 15
+  },
+  {
+   "Responsável": "Lia",
+   "Pontos abertos": 11,
+   "Pontos atrasados": 3,
+   "Capacidade semanal": 18
+  },
+  {
+   "Responsável": "Ivana Castro",
+   "Pontos abertos": 9,
+   "Pontos atrasados": 8,
+   "Capacidade semanal": 15
+  },
+  {
+   "Responsável": "Bia",
+   "Pontos abertos": 16,
+   "Pontos atrasados": 1,
+   "Capacidade semanal": 18
+  },
+  {
+   "Responsável": "Sara Alves",
+   "Pontos abertos": 7,
+   "Pontos atrasados": 0,
+   "Capacidade semanal": 18
+  },
+  {
+   "Responsável": "Marta Moraes",
+   "Pontos abertos": 21,
+   "Pontos atrasados": 5,
+   "Capacidade semanal": 15
+  },
+  {
+   "Responsável": "Miguel",
+   "Pontos abertos": 5,
+   "Pontos atrasados": 0,
+   "Capacidade semanal": null
+  },
+  {
+   "Responsável": "Marina Cruz",
+   "Pontos abertos": 12,
+   "Pontos atrasados": 2,
+   "Capacidade semanal": 15
+  }
+ ],
+ "reativo": {
+  "pontos_totais_abertos": 124,
+  "pontos_ad_hoc": 39,
+  "pontos_fire_drill": 8,
+  "mes_anterior_percentual": 31,
+  "por_area": {
+   "Design": 44,
+   "Eventos & Congressos": 51,
+   "Social Media": 22,
+   "Produto/Lançamentos": 18,
+   "Audiovisual": 29,
+   "Web": 60
+  }
+ },
+ "okrs": [
+  {
+   "OKR": "Dobrar leads qualificados de estética no 2º semestre",
+   "Atual": 118,
+   "Alvo": 200,
+   "Status": "No caminho"
+  },
+  {
+   "OKR": "Abrir o canal GTS com 500 seguidores no LinkedIn",
+   "Atual": 86,
+   "Alvo": 500,
+   "Status": "Em risco"
+  },
+  {
+   "OKR": "90% de aderência ao calendário editorial",
+   "Atual": 81,
+   "Alvo": 90,
+   "Status": "Em risco"
+  }
+ ],
+ "concluidas_detalhe_amostra": {
+  "_nota": "Todas as 14 concluídas de outubro que passaram por aprovação (têm 'Entrou em aprovação em'), mais 6 exemplos das 54 concluídas que NÃO passaram por aprovação. Total do mês = 68 (entregas.tarefas_concluidas_contagem).",
+  "linhas": [
+   {
+    "Tarefa": "Carrossel melasma",
+    "Tipo de entrega": "Design",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": "Educativo/Clínico",
+    "Responsável": "Bia",
+    "Entrou em aprovação em": "2026-10-03T10:00",
+    "Refações": 2,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Post clareamento",
+    "Tipo de entrega": "Design",
+    "Empresa": "Beauty Smile",
+    "Pilar de conteúdo": "Educativo/Clínico",
+    "Responsável": "Bia",
+    "Entrou em aprovação em": "2026-10-06T10:00",
+    "Refações": 3,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Roteiro reel Nd:YAG",
+    "Tipo de entrega": "Roteiro",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": "Educativo/Clínico",
+    "Responsável": "Sara Alves",
+    "Entrou em aprovação em": "2026-10-08T10:00",
+    "Refações": 1,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Post protocolo GLP1TIGHT",
+    "Tipo de entrega": "Design",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": "Educativo/Clínico",
+    "Responsável": "Bia",
+    "Entrou em aprovação em": "2026-10-10T10:00",
+    "Refações": 1,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Legenda depoimento Dra. Helena",
+    "Tipo de entrega": "Copy",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": "Prova social",
+    "Responsável": "Sara Alves",
+    "Entrou em aprovação em": "2026-10-12T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Banner LP StarWalker",
+    "Tipo de entrega": "Web/Site",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Léo Lima",
+    "Entrou em aprovação em": "2026-10-13T10:00",
+    "Refações": 0,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Apresentação distribuidores",
+    "Tipo de entrega": "Apresentação",
+    "Empresa": "GTS",
+    "Pilar de conteúdo": null,
+    "Responsável": "Sara Alves",
+    "Entrou em aprovação em": "2026-10-14T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Vídeo institucional GTS",
+    "Tipo de entrega": "Vídeo/Edição",
+    "Empresa": "GTS",
+    "Pilar de conteúdo": null,
+    "Responsável": "Ivana Castro",
+    "Entrou em aprovação em": "2026-10-15T10:00",
+    "Refações": 1,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Story bastidores",
+    "Tipo de entrega": "Design",
+    "Empresa": "Beauty Smile",
+    "Pilar de conteúdo": "Bastidores",
+    "Responsável": "Lia",
+    "Entrou em aprovação em": "2026-10-16T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Folder CSBD",
+    "Tipo de entrega": "Impresso",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": "Produto/Equipamento",
+    "Responsável": "Lia",
+    "Entrou em aprovação em": "2026-10-17T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "E-mail convite workshop",
+    "Tipo de entrega": "Copy",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Sara Alves",
+    "Entrou em aprovação em": "2026-10-20T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Post 4 anos Beauty Smile",
+    "Tipo de entrega": "Design",
+    "Empresa": "Beauty Smile",
+    "Pilar de conteúdo": "Institucional",
+    "Responsável": "Lia",
+    "Entrou em aprovação em": "2026-10-22T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Anúncio Fotona4GLOW",
+    "Tipo de entrega": "Tráfego/Ads",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Léo Lima",
+    "Entrou em aprovação em": "2026-10-24T10:00",
+    "Refações": 0,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Reel Fotona4GLOW",
+    "Tipo de entrega": "Vídeo/Edição",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": "Produto/Equipamento",
+    "Responsável": "Ivana Castro",
+    "Entrou em aprovação em": "2026-10-27T10:00",
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Setup pixel GTS",
+    "Tipo de entrega": "Tráfego/Ads",
+    "Empresa": "GTS",
+    "Pilar de conteúdo": null,
+    "Responsável": "Léo Lima",
+    "Entrou em aprovação em": null,
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Correção formulário LP",
+    "Tipo de entrega": "Web/Site",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Léo Lima",
+    "Entrou em aprovação em": null,
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Reunião briefing CSBD",
+    "Tipo de entrega": "Reunião",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Marta Moraes",
+    "Entrou em aprovação em": null,
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Compra de brindes",
+    "Tipo de entrega": "Outro",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Marta Moraes",
+    "Entrou em aprovação em": null,
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Relatório de mídia setembro",
+    "Tipo de entrega": "Tráfego/Ads",
+    "Empresa": "Fotona",
+    "Pilar de conteúdo": null,
+    "Responsável": "Léo Lima",
+    "Entrou em aprovação em": null,
+    "Refações": null,
+    "Status": "Concluída"
+   },
+   {
+    "Tarefa": "Atualizar bio Instagram GTS",
+    "Tipo de entrega": "Postagem",
+    "Empresa": "GTS",
+    "Pilar de conteúdo": null,
+    "Responsável": "Bia",
+    "Entrou em aprovação em": null,
+    "Refações": null,
+    "Status": "Concluída"
+   }
+  ]
+ }
+}

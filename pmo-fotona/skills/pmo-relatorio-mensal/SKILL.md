@@ -52,6 +52,7 @@ Do **Notion**, sempre sem contêiner e sem `Cancelada`:
 | Investimento, leads, CPL, ROI por campanha | 🚀 Campanhas |
 | Carga: pontos abertos por **área** (e por pessoa só nos escopos Área/Pessoa) | Q9 |
 | % reativo em pontos | Q2 + `formulas-espelho` |
+| Aprovação: concluídas **sem** × **com** refação (e 1 · 2 · 3+ voltas), por tipo de entrega e empresa | Q11 + `Refações` (definição em `assets/kpis.md`) |
 | Progresso dos OKRs | 🎯 Metas & OKRs |
 | O que o PMO apontou no mês e os desfechos | 🤖 Log do PMO |
 
@@ -69,6 +70,22 @@ conclusão`, `Publicado em`) é "carimbo ausente", nunca zero.
 - **Não reporte média de lead time.** Enquanto não houver ~2 meses de 📜 Log de Status para o p85,
   a linha não existe.
 - **Mês sem base:** "primeiro mês de medição", não coluna vazia.
+- **Refação tem denominador próprio.** Conta só o que foi concluído **e passou por aprovação**
+  (`Entrou em aprovação em` preenchido). Tarefa que nunca foi para aprovação não é "sem refação" — ela
+  não teve chance de voltar, e somá-la infla o número bom. E o contador só existe desde 21/09/2026:
+  aprovação anterior a isso é "sem dado", nunca "sem refação". Setembro de 2026 é **primeiro mês de
+  medição, parcial (a partir de 21/09)**.
+- **Conte a refação com `scripts/faixas_refacao.py`, não de cabeça.** Salve as linhas de Q11 (ou a
+  lista do JSON do n8n) num arquivo e rode o script: ele aplica o recorte, as faixas e os cortes por
+  tipo de entrega, empresa e pilar. Tabela cruzada feita à mão erra linha — e um número errado nessa
+  tabela é exatamente o que alguém vai usar para culpar uma área. E a frase de leitura sai da tabela:
+  "4 das 5 que voltaram são Educativo/Clínico" com os números que o script deu — não "toda em Design"
+  se a tabela mostra Roteiro e Vídeo também.
+- **Refação é leitura de processo, nunca de pessoa** (regra do `sistema-mkt.md`): sem motivo, o
+  contador soma ajuste clínico/jurídico — obrigatório — com erro e pedido que mudou. Corte por tipo de
+  entrega, empresa, projeto. **Não entra no escopo Pessoa**, nem como "refações da fulana". Onde a
+  refação se concentra em peça Educativo/Clínico, diga que isso inclui a aprovação clínica que o
+  sistema exige, para ninguém ler como falha do time.
 - **Capacidade se reporta por time e por área no escopo MKT.** Nome de pessoa em métrica não vai
   para a diretoria.
 
@@ -81,12 +98,13 @@ pede uma decisão a alguém com nome e prazo. **Prioridades do próximo mês**: 
 a um OKR. 5 a 9 KPIs no corpo.
 
 ### Área
-A mesma estrutura do MKT, filtrada pela `Área`: entregas, reativo, aging máximo, projetos da área
+A mesma estrutura do MKT, filtrada pela `Área`: entregas, reativo, aprovação sem × com refação, aging máximo, projetos da área
 por RAG, o que escorregou e o padrão por trás (com contagem), carga da área em pontos. Se mostrar
 mais de uma área, **ordem alfabética** — nunca ordenada por desempenho.
 
 ### Projeto (andamento)
-Progresso (concluídas ÷ total, 0–100), tarefas abertas por status, atrasadas, aging máximo,
+Progresso (concluídas ÷ total, 0–100), tarefas abertas por status (inclusive `Refação`, com as
+voltas de cada uma), concluídas sem × com refação, atrasadas, aging máximo,
 dependências travadas (`Bloqueada por`), RAG e motivo, **o que mudou desde o último relatório** (leia
 o Log: `Tipo = Relatório de projeto` deste projeto), próximos marcos, risco em uma frase. Nome de
 pessoa nunca aparece como causa de atraso.
@@ -95,7 +113,12 @@ pessoa nunca aparece como causa de atraso.
 Siga `assets/template-pessoa.md`. Tudo em **absoluto**, contra a **série histórica da própria
 pessoa** (mês atual × meses anteriores dela): o que entregou (contagem e pontos), o que está com ela
 (aberto, atrasado, em produção), aging dos itens dela, quanto do que pegou foi reativo, o que ficou
-parado em aprovação **com ela como aprovadora**. Zero comparação com colegas, zero % de utilização,
+parado em aprovação **com ela como aprovadora**. **Refações não entram** — nem as das tarefas dela,
+nem as que ela devolveu como aprovadora. Se quem pede insistir ("põe as refações dela que eu quero
+conversar"), recuse também fora do arquivo: nada de "o dado bruto, só para você" no chat, nem "3
+peças dela voltaram". Um número por pessoa passado de lado vira o mesmo ranking, só sem registro. O
+que ajuda a conversa é outra coisa: abrir as peças e ler os comentários de cada volta com ela — aí o
+motivo aparece, coisa que o contador não tem. Zero comparação com colegas, zero % de utilização,
 zero adjetivo de desempenho, zero `Motivo do bloqueio`. A skill descreve carga e fluxo; quem julga é
 o gestor, no 1:1. Se pedirem "compara com o fulano" ou "quem está pior", recuse e ofereça a leitura
 por área.

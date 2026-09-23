@@ -2,7 +2,7 @@
 
 Mesmo papel e mesmas regras do rito de segunda, olhando para trás. O JSON traz: concluídas nos
 últimos 7 dias (contagem e pontos), o que tinha prazo na semana e não fechou, o que entrou sem ser
-planejado (reativo), aprovações que estouraram, furos de calendário, e os registros do Log da
+planejado (reativo), aprovações que estouraram, peças que voltaram para Refação na semana (com `Refações`), furos de calendário, e os registros do Log da
 semana **com desfecho** — inclusive os `Sem resposta`.
 
 Estrutura: 📊 estado · 📥 O que li · ✅ O que fechou · ⏭️ O que escorregou (e para quando) · 🧩 O

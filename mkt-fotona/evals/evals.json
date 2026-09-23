@@ -566,6 +566,60 @@
      "text": "Não preenche Tipo de trabalho, Prazo, Responsável, Prioridade nem Estimativa; consulta duplicata antes de criar; no máximo 3 trocas"
     }
    ]
+  },
+  {
+   "id": 20,
+   "name": "ajuda-reprovou-vai-para-refacao",
+   "skill": "mkt-ajuda",
+   "prompt": "Use o arquivo ajuda-manual-refacao.json como o conteúdo do 📘 Manual do Sistema e como a estrutura dos bancos. Não consulte o Notion real e não grave nada.\n\nPergunta da pessoa: \"o Ivo não aprovou minha arte do carrossel, comentou lá pedindo pra trocar a foto. eu volto ela pra em produção?\"",
+   "files": [
+    "fixtures/ajuda-manual-refacao.json"
+   ],
+   "expected_output": "Não: a peça vai para Refação (quem aprova move, com o ajuste no comentário) e, corrigida, volta para Em aprovação. Refações soma sozinho. Avisa em uma frase que o Manual ainda descreve o fluxo sem a Refação. Resposta curta.",
+   "assertions": [
+    {
+     "text": "Responde logo no começo que não volta para Em produção: o status é Refação"
+    },
+    {
+     "text": "Diz que, depois de corrigir, a tarefa volta para Em aprovação"
+    },
+    {
+     "text": "Explica que o campo Refações soma sozinho (automação) — a pessoa não preenche"
+    },
+    {
+     "text": "Avisa que o Manual ainda não descreve a Refação (está desatualizado nesse ponto) em vez de ignorar a divergência ou inventar que o Manual cobre"
+    },
+    {
+     "text": "Resposta cabe numa tela de celular (até ~150 palavras) e não monta o card campo a campo"
+    }
+   ]
+  },
+  {
+   "id": 21,
+   "name": "ajuda-refacoes-nao-e-nota",
+   "skill": "mkt-ajuda",
+   "prompt": "Use o arquivo ajuda-manual-refacao.json como o conteúdo do 📘 Manual do Sistema e como a estrutura dos bancos. Não consulte o Notion real e não grave nada.\n\nPergunta da pessoa: \"apareceu um campo Refações na minha tarefa com 3. isso vai pro meu relatório? dá pra zerar? foi o jurídico que pediu pra mudar o texto duas vezes\"",
+   "files": [
+    "fixtures/ajuda-manual-refacao.json"
+   ],
+   "expected_output": "Não dá para zerar nem precisa: é contador automático de voltas para Refação. Não é nota individual — é lido por tipo de peça, porque mistura ajuste clínico/jurídico (obrigatório) com outros motivos. Não inventa campo de motivo.",
+   "assertions": [
+    {
+     "text": "Diz que não se zera nem se edita — é contador preenchido por automação a cada volta para Refação"
+    },
+    {
+     "text": "Diz que o número não é avaliação individual / não vai para relatório da pessoa — é lido por tipo de peça ou processo"
+    },
+    {
+     "text": "Reconhece que ajuste pedido pelo jurídico/clínico entra na conta e que por isso o número não mede erro de quem executa"
+    },
+    {
+     "text": "Não manda preencher um campo de motivo da refação (ele não existe) nem inventa campo que não está na fixture"
+    },
+    {
+     "text": "Resposta curta (até ~150 palavras), a resposta direta nas duas primeiras frases"
+    }
+   ]
   }
  ]
 }

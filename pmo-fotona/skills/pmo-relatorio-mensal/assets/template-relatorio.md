@@ -82,6 +82,18 @@
 - Projetos em andamento e % de progresso: [lista]
 - Atrasos relevantes e causa: [ ]
 
+## A2. Aprovação — sem × com refação
+> Concluídas no mês que passaram por aprovação. Contador existe desde 21/09/2026 — antes disso, "sem dado".
+> Nunca por pessoa: sem motivo registrado, o número inclui o ajuste clínico/jurídico obrigatório.
+
+| | Concluídas com aprovação | Sem refação | Com refação | 1 volta | 2 voltas | 3+ | % sem refação |
+|---|---|---|---|---|---|---|---|
+| Total | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] | [ ]% |
+| por Tipo de entrega — [ ] | [ ] | [ ] | [ ] | | | | |
+| por Empresa — [ ] | [ ] | [ ] | [ ] | | | | |
+
+- Onde se concentra e o que isso sugere sobre o fluxo (brief, aprovação clínica, pedido que mudou): [ ]
+
 ## B. Resultados de Campanha
 > Por campanha ativa no mês.
 

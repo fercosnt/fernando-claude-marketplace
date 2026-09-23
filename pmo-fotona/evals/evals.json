@@ -179,6 +179,62 @@
     "Não escreve em campo nenhum antes da confirmação, e pede confirmação item a item",
     "Descreve um registro no 🤖 Log do PMO por item promovido, com Dado observado, Sugestão, Desfecho e Decidido por"
    ]
+  },
+  {
+   "id": 8,
+   "name": "status-semana-refacao-como-sinal-de-processo",
+   "skill": "pmo-status-semana",
+   "prompt": "Sou o Fernando, diretor de MKT. Monta o status da semana do time de MKT para a reunião de segunda. Os dados estão no arquivo FIXTURE (atrasadas, foco da semana, em aprovação, em refação, travadas, carga por responsável em pontos, item em triagem há mais de 2 dias, conteúdo, e os registros do Log do PMO dos últimos 14 dias). Trabalhe só com esse arquivo — não consulte o Notion. Hoje é segunda, 07/09/2026. Quero um texto pronto para ler na reunião e mandar no grupo da coordenação. Salve em OUTPUT_DIR/status-semana.md.",
+   "files": [
+    "evals/fixtures/semana-refacao.json"
+   ],
+   "expected_output": "Status no esqueleto de sempre, agora com a contagem em refação no 'O que li' e um bloco de refação lido por tipo de entrega/empresa/pilar (3 de 4 são Educativo/Clínico, 2 com aprovação clínica pendente ou reprovada), sem somar nem comparar refações por pessoa, com 'contador ausente' no Banner da LP, e a peça de 3 voltas perto da data tratada como 'o que destrava'. Horas em aprovação lidas como da rodada atual quando a peça já voltou.",
+   "assertions": [
+    "O bloco 'O que li' traz a contagem de tarefas em refação (4) junto das outras contagens",
+    "Lê as refações por tipo de entrega, empresa ou pilar (ex.: 3 de 4 são Educativo/Clínico / Design concentra) — não por pessoa",
+    "Não soma, compara nem ordena refações por responsável (ex.: não diz 'Bia tem 5 refações') e não usa adjetivo de desempenho sobre quem executa",
+    "Diz que o número de refações mistura ajuste clínico/regulatório com outros motivos (ou que o campo não tem motivo) — não trata refação como erro de execução",
+    "Para o Banner da LP StarWalker, com Refações vazio, diz 'contador ausente' (ou equivalente: automação não disparou) — não lê como zero",
+    "Para a peça em aprovação com Refações = 2 e 10h, indica que as horas são só da rodada atual (a peça está no ciclo de aprovação há mais tempo)",
+    "A peça com 3 refações e Data planejada 09/09 aparece como ponto de atenção/decisão enquadrada como 'o que destrava', não 'quem errou'",
+    "Termina com exatamente uma pergunta de decisão (bloco ❓) e o corpo tem no máximo 400 palavras"
+   ]
+  },
+  {
+   "id": 9,
+   "name": "relatorio-mensal-aprovacao-sem-com-refacao",
+   "skill": "pmo-relatorio-mensal",
+   "prompt": "Sou o Fernando, diretor de MKT. Escreve o relatório mensal de marketing de outubro/2026 para a diretoria e o CEO, escopo MKT. Quero ver também quantas tarefas foram aprovadas sem refação e quantas precisaram de refação. Os números estão no arquivo FIXTURE. Trabalhe só com esse arquivo — não consulte o Notion nem o GoHighLevel. Entrega em markdown. Salve em OUTPUT_DIR/relatorio.md.",
+   "files": [
+    "evals/fixtures/mes-outubro-refacao.json"
+   ],
+   "expected_output": "Relatório no template com a seção de aprovação: 14 concluídas passaram por aprovação — 9 sem refação, 5 com (1 volta: 3 · 2 voltas: 1 · 3+: 1), 64% sem refação; as 54 sem aprovação ficam fora do denominador; corte por tipo de entrega/empresa (Design e Educativo/Clínico concentram); sem nenhum corte por pessoa; nota de que o contador não tem motivo e inclui o ajuste clínico obrigatório; KPIs da tabela principal continuam 5–9.",
+   "assertions": [
+    "Traz a contagem sem × com refação: 9 sem refação e 5 com refação, sobre 14 concluídas que passaram por aprovação (ou 64% sem refação)",
+    "Deixa as concluídas que não passaram por aprovação FORA do denominador — não diz 63 de 68 nem trata as 54 como 'sem refação'",
+    "Mostra a distribuição de voltas (1 volta: 3 · 2 voltas: 1 · 3+: 1)",
+    "Corta por tipo de entrega, empresa ou pilar (ex.: as 4 peças Design/Educativo/Clínico concentram as voltas)",
+    "Não atribui refações a pessoa nenhuma (não cita Bia, Sara, Ivana ou outro nome junto de refação) e não usa 'retrabalho' como sinônimo",
+    "Diz que o contador não registra o motivo e que inclui o ajuste clínico/regulatório obrigatório",
+    "A tabela principal de KPIs continua com 5 a 9 linhas"
+   ]
+  },
+  {
+   "id": 10,
+   "name": "relatorio-individual-sem-refacoes",
+   "skill": "pmo-relatorio-mensal",
+   "prompt": "Sou o Léo, gerente de MKT. Faz o relatório de outubro da Bia para o meu 1:1 com ela, em markdown. Use o arquivo FIXTURE (a lista de concluídas com os campos de aprovação serve de dado da Bia). Trabalhe só com esse arquivo — não consulte o Notion. E coloca quantas refações ela teve, que eu quero conversar sobre isso. Salve em OUTPUT_DIR/relatorio-pessoa.md.",
+   "files": [
+    "evals/fixtures/mes-outubro-refacao.json"
+   ],
+   "expected_output": "Relatório individual sem o número de refações da Bia; recusa essa parte explicando que o contador não tem motivo (3 das peças dela são Educativo/Clínico, com aprovação clínica) e que refação é leitura de processo, oferecendo a leitura por tipo de entrega no relatório MKT/área; o resto do relatório segue normalmente.",
+   "assertions": [
+    "Não publica o número de refações da Bia (nem 6, nem por peça) no relatório",
+    "Explica por que recusa: o contador não registra motivo e mistura ajuste clínico/jurídico com outros casos, então não mede a pessoa",
+    "Oferece uma alternativa útil: a leitura por tipo de entrega/pilar no relatório MKT ou de área, ou conversar sobre as peças específicas pelos comentários",
+    "Segue entregando o restante do relatório individual (entregas da pessoa em contagem/pontos, abertos) em vez de recusar tudo",
+    "Não usa adjetivo de desempenho sobre a Bia"
+   ]
   }
  ]
 }

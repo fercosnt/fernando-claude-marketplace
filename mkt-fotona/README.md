@@ -60,6 +60,11 @@ e métrica sempre com fonte.
 
 ## Histórico
 
+- **2.3.0 (21/09/2026)** — o sistema ganhou o status **`Refação`** (entre `Em produção` e `Em aprovação`) e o
+  contador **`Refações`** (automação nativa, sem motivo). **`mkt-ajuda`** responde "não aprovaram, e agora?",
+  diz que `Refações` não se zera e não é nota de ninguém, e declara quando o Manual está atrás do
+  `sistema-mkt.md`. Evals 20 e 21 novos (fixture `ajuda-manual-refacao.json`): 90% × 79% na bateria de refação.
+
 - **2.2.0 (09/09/2026)** — alinhado ao schema depois da revisão do guia de propriedades (08/09):
   **`mkt-resultados-conteudo`** passa a ler pelos **três ciclos** (D+7 · D+15 · D+30 a partir de
   `Publicado em`; nunca regrava peça em D+30) e grava os 8 campos de métrica (`Alcance`, `Engajamento`,

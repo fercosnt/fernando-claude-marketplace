@@ -63,6 +63,15 @@ sobre o Notion real. Inclui evals negativos (escrita fora da classe, comparaçã
 
 ## Histórico
 
+- **2.2.0 (21–22/09/2026)** — **`pmo-status-semana`** lê o status novo **`Refação`** (Q8b): contagem no
+  "O que li", bloco 🔁 com a concentração por tipo de entrega/empresa/pilar — nunca por pessoa, e sem
+  afirmar motivo —, "contador ausente" quando `Refações` vem vazio, e `Horas em aprovação` lida como da
+  rodada atual. **`pmo-relatorio-mensal`** ganha a seção **aprovação sem × com refação** (denominador =
+  concluídas que passaram por aprovação desde 21/09; faixas 1 · 2 · 3+; cortes por tipo de entrega,
+  empresa e pilar), contada por `scripts/faixas_refacao.py`; no escopo Pessoa recusa refações também fora
+  do arquivo. Prompts do n8n (`rito-segunda`, `rito-sexta`) acompanham. Evals 8, 9 e 10 novos
+  (fixtures `semana-refacao.json` e `mes-outubro-refacao.json`): relatório 100% × 27%.
+
 - **2.1.0 (09/09/2026)** — `pmo-triagem` lê `Entregas pedidas` e `Solicitante`, decide `Tipo de entrega`
   (uma só; entregas distintas viram sub-itens), lê `Origem` vazia como demanda do próprio MKT e propõe
   `Aprovação clínica = Aguardando` (select; nunca `Aprovada`). `prompts/enriquecimento-entrada.md`

@@ -23,6 +23,7 @@ Quase todo erro deste relatório é de **definição**, não de conta. Este arqu
 | **Work Item Age** | `Idade em produção (dias)` da tarefa aberta; no projeto, `Maior idade em produção` | É a única métrica sobre a qual dá para agir hoje. As outras são retrospectivas |
 | **Cycle time (p85)** | ⏳ **Não existe ainda.** Depende de ~2 meses de histórico no 📜 Log de Status | Enquanto isso, **não reporte média** — média esconde a cauda |
 | **Atrasadas no fim do mês** | Abertas com prazo vencido | Excluir contêineres e Canceladas |
+| **Aprovação sem × com refação** | Das concluídas no mês que **passaram por aprovação** (`Entrou em aprovação em` preenchido, ≥ 21/09/2026): quantas com `Refações` vazio ou 0 (**sem refação**) e quantas com ≥ 1 (**com refação**), mais a distribuição 1 · 2 · 3+ voltas. Publique a contagem dos dois lados e o % sem refação | (1) Tarefa que nunca foi para aprovação **não** entra no denominador. (2) Antes de 21/09 é "sem dado". (3) Sem motivo, o número mistura ajuste clínico/jurídico com erro — leia por tipo de entrega/empresa, **nunca por pessoa**, e não chame de "retrabalho" |
 
 ## Resultados de Campanha
 

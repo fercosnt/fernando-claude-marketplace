@@ -1,0 +1,191 @@
+{
+ "_nota": "Fixture fictícia. Representa o 📘 Manual do Sistema e a estrutura dos bancos como estariam no Notion. Nomes de pessoas são inventados. Serve para testar a mkt-ajuda sem tocar no Notion real. VARIANTE 21/09: a estrutura dos bancos já tem o status Refação e o campo Refações; o texto do Manual AINDA NÃO foi atualizado (lag real do Manual).",
+ "manual": {
+  "titulo": "📘 Manual do Sistema — MKT",
+  "atualizado_em": "2026-09-09",
+  "secoes": [
+   {
+    "titulo": "1. Por onde entra trabalho",
+    "conteudo": "Pedido de fora do MKT entra pelo formulário 📥 Solicitações — MKT. Evento entra pelo formulário 🎪 Solicitação de evento. Quem é do time abre direto no banco ✅ Tarefas, com Status = Triagem. Tudo que entra passa pela triagem diária do coordenador de MKT, que define Responsável, Prazo, Prioridade e Estimativa."
+   },
+   {
+    "titulo": "2. Os status de uma tarefa",
+    "conteudo": "Triagem (entrou, ainda sem dono) · A fazer (tem dono e prazo) · Em produção · Em aprovação · Parada/Bloqueada (exige Motivo do bloqueio) · Concluída · Arquivada · Cancelada. Mover card é na tela, arrastando no Kanban."
+   },
+   {
+    "titulo": "3. Os bancos e para que serve cada um",
+    "conteudo": "✅ Tarefas é o trabalho. 🗂️ Projetos é iniciativa com entregável e prazo. 🚀 Campanhas busca resultado no mercado, com período e budget. 🧭 Áreas são as 11 frentes do MKT. 🎯 Metas & OKRs. 📚 Base de Conhecimento guarda documento, guia, template e comparativo. 💡 Ideias & Oportunidades guarda o que ainda não tem dono nem data. 🤝 Reuniões & Atas guarda ata e action item. 🌟 Creators."
+   },
+   {
+    "titulo": "4. Campos que confundem",
+    "conteudo": "Data desejada é a data que o solicitante pediu; Prazo é a data que a triagem definiu. Tipo de trabalho (Planejado · Ad-hoc/Demanda extra · Fire-drill/P0) é classificação de entrada e não se reclassifica. Publicado é o Link do post, não o status. Data planejada não se edita quando atrasa."
+   },
+   {
+    "titulo": "5. Calendários editoriais",
+    "conteudo": "Cada calendário tem três views: 🗓️ Mês (o que vai ao ar, por Data planejada), 📋 Produção (as fases abertas, por responsável) e ⚠️ Furos (peça que passou da Data planejada sem Link do post)."
+   },
+   {
+    "titulo": "6. Aprovações",
+    "conteudo": "Aprovação clínica é um campo de seleção na tarefa: Não requer · Aguardando · Aprovada · Reprovada. Quem cria a peça marca Aguardando quando o tema é clínico (protocolo, resultado, indicação). A aprovação em si acontece no grupo de WhatsApp da clínica; quem aprova muda o campo para Aprovada (ou Reprovada) e a data em Aprovação clínica em é preenchida sozinha. O Aprovador (campo de pessoa) é quem revisa a peça em Em aprovação. Não existe campo de aprovação jurídica."
+   },
+   {
+    "titulo": "7. Onde fica a entrega e a revisão",
+    "conteudo": "Quando a peça está pronta (apresentação, aula, documento, arte), cole o endereço dela no campo Link da entrega (Canva, Drive, PDF). É esse link que quem revisa abre. Para pedir revisão: preencha Aprovador e mova a tarefa para Em aprovação — ela aparece na Meu dia de quem aprova, em Esperando eu aprovar. Quando uma apresentação, aula ou impresso é concluída, uma automação cria a página dela na Base de Conhecimento, já com o link; depois alguém completa Finalidade, Público-alvo e Link público."
+   },
+   {
+    "titulo": "8. Métricas de post",
+    "conteudo": "Métrica de post se preenche em três momentos: 7, 15 e 30 dias depois de publicada (campo Ciclo de métricas). Depois de 30 dias ninguém atualiza mais. Os campos são Alcance, Engajamento, Curtidas, Comentários, Salvamentos, Compartilhamentos, Visualizações e Seguidores ganhos. A skill mkt-resultados-conteudo puxa do Reportei ou aceita os números colados."
+   },
+   {
+    "titulo": "9. Formulário × criar direto",
+    "conteudo": "Quem é de fora do MKT usa o formulário 📥 Solicitações — MKT e marca o que precisa em Entregas pedidas (pode ser mais de uma). Quem é do time cria direto no banco. Origem é a área de fora que pediu; se o pedido é do próprio MKT, Origem fica vazia. Tipo de entrega (um só) quem define é a triagem."
+   }
+  ],
+  "lacunas_conhecidas": [
+   "O manual ainda não explica quando uma tarefa deve virar sub-item.",
+   "O manual ainda não explica onde entra aula para médico."
+  ]
+ },
+ "bancos": {
+  "Tarefas": {
+   "campos_select": {
+    "Status": [
+     "Triagem",
+     "A fazer",
+     "Em produção",
+     "Refação",
+     "Em aprovação",
+     "Parada/Bloqueada",
+     "Concluída",
+     "Arquivada",
+     "Cancelada"
+    ],
+    "Tipo de trabalho": [
+     "Planejado",
+     "Ad-hoc/Demanda extra",
+     "Fire-drill/P0"
+    ],
+    "Tipo de entrega": [
+     "Roteiro",
+     "Design",
+     "Vídeo/Edição",
+     "Copy",
+     "Tráfego/Ads",
+     "Captação/Gravação",
+     "Web/Site",
+     "Impresso",
+     "Aula/Workshop",
+     "Apresentação",
+     "Proposta comercial",
+     "Aprovação",
+     "Postagem",
+     "Reunião",
+     "Outro"
+    ],
+    "Empresa": [
+     "Fotona",
+     "GTS",
+     "Beauty Smile",
+     "IC360",
+     "Fernando Costa Jr"
+    ],
+    "Categoria": [
+     "Operacional",
+     "Conteúdo"
+    ],
+    "Aprovação clínica": [
+     "Não requer",
+     "Aguardando",
+     "Aprovada",
+     "Reprovada"
+    ],
+    "Ciclo de métricas": [
+     "D+7",
+     "D+15",
+     "D+30"
+    ],
+    "Origem": [
+     "LA&HA",
+     "Comercial",
+     "Diretoria",
+     "Financeiro",
+     "Assistência técnica",
+     "GTS",
+     "Beauty Smile",
+     "Customer Success",
+     "Outra"
+    ]
+   },
+   "campos_data": [
+    "Prazo",
+    "Data desejada",
+    "Prazo interno",
+    "Data planejada",
+    "Publicado em",
+    "Aprovação clínica em",
+    "Métricas atualizadas em"
+   ],
+   "campos_ia": [
+    "🤖 Resumo (IA)",
+    "🤖 Sugestão de triagem (IA)",
+    "🤖 Analisado em"
+   ],
+   "campos_multi_select": {
+    "Entregas pedidas": "mesmas opções de Tipo de entrega (só o formulário escreve)"
+   },
+   "campos_url": [
+    "Link do post",
+    "Link da entrega",
+    "Links e referências"
+   ],
+   "campos_numero": [
+    "Alcance",
+    "Engajamento",
+    "Cliques/Leads",
+    "Curtidas",
+    "Comentários",
+    "Salvamentos",
+    "Compartilhamentos",
+    "Visualizações",
+    "Seguidores ganhos",
+    "Refações (preenchido por automação)"
+   ],
+   "campos_pessoa": [
+    "Responsável",
+    "Colaboradores",
+    "Aprovador"
+   ]
+  },
+  "Areas": [
+   "Social Media",
+   "Performance",
+   "Produto/Lançamentos",
+   "Design",
+   "Audiovisual",
+   "Eventos & Congressos",
+   "Branding",
+   "Web",
+   "Comercial",
+   "Imprensa",
+   "Creators"
+  ]
+ },
+ "time_ficticio": [
+  {
+   "nome": "Otávio Bragança",
+   "papel": "coordenador de MKT (triagem)"
+  },
+  {
+   "nome": "Renata Sicupira",
+   "papel": "coordenadora de criação"
+  },
+  {
+   "nome": "Ivo Palhares",
+   "papel": "coordenador de eventos"
+  },
+  {
+   "nome": "Duda Nepomuceno",
+   "papel": "social media"
+  }
+ ]
+}

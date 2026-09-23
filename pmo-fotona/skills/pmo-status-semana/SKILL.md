@@ -31,17 +31,27 @@ Sempre sem contêiner e sem `Cancelada`:
 2. **Foco da semana** — Q4.
 3. **Em aprovação** — Q5, ordenadas pela mais antiga. Acima de 48h é fila, não aprovação. Carimbo
    `Entrou em aprovação em` vazio → "carimbo ausente", não zero horas.
-4. **Travadas** — Q6. `Motivo do bloqueio` só como escrito/não escrito; sem motivo é um achado por
+4. **Em refação** — Q8b: o que voltou da aprovação e está com quem executa, com `Refações` (quantas
+   voltas). É sinal de **processo**, não de pessoa: o campo não tem motivo e soma, no mesmo número,
+   o ajuste clínico/regulatório que o sistema é obrigado a ter com o erro de execução e a mudança de
+   pedido. Por isso leia por tipo de entrega, empresa ou projeto — "3 das 4 peças em refação são
+   Educativo/Clínico" diz onde o fluxo engasga; "fulano tem 5 refações" pune quem pega a peça difícil.
+   E diga onde se concentra sem dizer por quê: "3 de 4 são Educativo/Clínico" é dado; "todas por
+   causa da clínica" é inferência que o campo não sustenta — escreva a concentração e, se couber,
+   "o contador não diz o motivo". Nunca some ou compare refações por responsável. Peça com muitas voltas (3+) merece uma linha no
+   bloco de decisão só se estiver perto da data — a pergunta é "o que destrava", não "quem errou".
+   `Refações` vazio numa tarefa em `Refação` → "contador ausente" (a automação não disparou), não zero.
+5. **Travadas** — Q6. `Motivo do bloqueio` só como escrito/não escrito; sem motivo é um achado por
    si só. **Não leia nem cite o conteúdo do motivo** — pode ser dado sensível sobre a pessoa.
-5. **Em triagem há mais de 2 dias úteis** — Q1.
-6. **Carga** — Q9: pontos abertos · atrasados · itens em produção por responsável, em absoluto.
-   Bloqueada conta. Creators fora.
-7. **Conteúdo da semana** — Q10: o que vai ao ar e o que passou da `Data planejada` sem
+6. **Em triagem há mais de 2 dias úteis** — Q1.
+7. **Carga** — Q9: pontos abertos · atrasados · itens em produção por responsável, em absoluto.
+   Bloqueada conta, e Refação também — é trabalho de volta na mão de quem executa. Creators fora.
+8. **Conteúdo da semana** — Q10: o que vai ao ar e o que passou da `Data planejada` sem
    `Link do post` (furo de calendário).
-8. **Memória** — o 🤖 Log do PMO dos últimos 14 dias: o que a leitura anterior apontou e o desfecho
+9. **Memória** — o 🤖 Log do PMO dos últimos 14 dias: o que a leitura anterior apontou e o desfecho
    de cada registro (`log-do-pmo.md` §Como ler). Na sexta, também os registros `Sem resposta` da
    semana — são os que vão ser cobrados.
-9. **Na sexta**, troque 1 e 2 por: concluídas nos últimos 7 dias (Q11 com o período da semana), e o
+10. **Na sexta**, troque 1 e 2 por: concluídas nos últimos 7 dias (Q11 com o período da semana), e o
    que tinha prazo na semana e não fechou.
 
 Todo derivado (pontos, aging, horas, sinal) vem de `formulas-espelho.md` — a API não devolve
@@ -60,7 +70,7 @@ deve, em vez de aceitar por inércia.
 <Uma frase com o estado geral: o número que mais importa esta semana e o que ele significa.>
 
 📥 O que li
-• N abertas · N atrasadas · N em aprovação (mais antiga: Xh) · N travadas · N em triagem há >2d
+• N abertas · N atrasadas · N em aprovação (mais antiga: Xh) · N em refação · N travadas · N em triagem há >2d
 • Não consegui ler: <ou "tudo lido">
 
 🔴 Precisa de decisão hoje
@@ -72,6 +82,7 @@ deve, em vez de aceitar por inércia.
 
 ✋ Aprovação parada
 • <item> — <Xh> com <aprovador>
+🔁 Em refação (N) — <onde se concentra: tipo de entrega / empresa; a peça com mais voltas, se estiver perto da data>
 
 ⚖️ Carga (pontos abertos · atrasados · em produção)
 <Uma linha por pessoa que está fora do padrão dela, para mais ou para menos. Não liste o time todo.
@@ -101,6 +112,8 @@ Regras de escrita que fazem diferença:
   qualquer número isolado — e precisa do Log ou de contagem para ser dito. Sem base, escreva
   "impressão", ou não escreva.
 - **Português do time.** Sem "throughput", sem "WIP" — a não ser que quem pediu use esses termos.
+- **`Horas em aprovação` é da rodada atual.** Ao voltar de Refação, o relógio recomeça; uma peça com
+  10h em aprovação e 3 refações está na fila há bem mais que 10h. Diga as duas coisas juntas.
 - **≤ 400 palavras.**
 
 ## Entrega e memória
