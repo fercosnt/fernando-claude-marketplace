@@ -1,12 +1,13 @@
 ---
 name: claude-md-generator
 description: Cria ou melhora CLAUDE.md + estrutura .claude/ completa. Use ao iniciar projeto, configurar Claude Code, melhorar CLAUDE.md, ou mencionar "CLAUDE.md", "setup do projeto".
-intent: >
-  CLAUDE.md e o unico mecanismo de contexto persistente entre sessoes do Claude Code.
-  Sem ele, voce repete instrucoes a cada conversa. Esta skill aplica pesquisa de 60+ fontes
-  (documentacao oficial Anthropic, blog posts, showcases, gists reais) para gerar CLAUDE.md
-  otimizado e toda a infraestrutura .claude/ necessaria. Foco no stack padrao de Fernando
-  (Next.js + Supabase + TypeScript + Tailwind + n8n + @beautysmile/design-system).
+metadata:
+  intent: >
+    CLAUDE.md e o unico mecanismo de contexto persistente entre sessoes do Claude Code.
+    Sem ele, voce repete instrucoes a cada conversa. Esta skill aplica pesquisa de 60+ fontes
+    (documentacao oficial Anthropic, blog posts, showcases, gists reais) para gerar CLAUDE.md
+    otimizado e toda a infraestrutura .claude/ necessaria. Foco no stack padrao de Fernando
+    (Next.js + Supabase + TypeScript + Tailwind + n8n + @beautysmile/design-system).
 ---
 
 # Claude MD Generator

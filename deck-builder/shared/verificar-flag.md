@@ -4,7 +4,7 @@
 
 ## Problema que isto resolve
 
-LLMs (incluindo Opus 4.7) inventam números específicos e citações de papers com alta plausibilidade quando o STORYBOARD pede dados concretos. Exemplos reais observados nos walkthroughs v1.0:
+LLMs (inclusive os modelos Claude atuais) inventam números específicos e citações de papers com alta plausibilidade quando o STORYBOARD pede dados concretos. Exemplos reais observados nos walkthroughs v1.0:
 
 - `40% das clinicas dentais premium em SP fecharam` — número plausível, sem fonte real, citado como CFO/ABO
 - `Genova 2023`, `Tonetti 2024`, `ICOI consensus 2024` — papers fabricados que soam reais

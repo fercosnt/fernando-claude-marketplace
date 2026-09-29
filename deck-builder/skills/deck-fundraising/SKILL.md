@@ -1,20 +1,21 @@
 ---
 name: deck-fundraising
 description: STORYBOARD para deck de captacao (anjo/VC/family office/Rouanet) em 3 modos (padrao/sponsorship/demo-day). Use ao mencionar pitch investidor, captacao, seed, Series A, patrocinio.
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core (Resonate, Made to Stick, Pitch Anything, Storytelling with Data)
-  - 5a0aaabb-78c1-4d03-a400-e9ce1973737b  # NB3 Comerciais (pitch-decks-captacao + Sequoia + Raskin + Klaff)
-references:
-  - references/framework-sequoia-raskin.md
-  - references/framework-klaff-strong.md
-  - references/compliance-forward-looking-statements.md
-  - references/eval-cases-fundraising.md
-assets:
-  - assets/templates/storyboard-skeleton-sequoia.md
-  - assets/templates/sponsorship-mode-skeleton.md
-  - assets/checklists/fundraising-checklist.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core (Resonate, Made to Stick, Pitch Anything, Storytelling with Data)
+    - 5a0aaabb-78c1-4d03-a400-e9ce1973737b  # NB3 Comerciais (pitch-decks-captacao + Sequoia + Raskin + Klaff)
+  references:
+    - references/framework-sequoia-raskin.md
+    - references/framework-klaff-strong.md
+    - references/compliance-forward-looking-statements.md
+    - references/eval-cases-fundraising.md
+  assets:
+    - assets/templates/storyboard-skeleton-sequoia.md
+    - assets/templates/sponsorship-mode-skeleton.md
+    - assets/checklists/fundraising-checklist.md
 ---
 
 # deck-fundraising

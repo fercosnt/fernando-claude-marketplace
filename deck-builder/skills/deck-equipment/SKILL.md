@@ -1,18 +1,19 @@
 ---
 name: deck-equipment
 description: Cria STORYBOARD para vender equipamentos medicos/dentais. Auto-detecta Fotona/LightWalker/Er:YAG/Nd:YAG. Aplica FAB + TCO 5 anos + Payback + Sensitivity 3 cenarios. Compliance Anvisa Classe II/III.
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core Transversal
-  - 1635d16b-773c-480d-89c2-79c717f4b2e1  # NB2 Verticais Densas
-references:
-  - references/framework-fab-tco-payback.md
-  - references/compliance-anvisa-equipment.md
-  - references/eval-cases-equipment.md
-assets:
-  - assets/templates/storyboard-skeleton-equipment.md
-  - assets/checklists/equipment-compliance.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core Transversal
+    - 1635d16b-773c-480d-89c2-79c717f4b2e1  # NB2 Verticais Densas
+  references:
+    - references/framework-fab-tco-payback.md
+    - references/compliance-anvisa-equipment.md
+    - references/eval-cases-equipment.md
+  assets:
+    - assets/templates/storyboard-skeleton-equipment.md
+    - assets/checklists/equipment-compliance.md
 ---
 
 # deck-equipment

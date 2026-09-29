@@ -1,6 +1,7 @@
 ---
 name: mkt-nova-demanda
-description: Abre uma demanda no sistema de MKT da Fotona (Notion) conversando, em vez de preencher o formulário — pergunta quem está pedindo, cobre as mesmas 10 perguntas do formulário em até 3 trocas, insiste no "para quê", busca duplicata antes de criar e grava a tarefa em Triagem só com o que a pessoa disse. Use sempre que alguém do time quiser "abrir uma tarefa", "pedir um post/arte/vídeo/material", "cadastrar uma demanda", "preciso de um…", "cria pra mim no Notion", "manda pra triagem", "o comercial pediu…", "a diretoria quer…", ou descrever um trabalho novo para o marketing fazer — mesmo sem usar a palavra demanda ou tarefa. Não use para mudar tarefa que já existe (status, prazo, dono): isso é triagem ou Kanban, não entrada.
+description: >-
+  Abre uma demanda no sistema de MKT da Fotona (Notion) conversando, em vez de preencher o formulário — pergunta quem está pedindo, cobre as mesmas 10 perguntas do formulário em até 3 trocas, insiste no "para quê", busca duplicata antes de criar e grava a tarefa em Triagem só com o que a pessoa disse. Use sempre que alguém do time quiser "abrir uma tarefa", "pedir um post/arte/vídeo/material", "cadastrar uma demanda", "preciso de um…", "cria pra mim no Notion", "manda pra triagem", "o comercial pediu…", "a diretoria quer…", ou descrever um trabalho novo para o marketing fazer — mesmo sem usar a palavra demanda ou tarefa. Não use para mudar tarefa que já existe (status, prazo, dono): isso é triagem ou Kanban, não entrada.
 ---
 
 # Nova demanda por conversa

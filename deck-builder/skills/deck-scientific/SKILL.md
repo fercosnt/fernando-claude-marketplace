@@ -1,21 +1,23 @@
 ---
 name: deck-scientific
-description: Cria STORYBOARD (oral/keynote) ou POSTER.md (modo poster, D8) para apresentacao cientifica em congressos (CIOSP/ICOI/AAOMS/IADR). 4 modos. Triggers: paper, poster, abstract, RCT, IMRAD, GRADE.
-intent: action
+description: >-
+  Cria STORYBOARD (oral/keynote) ou POSTER.md (modo poster, D8) para apresentacao cientifica em congressos (CIOSP/ICOI/AAOMS/IADR). 4 modos. Triggers: paper, poster, abstract, RCT, IMRAD, GRADE.
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-  - 1635d16b-773c-480d-89c2-79c717f4b2e1
-references:
-  - references/framework-imrad-grade.md
-  - references/framework-tufte-doumont.md
-  - references/framework-better-poster-morrison.md
-  - references/compliance-consort-strobe-prisma-coi.md
-  - references/eval-cases-scientific.md
-assets:
-  - assets/templates/storyboard-skeleton-oral.md
-  - assets/templates/poster-skeleton.md
-  - assets/checklists/scientific-checklist.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+    - 1635d16b-773c-480d-89c2-79c717f4b2e1
+  references:
+    - references/framework-imrad-grade.md
+    - references/framework-tufte-doumont.md
+    - references/framework-better-poster-morrison.md
+    - references/compliance-consort-strobe-prisma-coi.md
+    - references/eval-cases-scientific.md
+  assets:
+    - assets/templates/storyboard-skeleton-oral.md
+    - assets/templates/poster-skeleton.md
+    - assets/checklists/scientific-checklist.md
 ---
 
 # deck-scientific

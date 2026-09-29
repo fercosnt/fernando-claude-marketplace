@@ -8,7 +8,7 @@
 
 Cada tarefa deve ser **atomica o suficiente para 1 sessao focada** do Claude Code. Se voce nao consegue descrever a mudanca em 2-3 frases, divida.
 
-> **Por que atomicidade e nao apenas "cabe no contexto"**: o Opus 4.7 tem 1M de context window, entao o limite tecnico quase nunca aperta. O problema real e de **foco e qualidade**: tasks menores (a) reduzem "context rot" (contextos frescos por task), (b) aproveitam a literalidade do 4.7 (instrucoes especificas produzem saida mais precisa), (c) facilitam review humano, (d) permitem commits atomicos, e (e) tornam retries baratos quando algo falha. A regra e de disciplina de engenharia, nao de limite tecnico.
+> **Por que atomicidade e nao apenas "cabe no contexto"**: os modelos Claude atuais tem 1M de context window, entao o limite tecnico quase nunca aperta. O problema real e de **foco e qualidade**: tasks menores (a) reduzem "context rot" (contextos frescos por task), (b) aproveitam a literalidade do 4.7 (instrucoes especificas produzem saida mais precisa), (c) facilitam review humano, (d) permitem commits atomicos, e (e) tornam retries baratos quando algo falha. A regra e de disciplina de engenharia, nao de limite tecnico.
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: pmo-replanejamento
-description: Propõe o replanejamento de um projeto ou campanha atrasada (ou em 🔴) do MKT da Fotona — lê as tarefas abertas, dependências, prazos e carga dos responsáveis no Notion, pede primeiro o palpite de quem decide, e só então apresenta 2 a 3 cenários (cortar escopo nomeado · empurrar prazo · redistribuir) com quem é afetado, risco e um premortem cada. Nunca aplica: entrega o cenário escolhido como lista de mudanças para a coordenação. Use sempre que a coordenação disser "o projeto estourou", "não vai dar tempo", "o que eu corto", "replaneja o X", "como salvo o congresso", "precisa empurrar", "redistribui isso", "o que faço com o atraso de Y", ou qualquer pedido de decidir o que fazer com algo atrasado — mesmo sem a palavra replanejamento.
+description: >-
+  Propõe o replanejamento de um projeto ou campanha atrasada (ou em 🔴) do MKT da Fotona — lê as tarefas abertas, dependências, prazos e carga dos responsáveis no Notion, pede primeiro o palpite de quem decide, e só então apresenta 2 a 3 cenários (cortar escopo nomeado · empurrar prazo · redistribuir) com quem é afetado, risco e um premortem cada. Nunca aplica: entrega o cenário escolhido como lista de mudanças para a coordenação. Use sempre que a coordenação disser "o projeto estourou", "não vai dar tempo", "o que eu corto", "replaneja o X", "como salvo o congresso", "precisa empurrar", "redistribui isso", "o que faço com o atraso de Y", ou qualquer pedido de decidir o que fazer com algo atrasado — mesmo sem a palavra replanejamento.
 ---
 
 # Replanejamento — cenários, nunca proposta única

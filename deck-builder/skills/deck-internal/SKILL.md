@@ -1,23 +1,24 @@
 ---
 name: deck-internal
 description: STORYBOARD para apresentacoes internas (pitch CEO, all-hands, estrategia, concept reveal). 4 modos com Pyramid/BLUF, Raskin, Sparkline, Sinek e 6-pager Amazon. concept-reveal consome cenografia (D3).
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core (sempre)
-  - 5a0aaabb-78c1-4d03-a400-e9ce1973737b  # NB3 Comerciais (Pyramid Minto transversal)
-references:
-  - references/framework-pyramid-raskin-sparkline.md
-  - references/framework-working-backwards-amazon.md
-  - references/pipeline-cenografia-handoff.md
-  - references/eval-cases-internal.md
-assets:
-  - assets/templates/storyboard-skeleton-pitch-leadership.md
-  - assets/templates/storyboard-skeleton-strategy.md
-  - assets/templates/storyboard-skeleton-concept-reveal.md
-  - assets/templates/storyboard-skeleton-all-hands.md
-  - assets/templates/amazon-6pager-skeleton.md
-  - assets/checklists/internal-checklist.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core (sempre)
+    - 5a0aaabb-78c1-4d03-a400-e9ce1973737b  # NB3 Comerciais (Pyramid Minto transversal)
+  references:
+    - references/framework-pyramid-raskin-sparkline.md
+    - references/framework-working-backwards-amazon.md
+    - references/pipeline-cenografia-handoff.md
+    - references/eval-cases-internal.md
+  assets:
+    - assets/templates/storyboard-skeleton-pitch-leadership.md
+    - assets/templates/storyboard-skeleton-strategy.md
+    - assets/templates/storyboard-skeleton-concept-reveal.md
+    - assets/templates/storyboard-skeleton-all-hands.md
+    - assets/templates/amazon-6pager-skeleton.md
+    - assets/checklists/internal-checklist.md
 ---
 
 # deck-internal

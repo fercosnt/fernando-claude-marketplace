@@ -1,21 +1,22 @@
 ---
 name: project-instructions
 description: Escreve, audita e melhora as INSTRUCOES de projetos do Claude — tanto Projects do chat (claude.ai / Claude Desktop) quanto Projects do Claude Cowork. Roteia cada regra para a camada certa (perfil global, instrucao do projeto, knowledge, memoria, skill) em vez de empilhar tudo num texto so. Inclui modo auditoria de instrucao existente e montagem do pacote completo do projeto (arquivos, pastas, links, connectors, skills). Ativar quando o usuario pedir para escrever instrucoes de projeto, custom instructions, project instructions, instrucao do Cowork, global instructions, configurar um projeto do Claude, "o que colocar nas instrucoes", "meu projeto do Claude nao obedece", "montar um projeto pro time", "revisar as instrucoes do projeto", ou colar uma instrucao existente pedindo melhoria. Tambem ativar ao mencionar Cowork, project knowledge, "instrucoes pro Claude", ou projeto compartilhado com o time.
-intent: >
-  Instrucao de projeto nao e prompt. E a camada de contexto duravel de um espaco de trabalho —
-  e a maior parte do que as pessoas escrevem nela deveria morar em outro lugar (knowledge, skill,
-  memoria, ou no proprio chat). Esta skill existe para decidir ONDE cada regra vai antes de
-  redigir, porque instrucao inchada compete por janela de contexto e regra morta ensina o Claude
-  a ignorar o resto. Cobre dois alvos com modelos mentais opostos: Chat Project (conversacional,
-  governa como a resposta sai) e Cowork Project (agentico, governa o que e feito, onde salva e
-  o que e "pronto"). Escrita para instrucoes que o time do Fernando vai usar — logo, explicitas,
-  com dono e data, sem contexto tacito.
 effort: high
-references:
-  - references/chat-project.md
-  - references/cowork-project.md
-  - references/auditoria.md
-  - references/pacote.md
+metadata:
+  intent: >
+    Instrucao de projeto nao e prompt. E a camada de contexto duravel de um espaco de trabalho —
+    e a maior parte do que as pessoas escrevem nela deveria morar em outro lugar (knowledge, skill,
+    memoria, ou no proprio chat). Esta skill existe para decidir ONDE cada regra vai antes de
+    redigir, porque instrucao inchada compete por janela de contexto e regra morta ensina o Claude
+    a ignorar o resto. Cobre dois alvos com modelos mentais opostos: Chat Project (conversacional,
+    governa como a resposta sai) e Cowork Project (agentico, governa o que e feito, onde salva e
+    o que e "pronto"). Escrita para instrucoes que o time do Fernando vai usar — logo, explicitas,
+    com dono e data, sem contexto tacito.
+  references:
+    - references/chat-project.md
+    - references/cowork-project.md
+    - references/auditoria.md
+    - references/pacote.md
 ---
 
 # project-instructions

@@ -1,17 +1,18 @@
 ---
 name: deck-image-prompts
 description: Gera prompts de imagem (MJ v7/Imagen 4/Nano Banana Pro/Higgsfield/DALL-E/Ideogram) para STORYBOARD em slides na whitelist D5. Plugin deck-builder ou direto via /deck-image-prompts.
-intent: action
 effort: medium
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-references:
-  - references/engines-higgsfield-imagen-nanobanana-mj-dalle-ideogram.md
-  - references/whitelist-por-tipo-slide.md
-  - references/anti-cliches-stock.md
-assets:
-  - assets/templates/prompt-skeleton-por-engine.md
-  - evals/image-prompts-cases.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+  references:
+    - references/engines-higgsfield-imagen-nanobanana-mj-dalle-ideogram.md
+    - references/whitelist-por-tipo-slide.md
+    - references/anti-cliches-stock.md
+  assets:
+    - assets/templates/prompt-skeleton-por-engine.md
+    - evals/image-prompts-cases.md
 ---
 
 # deck-image-prompts

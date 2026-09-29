@@ -1,18 +1,19 @@
 ---
 name: deck-review-print
 description: Transforma um deck pronto (Canva, PPTX ou PDF) em dossie A4 de revisao — legivel, numerado e anotavel a caneta, com ~30x menos tinta que imprimir os slides. Use ao pedir "imprimir esse deck", "preparar para a presidencia revisar", "dossie de revisao", "handout para cliente", "copia de apresentador", "revisar no papel".
-intent: action
 effort: medium
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-references:
-  - references/ingestao-3-fontes.md
-  - references/classificacao-slides.md
-  - references/modos-saida.md
-assets:
-  - assets/templates/dossie-layout.html
-  - assets/checklists/conferencia-tabelas.md
-  - evals/review-print-cases.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+  references:
+    - references/ingestao-3-fontes.md
+    - references/classificacao-slides.md
+    - references/modos-saida.md
+  assets:
+    - assets/templates/dossie-layout.html
+    - assets/checklists/conferencia-tabelas.md
+    - evals/review-print-cases.md
 ---
 
 # deck-review-print

@@ -1,6 +1,6 @@
 {
   "name": "deck-builder",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Plugin para criar STORYBOARD.md de apresentacoes em 8 verticais + auxiliares, converter deck pronto em dossie A4 de revisao (deck-review-print) e anotar deck no Canva com briefing de montagem (deck-render-canva). Entry: /deck.",
   "author": {
     "name": "Fernando Costa",

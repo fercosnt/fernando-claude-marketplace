@@ -1,19 +1,20 @@
 ---
 name: deck-clinical
 description: Cria STORYBOARD para apresentacao de protocolos clinicos (peer-facing ou patient-facing). EBM + AIDET + Calgary-Cambridge. Compliance CFO 196/2019 + CFM 1974/2011 + Anvisa em bloco final 3 tiers.
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core Transversal
-  - 1635d16b-773c-480d-89c2-79c717f4b2e1  # NB2 Verticais Densas (clinical + scientific + equipment)
-references:
-  - references/framework-ebm-aidet-calgary.md
-  - references/compliance-cfo-cfm-anvisa.md
-  - references/eval-cases-clinical.md
-assets:
-  - assets/templates/storyboard-skeleton-peer.md
-  - assets/templates/storyboard-skeleton-patient.md
-  - assets/checklists/clinical-compliance-3tiers.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core Transversal
+    - 1635d16b-773c-480d-89c2-79c717f4b2e1  # NB2 Verticais Densas (clinical + scientific + equipment)
+  references:
+    - references/framework-ebm-aidet-calgary.md
+    - references/compliance-cfo-cfm-anvisa.md
+    - references/eval-cases-clinical.md
+  assets:
+    - assets/templates/storyboard-skeleton-peer.md
+    - assets/templates/storyboard-skeleton-patient.md
+    - assets/checklists/clinical-compliance-3tiers.md
 ---
 
 # deck-clinical

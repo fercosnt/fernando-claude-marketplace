@@ -1,21 +1,22 @@
 ---
 name: deck-proposal
 description: Cria STORYBOARD para propostas comerciais visuais (B2B BR, ticket medio-alto). 3 modos (commercial / strategic-partnership M&A/JV / retainer). Pyramid (Minto, BLUF) + SCQA + ROI framing + Win Without Pitching (Enns). Termos juridicos BR.
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core
-  - 5a0aaabb-78c1-4d03-a400-e9ce1973737b  # NB3 Comerciais
-references:
-  - references/framework-pyramid-scqa-roi.md
-  - references/framework-win-without-pitching.md
-  - references/compliance-termos-juridicos-br.md
-  - references/eval-cases-proposal.md
-assets:
-  - assets/templates/storyboard-skeleton-commercial.md
-  - assets/templates/storyboard-skeleton-partnership.md
-  - assets/templates/storyboard-skeleton-retainer.md
-  - assets/checklists/proposal-checklist.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da  # NB1 Core
+    - 5a0aaabb-78c1-4d03-a400-e9ce1973737b  # NB3 Comerciais
+  references:
+    - references/framework-pyramid-scqa-roi.md
+    - references/framework-win-without-pitching.md
+    - references/compliance-termos-juridicos-br.md
+    - references/eval-cases-proposal.md
+  assets:
+    - assets/templates/storyboard-skeleton-commercial.md
+    - assets/templates/storyboard-skeleton-partnership.md
+    - assets/templates/storyboard-skeleton-retainer.md
+    - assets/checklists/proposal-checklist.md
 ---
 
 # deck-proposal

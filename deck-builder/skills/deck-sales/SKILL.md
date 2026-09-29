@@ -1,22 +1,23 @@
 ---
 name: deck-sales
 description: Cria STORYBOARD para vendas B2B consultivas + demo de produto. Aplica Challenger Sale + Gap Selling + Raskin (Old World → New World) + PAS opcional. Use para sales deck, demo de produto, proposta B2B, recrutamento de franqueado, plano corporativo. Slide 2 SEMPRE insight provocador (nunca "obrigado pela reuniao"). ROI/payback obrigatorio. Comparativo SEM badmouth.
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-  - 5a0aaabb-78c1-4d03-a400-e9ce1973737b
-references:
-  - references/framework-challenger-gap-raskin.md
-  - references/framework-pas.md
-  - references/comparativo-responsavel.md
-  - references/roi-payback.md
-  - references/demo-presentation.md
-  - references/eval-cases-sales.md
-assets:
-  - assets/templates/storyboard-skeleton-challenger.md
-  - assets/templates/storyboard-skeleton-demo.md
-  - assets/checklists/sales-checklist.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+    - 5a0aaabb-78c1-4d03-a400-e9ce1973737b
+  references:
+    - references/framework-challenger-gap-raskin.md
+    - references/framework-pas.md
+    - references/comparativo-responsavel.md
+    - references/roi-payback.md
+    - references/demo-presentation.md
+    - references/eval-cases-sales.md
+  assets:
+    - assets/templates/storyboard-skeleton-challenger.md
+    - assets/templates/storyboard-skeleton-demo.md
+    - assets/checklists/sales-checklist.md
 ---
 
 # deck-sales

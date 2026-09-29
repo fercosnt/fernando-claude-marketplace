@@ -1,6 +1,7 @@
 ---
 name: mkt-meu-mes
-description: Gera o relatório individual do mês da própria pessoa no sistema de MKT da Fotona (Notion) — o que entregou, o que está com ela, aging dos itens dela, quanto veio de demanda extra, o que travou esperando outra pessoa — em absoluto, contra a série dela mesma, sem comparar com ninguém; entrega em markdown, PDF ou HTML e registra no Log do PMO. Use sempre que alguém pedir "meu mês", "como foi meu mês", "o que eu entreguei", "meu relatório", "meus números", "resumo do que fiz em setembro", "quero levar pro meu 1:1", ou qualquer pedido da pessoa sobre o próprio trabalho no período. Recuse o mês de outra pessoa ("mostra o mês da fulana", "compara comigo"): isso é o PMO da coordenação, não este plugin.
+description: >-
+  Gera o relatório individual do mês da própria pessoa no sistema de MKT da Fotona (Notion) — o que entregou, o que está com ela, aging dos itens dela, quanto veio de demanda extra, o que travou esperando outra pessoa — em absoluto, contra a série dela mesma, sem comparar com ninguém; entrega em markdown, PDF ou HTML e registra no Log do PMO. Use sempre que alguém pedir "meu mês", "como foi meu mês", "o que eu entreguei", "meu relatório", "meus números", "resumo do que fiz em setembro", "quero levar pro meu 1:1", ou qualquer pedido da pessoa sobre o próprio trabalho no período. Recuse o mês de outra pessoa ("mostra o mês da fulana", "compara comigo"): isso é o PMO da coordenação, não este plugin.
 ---
 
 # Meu mês

@@ -1,17 +1,18 @@
 ---
 name: deck-orchestrator
 description: Entrypoint /deck do plugin deck-builder. Classifica vertical por keywords + auto-detection de marca, e delega a skill apropriada. Routing-first (D10), NUNCA auto-delega /idea-to-brief (D12).
-intent: orchestration
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-references:
-  - references/routing-matrix.md
-  - references/handoff-context.md
-  - references/ask-user-templates.md
-  - references/eval-cases-orchestrator.md
-assets:
-  - evals/orchestrator-cases.md
+metadata:
+  intent: orchestration
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+  references:
+    - references/routing-matrix.md
+    - references/handoff-context.md
+    - references/ask-user-templates.md
+    - references/eval-cases-orchestrator.md
+  assets:
+    - evals/orchestrator-cases.md
 ---
 
 # deck-orchestrator

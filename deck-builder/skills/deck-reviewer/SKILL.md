@@ -1,19 +1,20 @@
 ---
 name: deck-reviewer
 description: Revisa STORYBOARD de deck com 4 criticos adversariais (clareza/persuasao/SUCCESs Heath/VERIFICAR auditor v1.2) e gera issues BLOCKER/MAJOR/MINOR. Use ao pedir "/deck review", "revisa esse deck", "vamos criticar storyboard".
-intent: action
 effort: medium
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-references:
-  - references/critico-clareza.md
-  - references/critico-persuasao.md
-  - references/critico-success-heath.md
-  - references/critico-verificar.md
-  - references/severidades-categoricas.md
-assets:
-  - assets/templates/review-skeleton.md
-  - evals/reviewer-cases.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+  references:
+    - references/critico-clareza.md
+    - references/critico-persuasao.md
+    - references/critico-success-heath.md
+    - references/critico-verificar.md
+    - references/severidades-categoricas.md
+  assets:
+    - assets/templates/review-skeleton.md
+    - evals/reviewer-cases.md
 ---
 
 # deck-reviewer

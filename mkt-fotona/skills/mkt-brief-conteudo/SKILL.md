@@ -1,6 +1,7 @@
 ---
 name: mkt-brief-conteudo
-description: Escreve o briefing de uma peça de conteúdo do MKT da Fotona (post, carrossel, reels, story, e-mail, blog) no template da casa — objetivo, público, mensagem-chave, referência, CTA, o que não dizer — na voz da empresa certa (Fotona, GTS, Beauty Smile, IC360, Fernando Costa Jr), e grava no corpo da página da peça no Notion depois de mostrar. Use sempre que alguém pedir "briefing", "brief do post", "escreve o brief da peça", "o que esse carrossel precisa dizer", "monta a pauta desse reels" (no sentido de roteiro/mensagem), "manda o direcionamento pra designer/copy", ou quiser o direcionamento criativo de uma peça já na pauta — mesmo sem usar a palavra briefing. Não use para escrever a legenda final ou o texto pronto do post: o briefing direciona; quem escreve a peça é a pessoa.
+description: >-
+  Escreve o briefing de uma peça de conteúdo do MKT da Fotona (post, carrossel, reels, story, e-mail, blog) no template da casa — objetivo, público, mensagem-chave, referência, CTA, o que não dizer — na voz da empresa certa (Fotona, GTS, Beauty Smile, IC360, Fernando Costa Jr), e grava no corpo da página da peça no Notion depois de mostrar. Use sempre que alguém pedir "briefing", "brief do post", "escreve o brief da peça", "o que esse carrossel precisa dizer", "monta a pauta desse reels" (no sentido de roteiro/mensagem), "manda o direcionamento pra designer/copy", ou quiser o direcionamento criativo de uma peça já na pauta — mesmo sem usar a palavra briefing. Não use para escrever a legenda final ou o texto pronto do post: o briefing direciona; quem escreve a peça é a pessoa.
 ---
 
 # Briefing da peça

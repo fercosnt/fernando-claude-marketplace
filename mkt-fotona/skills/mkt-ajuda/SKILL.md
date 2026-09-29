@@ -1,6 +1,7 @@
 ---
 name: mkt-ajuda
-description: Responde dúvidas do time de Marketing da Fotona sobre como usar o sistema no Notion — onde uma coisa é registrada, qual campo preencher, o que cada status significa, a diferença entre Projeto e Campanha, quando usar sub-item, onde entra uma aula para médico, qual formulário usar, o que cada view do calendário mostra. Use sempre que alguém perguntar "onde eu coloco…", "isso é projeto ou campanha?", "o que é esse campo?", "como faço para…", "qual a diferença entre…", "isso vai em qual área?", "não achei onde…", "o sistema faz X?", ou demonstrar qualquer confusão sobre o Notion do MKT — inclusive quando a pergunta vier no meio de outro assunto e mesmo que a pessoa não peça ajuda explicitamente. Esta skill só explica: quem quer abrir demanda usa mkt-nova-demanda, quem quer o próprio mês usa mkt-meu-mes.
+description: >-
+  Responde dúvidas do time de Marketing da Fotona sobre como usar o sistema no Notion — onde uma coisa é registrada, qual campo preencher, o que cada status significa, a diferença entre Projeto e Campanha, quando usar sub-item, onde entra uma aula para médico, qual formulário usar, o que cada view do calendário mostra. Use sempre que alguém perguntar "onde eu coloco…", "isso é projeto ou campanha?", "o que é esse campo?", "como faço para…", "qual a diferença entre…", "isso vai em qual área?", "não achei onde…", "o sistema faz X?", ou demonstrar qualquer confusão sobre o Notion do MKT — inclusive quando a pergunta vier no meio de outro assunto e mesmo que a pessoa não peça ajuda explicitamente. Esta skill só explica: quem quer abrir demanda usa mkt-nova-demanda, quem quer o próprio mês usa mkt-meu-mes.
 ---
 
 # Ajuda sobre o sistema

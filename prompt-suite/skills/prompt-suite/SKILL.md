@@ -1,14 +1,15 @@
 ---
 name: prompt-suite
 description: Entrypoint do plugin prompt-suite. Classifica o pedido por SUPERFICIE (onde a instrucao vai morar) e roteia para a skill certa — claude-md-generator (Claude Code / CLAUDE.md / .claude/), project-instructions (Projects do chat e do Cowork) ou prompt-engineer (prompt avulso, system prompt, N8N, Notion Custom AI, OpenClaw). NAO escreve a instrucao sozinho. Ativar quando o usuario pedir ajuda para "escrever instrucoes pro Claude", "criar um prompt", "configurar meu projeto", "fazer o Claude se comportar assim", "melhorar minhas instrucoes", "montar isso pro meu time", ou quando pedir instrucao/prompt sem deixar claro para qual superficie. Tambem ativar quando o pedido envolver mais de uma superficie ao mesmo tempo (por exemplo, projeto de codigo que o time tambem usa no Cowork).
-intent: >
-  As tres skills do plugin respondem a mesma pergunta — o que escrever para mudar o comportamento
-  do Claude — mas em superficies diferentes, e escolher errado custa caro: CLAUDE.md num Chat
-  Project nao existe, instrucao de Cowork num chat manda salvar arquivo em pasta que nao ha,
-  prompt avulso congelado numa instrucao permanente vira regra morta. Esta skill nao redige nada;
-  ela faz a unica pergunta que resolve (onde isso vai morar, e por quanto tempo) e entrega o
-  pedido pronto para a skill certa — ou para mais de uma, na ordem certa, quando o caso pede.
 effort: medium
+metadata:
+  intent: >
+    As tres skills do plugin respondem a mesma pergunta — o que escrever para mudar o comportamento
+    do Claude — mas em superficies diferentes, e escolher errado custa caro: CLAUDE.md num Chat
+    Project nao existe, instrucao de Cowork num chat manda salvar arquivo em pasta que nao ha,
+    prompt avulso congelado numa instrucao permanente vira regra morta. Esta skill nao redige nada;
+    ela faz a unica pergunta que resolve (onde isso vai morar, e por quanto tempo) e entrega o
+    pedido pronto para a skill certa — ou para mais de uma, na ordem certa, quando o caso pede.
 ---
 
 # prompt-suite

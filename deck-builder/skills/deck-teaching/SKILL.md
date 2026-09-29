@@ -1,19 +1,20 @@
 ---
 name: deck-teaching
 description: Cria STORYBOARD para aulas, cursos, treinamentos e keynotes inspiracionais. 3 modos (aula-tecnica/workshop-hands-on/keynote-inspirational). Andragogy + Bloom + Mayer + Sparkline Duarte.
-intent: action
 effort: high
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-references:
-  - references/framework-andragogy-bloom-backwards.md
-  - references/framework-sparkline-duarte-keynote.md
-  - references/eval-cases-teaching.md
-assets:
-  - assets/templates/storyboard-skeleton-aula-tecnica.md
-  - assets/templates/storyboard-skeleton-workshop.md
-  - assets/templates/storyboard-skeleton-keynote.md
-  - assets/checklists/teaching-checklist.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+  references:
+    - references/framework-andragogy-bloom-backwards.md
+    - references/framework-sparkline-duarte-keynote.md
+    - references/eval-cases-teaching.md
+  assets:
+    - assets/templates/storyboard-skeleton-aula-tecnica.md
+    - assets/templates/storyboard-skeleton-workshop.md
+    - assets/templates/storyboard-skeleton-keynote.md
+    - assets/checklists/teaching-checklist.md
 ---
 
 # deck-teaching

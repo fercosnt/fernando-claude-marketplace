@@ -1,15 +1,16 @@
 ---
 name: deck-render-canva
 description: Leva o STORYBOARD.md para o Canva — escreve o briefing de montagem nas notas de cada pagina e publica o comentario-indice (modo `anotar`), e preenche brand template quando houver (modo `render`). Use ao pedir "anotar o deck no Canva", "por o briefing nas notas", "montar a base no Canva", "gerar o deck a partir do storyboard".
-intent: action
 effort: medium
-nb_ids:
-  - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
-references:
-  - references/briefing-de-montagem.md
-  - references/transacao-edicao-canva.md
-assets:
-  - evals/render-canva-cases.md
+metadata:
+  intent: action
+  nb_ids:
+    - 7f1b2e2b-4ba4-40de-ba56-ca2f55e2c0da
+  references:
+    - references/briefing-de-montagem.md
+    - references/transacao-edicao-canva.md
+  assets:
+    - evals/render-canva-cases.md
 ---
 
 # deck-render-canva
