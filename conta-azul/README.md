@@ -69,7 +69,7 @@ com dois servidores simultâneos.
 - **Servidor:** 45 testes contra uma API simulada.
 - **API real:** conectada e consultada na conta da Beauty Smile em 20/09/2026. As três correções da 0.1.1 saíram
   desse teste (ver [CHANGELOG.md](CHANGELOG.md)).
-- **Skill:** 3 iterações de evals do skill-creator, 7 casos, 100% de acerto. Com a skill, o modelo chega à resposta
+- **Skill:** 3 iterações de evals do skill-builder, 7 casos, 100% de acerto. Com a skill, o modelo chega à resposta
   com metade das chamadas de API em relação à skill antiga ou a nenhuma skill.
 
 Detalhes em [docs/testes.md](docs/testes.md) e `evals/benchmark-iteracao-*.md`.

@@ -19,7 +19,7 @@ ANTES de qualquer interacao, buscar artefatos de skills anteriores no pipeline:
 
 1. **`BRIEF/BRIEF.md`** — produzido pela skill `idea-to-brief`. Contem MITRE Problem Framing, Opportunity Solution Tree, Lean UX Canvas, pesquisa de mercado e recomendacao de abordagem. Se presente, usar **Modo D: From Brief** (ver `references/entry-modes.md`).
 
-2. **`pesquisas/*/PESQUISA-*.md`** — produzido pela skill `deep-research`. Compilado de pesquisa com citacoes, comparacoes e gaps. Usar como fonte de evidencia para secoes de Problema e Consideracoes Tecnicas.
+2. **`pesquisas/*/PESQUISA-*.md`** — produzido pela skill `pesquisa-profunda`. Compilado de pesquisa com citacoes, comparacoes e gaps. Usar como fonte de evidencia para secoes de Problema e Consideracoes Tecnicas.
 
 3. **NotebookLM** — se o usuario mencionar um notebook ou se `BRIEF.md` referencia um `notebook_id`, registrar para consulta durante o PRD. Quando houver gaps ou duvidas durante a redacao, consultar via:
    ```bash
@@ -266,14 +266,14 @@ Salvar em `PRD/PRD.md` (e `PRD/tasks-[nome].md` se tasks solicitadas). Apresenta
 **Upstream (receber de):**
 | Skill | Artefato | Como usar |
 |-------|----------|-----------|
-| `deep-research` | `pesquisas/*/PESQUISA-*.md` | Fonte de evidencia para Problema e Tecnico |
+| `pesquisa-profunda` | `pesquisas/*/PESQUISA-*.md` | Fonte de evidencia para Problema e Tecnico |
 | `idea-to-brief` | `BRIEF/BRIEF.md` | Modo From Brief — herdar e aprofundar |
 | `notebooklm` | Notebook ID | RAG para gaps durante redacao |
 
 **Downstream (recomendar):**
 | Situacao | Skill | Quando |
 |----------|-------|--------|
-| PRD requer criacao de skill | `skill-creator` | Apos PRD aprovado |
+| PRD requer criacao de skill | `skill-builder` | Apos PRD aprovado |
 | PRD requer prompt/system prompt | `prompt-engineer` | Durante secao tecnica |
 | CLAUDE.md precisa de auditoria | `claude-md-improver` | Apos PRD |
 | PRD precisa ir para Notion | Notion MCP tools | Se usuario pedir |

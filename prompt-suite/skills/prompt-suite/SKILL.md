@@ -60,7 +60,7 @@ Existem e sao comuns. Nao escolha uma e ignore o resto — **diga a ordem e exec
 |---|---|
 | Projeto de codigo que o time tambem opera pelo Cowork | `claude-md-generator` primeiro (o repo e a fonte), depois `project-instructions` para o Cowork apontar para ele |
 | "Meu prompt gigante vive colado em toda conversa" | `project-instructions` — o que e permanente vira instrucao de projeto; `prompt-engineer` so para o resto que sobrou |
-| Instrucao de projeto que na verdade era um processo repetivel | `project-instructions` roteia a regra para virar skill; entao `skill-creator` (fora deste plugin) |
+| Instrucao de projeto que na verdade era um processo repetivel | `project-instructions` roteia a regra para virar skill; entao `skill-builder` (fora deste plugin) |
 | Projeto novo do zero, sem nada escrito | `project-instructions` no modo PACOTE — ele cobre instrucao + knowledge + connectors + setup de time |
 
 ## 5. Como entregar o pedido para a skill de destino

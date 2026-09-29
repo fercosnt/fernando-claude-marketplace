@@ -56,11 +56,11 @@ Scorecard 5 dimensoes com pesos — Problema 25% / Escopo 15% / Requisitos 25% /
 
 **Recebe de**:
 - `idea-to-brief` (BRIEF.md) — Modo D
-- `deep-research` (PESQUISA-*.md) — evidencia
+- `pesquisa-profunda` (PESQUISA-*.md) — evidencia
 - NotebookLM — RAG para gaps
 
 **Entrega para**:
-- `skill-creator` — se PRD requer criar nova skill
+- `skill-builder` — se PRD requer criar nova skill
 - `prompt-engineer` — se PRD requer prompt/system prompt
 - `claude-md-improver` — auditoria pos-PRD
 

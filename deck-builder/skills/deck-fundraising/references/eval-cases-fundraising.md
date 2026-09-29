@@ -214,7 +214,7 @@
 
 ## Como rodar os asserts
 
-Asserts implementadas em [evals/evals.json](../evals/evals.json) como rubrica para grader semantic (`agents/grader.md` do skill-creator) + regex de presenca de termos-chave.
+Asserts implementadas em [evals/evals.json](../evals/evals.json) como rubrica para grader semantic (`agents/grader.md` do skill-builder) + regex de presenca de termos-chave.
 
 **Aproximacao de pass/fail:**
 - 80%+ asserts passam → eval PASS

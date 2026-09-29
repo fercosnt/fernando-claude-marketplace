@@ -216,5 +216,5 @@
     "PARTIAL": "60-79% (revisar 1 iteracao)",
     "FAIL": "<60% (reescrever skill)"
   },
-  "grading_method": "regex + semantic via skill-creator agents/grader.md"
+  "grading_method": "regex + semantic via skill-builder agents/grader.md"
 }

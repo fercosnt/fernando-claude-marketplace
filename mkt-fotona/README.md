@@ -48,7 +48,7 @@ inventam ID. O conector do Notion precisa estar autenticado **na sua conta** (gu
 ## Como foi testado
 
 `evals/` traz **17 casos** com e sem skill sobre **fixtures fictícias** (nomes inventados; nunca o
-Notion real), rodados com o `skill-creator`. Nos 11 casos das skills que escrevem: **100% com skill
+Notion real), rodados com o `skill-builder`. Nos 11 casos das skills que escrevem: **100% com skill
 × 48–56% sem**. Nos 6 casos da `mkt-ajuda`: **93% com skill × 73% sem** — sem ela o Claude responde
 razoavelmente, mas monta o card campo a campo (trabalho da `mkt-nova-demanda`), inventa nome de
 campo e recusa gestão por falta de acesso em vez de por escopo. O que eles cobrem:

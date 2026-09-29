@@ -17,7 +17,7 @@ checagem de CPF duplicado, versão da parcela no PATCH e nenhum segredo no `cont
 Desde a 0.1.1 também cobrem: categoria pelo rateio (desconto não entra), atraso pela data, `somente_vencidas` e caixa
 somando só as baixas do período.
 
-## Evals da skill (skill-creator)
+## Evals da skill (skill-builder)
 
 `evals/evals.json`: 5 casos com dados fictícios da Beauty Smile (hoje = 2026-09-20). Cada caso roda com a skill e
 sem a skill, por subagentes que só acessam a Conta Azul pela CLI `evals/harness/ca.mjs` (servidor real + API simulada).

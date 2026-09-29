@@ -19,7 +19,7 @@
       "id": 3,
       "name": "skill-claude-code",
       "prompt": "Quero criar uma skill pro Claude Code que ajuda a fazer code review automatizado. A skill deve analisar o diff do git, identificar problemas e sugerir melhorias. Preciso do PRD e depois as tasks.",
-      "expected_output": "PRD que reconhece que o produto e uma skill (nao webapp). Secao tecnica com estrutura de skill (SKILL.md, references/). Fora do Escopo documentado. Metricas em 3 camadas. Recomenda skill-creator para implementacao. Tasks focadas em criacao de arquivos da skill, nao em codigo de app.",
+      "expected_output": "PRD que reconhece que o produto e uma skill (nao webapp). Secao tecnica com estrutura de skill (SKILL.md, references/). Fora do Escopo documentado. Metricas em 3 camadas. Recomenda skill-builder para implementacao. Tasks focadas em criacao de arquivos da skill, nao em codigo de app.",
       "assertions": []
     },
     {
@@ -125,7 +125,7 @@
     {
       "id": 18,
       "name": "pipeline-completo-research-brief-prd",
-      "prompt": "ja rodei o deep-research e o idea-to-brief. tenho pesquisa em pesquisas/crm/ e brief em BRIEF/BRIEF.md. faz o PRD standard com tasks",
+      "prompt": "ja rodei o pesquisa-profunda e o idea-to-brief. tenho pesquisa em pesquisas/crm/ e brief em BRIEF/BRIEF.md. faz o PRD standard com tasks",
       "expected_output": "Skill detecta AMBOS artefatos upstream. Usa brief como estrutura principal (From Brief) e pesquisa como evidencia adicional. Cabecalho: 'Upstream: Brief + Pesquisa'. Rastreabilidade clara: [DO BRIEF] e [PESQUISA] nas secoes. Minimal questioning — material rico ja disponivel. PRD + tasks gerados.",
       "assertions": []
     }

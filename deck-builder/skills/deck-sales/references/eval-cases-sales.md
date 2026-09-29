@@ -169,7 +169,7 @@ S5: "Marca de bebida X ativou no Carnaval 360 2024, NPS 9.2, UGC +47%, brand con
 
 ## Fixtures suggestion (futuro)
 
-Quando rodando via `skill-creator` em modo evals automatizado, criar fixtures:
+Quando rodando via `skill-builder` em modo evals automatizado, criar fixtures:
 
 ```
 evals/

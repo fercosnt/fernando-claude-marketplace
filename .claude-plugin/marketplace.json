@@ -26,7 +26,7 @@
     {
       "name": "skill-prd",
       "description": "Skill de criacao, validacao e melhoria de PRDs estruturados — 4 modos (Guided/Context Dump/Best Guess/From Brief), 3 niveis (Lean/Standard/Comprehensive), scorecard 5D, frameworks embutidos (MITRE/OST/Epic Hypothesis/MoSCoW/3 camadas), Deep Modules (Ousterhout), Testing Decisions com prior art, hygiene anti-rot, suporte a ADRs e domain glossary. Gera tasks vertical-slice (tracer bullets) com labels Direto/Bloqueante e rastreabilidade Parent.",
-      "version": "0.3.2",
+      "version": "0.3.3",
       "source": "./skill-prd",
       "author": {
         "name": "Fernando Costa"
@@ -45,7 +45,7 @@
     {
       "name": "deck-builder",
       "description": "Plugin para criar STORYBOARD.md de apresentacoes em 8 verticais (fundraising/sales/clinical/equipment/teaching/proposal/scientific/internal) + 2 auxiliares (image-prompts/reviewer) + 1 orquestrador (deck-orchestrator). Entry: /deck. 11 skills, 8 contratos compartilhados, 4 templates (storyboard + poster D8 + brands.yaml + env), lint shell+grep. Auto-detect Beauty Smile/Fotona/Carnaval 360. NotebookLM-aware (3 NBs, 734 sources).",
-      "version": "2.0.1",
+      "version": "2.0.2",
       "source": "./deck-builder",
       "author": {
         "name": "Fernando Costa"
@@ -86,7 +86,7 @@
     },
     {
       "name": "conta-azul",
-      "description": "Acesso ao ERP Conta Azul (API v2) via MCP local — 38 tools: leitura (resumo financeiro do periodo, contas a receber e a pagar, parcelas e baixas, saldos, categorias, DRE, centros de custo, vendas, orcamentos, contratos, pessoas, NF-e, NFS-e, GET generico) e escrita opcional desligada por padrao, sempre em dois passos (previa -> confirmar) (lancamentos, baixas, alterar parcela, pessoas, vendas, cobrancas). OAuth local com refresh token rotativo protegido por trava de arquivo contra dois processos renovando juntos. Skills conta-azul, conta-azul-setup e conta-azul-escrita. Credenciais em ~/.conta-azul-mcp.json, nenhuma no repositorio. Validado na conta real da Beauty Smile; 0.1.1 corrige caixa (soma so as baixas do periodo), atraso (pela data, nao pelo status defasado da API) e categoria (pelo rateio). 45 testes contra API simulada; evals skill-creator em 3 iteracoes, 7 casos, 100%.",
+      "description": "Acesso ao ERP Conta Azul (API v2) via MCP local — 38 tools: leitura (resumo financeiro do periodo, contas a receber e a pagar, parcelas e baixas, saldos, categorias, DRE, centros de custo, vendas, orcamentos, contratos, pessoas, NF-e, NFS-e, GET generico) e escrita opcional desligada por padrao, sempre em dois passos (previa -> confirmar) (lancamentos, baixas, alterar parcela, pessoas, vendas, cobrancas). OAuth local com refresh token rotativo protegido por trava de arquivo contra dois processos renovando juntos. Skills conta-azul, conta-azul-setup e conta-azul-escrita. Credenciais em ~/.conta-azul-mcp.json, nenhuma no repositorio. Validado na conta real da Beauty Smile; 0.1.1 corrige caixa (soma so as baixas do periodo), atraso (pela data, nao pelo status defasado da API) e categoria (pelo rateio). 45 testes contra API simulada; evals skill-builder em 3 iteracoes, 7 casos, 100%.",
       "version": "0.1.1",
       "source": "./conta-azul",
       "author": {
@@ -107,7 +107,7 @@
     },
     {
       "name": "mkt-fotona",
-      "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-ajuda (balcao de duvidas do sistema — projeto ou campanha, em que area entra, o que e esse campo; so explica, nao grava), mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-creator: 100% com skill x 48% sem nas skills que escrevem; 93% x 73% na mkt-ajuda. 17 casos, fixtures ficticias.",
+      "description": "O Claude na rotina do time de Marketing da Fotona sobre o sistema no Notion: mkt-ajuda (balcao de duvidas do sistema — projeto ou campanha, em que area entra, o que e esse campo; so explica, nao grava), mkt-nova-demanda (abre demanda conversando, pergunta quem pede, teto de 3 trocas, checa duplicata), mkt-brief-conteudo (briefing da peca na voz da empresa, com o que nao dizer e aprovacao clinica), mkt-pauta-conteudo (pauta do mes e criacao das pecas com as fases datadas: Roteiro/Arte/Legenda/Aprovacao/Postagem, mais Gravacao em video), mkt-meu-mes (relatorio individual da propria pessoa, sem comparacao) e mkt-resultados-conteudo (metricas de post com fonte citada). Escreve so o que a pessoa disse; nunca muda status, prazo, dono ou prioridade; nunca le carga de outra pessoa. Contexto (IDs, nomes) no repositorio privado fotona-mkt-contexto. Evals skill-builder: 100% com skill x 48% sem nas skills que escrevem; 93% x 73% na mkt-ajuda. 17 casos, fixtures ficticias.",
       "version": "2.3.2",
       "source": "./mkt-fotona",
       "author": {
@@ -132,7 +132,7 @@
     },
     {
       "name": "pmo-fotona",
-      "description": "O cerebro do agente de PMO do time de Marketing da Fotona sobre o sistema no Notion: pmo-triagem (fila de Triagem, confirmacao item a item), pmo-status-semana (segunda e sexta, com memoria no Log do PMO), pmo-relatorio-mensal (4 escopos: MKT, area, projeto, pessoa; md/docx/html/pdf), pmo-briefing (como esta X) e pmo-replanejamento (palpite antes dos cenarios). prompts/ alimentam os ritos agendados no n8n a partir dos mesmos arquivos. Nao contem IDs nem nomes: contexto vem do repositorio privado fotona-mkt-contexto (CONTEXTO.md). Evals skill-creator: 98% com skill x 35% sem, 7 casos.",
+      "description": "O cerebro do agente de PMO do time de Marketing da Fotona sobre o sistema no Notion: pmo-triagem (fila de Triagem, confirmacao item a item), pmo-status-semana (segunda e sexta, com memoria no Log do PMO), pmo-relatorio-mensal (4 escopos: MKT, area, projeto, pessoa; md/docx/html/pdf), pmo-briefing (como esta X) e pmo-replanejamento (palpite antes dos cenarios). prompts/ alimentam os ritos agendados no n8n a partir dos mesmos arquivos. Nao contem IDs nem nomes: contexto vem do repositorio privado fotona-mkt-contexto (CONTEXTO.md). Evals skill-builder: 98% com skill x 35% sem, 7 casos.",
       "version": "2.2.1",
       "source": "./pmo-fotona",
       "author": {
@@ -157,7 +157,7 @@
     {
       "name": "prompt-suite",
       "description": "As tres superficies onde se escreve instrucao para o Claude, num plugin so, com orquestrador que decide qual delas e a sua. Entrypoint /prompt-suite classifica pela pergunta que resolve — onde esse texto vai morar, e por quanto tempo — e roteia: claude-md-generator (Claude Code: CLAUDE.md e a estrutura .claude/), project-instructions (Projects do chat e do Cowork: roteador de camadas, teste de permanencia, 9 falhas de auditoria, pacote de time) e prompt-engineer (prompt avulso, system prompt, N8N, Notion Custom AI, OpenClaw, scorecard 4D). Escolher a superficie errada falha em silencio: CLAUDE.md nao existe num Chat Project, instrucao de Cowork num chat manda salvar em pasta que nao ha, e prompt avulso congelado numa instrucao permanente vira regra morta. Fatos de plataforma verificados contra a doc oficial, inclusive os que a Anthropic nao publica (limite de caracteres, precedencia entre camadas), que a suite se recusa a inventar. Prompt de imagem nao esta aqui — ver deck-image-prompts.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "source": "./prompt-suite",
       "author": {
         "name": "Fernando Costa"

@@ -40,7 +40,7 @@ cp -r skills/<nome>/ ~/.claude/skills/<nome>/
 cp -r skills/<nome>/ "~/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/<sessao>/skills/<nome>/"
 ```
 
-Skills com `scripts/` (ex.: `deep-research`, `presentation-text-extractor`) trazem `requirements.txt` — recrie o `.venv` localmente (o ambiente virtual nao e versionado).
+Skills com `scripts/` (ex.: `pesquisa-profunda`, `presentation-text-extractor`) trazem `requirements.txt` — recrie o `.venv` localmente (o ambiente virtual nao e versionado).
 
 ## Plugins disponiveis
 
@@ -61,7 +61,7 @@ Em [`skills/`](./skills/) — instalacao por copia manual.
 |-------|-----------|
 | [idea-to-brief](./skills/idea-to-brief/) | Transforma ideias em briefs estruturados com pesquisa automatica |
 | [grill-me](./skills/grill-me/) | Entrevista 1-pergunta-por-vez antes do PRD (Matt Pocock) |
-| [skill-creator](./skills/skill-creator/) | Cria, melhora e avalia skills (com evals) |
+| [skill-builder](./skills/skill-builder/) | Cria, melhora e avalia skills (com evals) |
 | [skill-analyzer](./skills/skill-analyzer/) | Avalia qualquer skill com scorecard de 4 dimensoes |
 | [plugin-builder](./skills/plugin-builder/) | Constroi plugins para Claude Code e Cowork |
 | [prompt-engineer](./skills/prompt-engineer/) | Cria, melhora e analisa prompts (tecnicas Anthropic) |
@@ -70,7 +70,7 @@ Em [`skills/`](./skills/) — instalacao por copia manual.
 ### Pesquisa e conhecimento
 | Skill | Descricao |
 |-------|-----------|
-| [deep-research](./skills/deep-research/) | Pesquisa profunda com subagentes paralelos + sync NotebookLM |
+| [pesquisa-profunda](./skills/pesquisa-profunda/) | Pesquisa profunda com subagentes paralelos + sync NotebookLM |
 | [notebook-source-auditor](./skills/notebook-source-auditor/) | Reconcilia NotebookLM com manifesto e pesquisas |
 | [knowledge-optimizer](./skills/knowledge-optimizer/) | Transforma conteudo em base RAG-otimizada |
 | [presentation-text-extractor](./skills/presentation-text-extractor/) | Extrai texto de PDFs de apresentacoes (OCR hibrido) |
@@ -119,7 +119,7 @@ fernando-claude-marketplace/
 ├── conta-azul/                 # Plugin (MCP local + 3 skills + docs/ + evals/)
 ├── skills/                     # Skills avulsas (copia manual, nao viram plugin)
 │   ├── idea-to-brief/
-│   ├── deep-research/
+│   ├── pesquisa-profunda/
 │   └── ... (27 skills)
 └── README.md
 ```
