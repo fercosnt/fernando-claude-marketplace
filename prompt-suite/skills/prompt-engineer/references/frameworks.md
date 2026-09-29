@@ -255,7 +255,7 @@ Terceiro: Call-to-action.
 
 ## 6. Chain of Thought
 
-Melhor para: Raciocinio complexo, matematica, logica, analise.
+Melhor para: Raciocinio complexo, matematica, logica, analise — **em modelos sem thinking nativo** (Notion Custom AI, OpenClaw, modelos nao-Claude). Na familia Claude 5 o thinking ja roda sozinho: controle pelo `effort` e nao peca o raciocinio escrito na resposta (pode ser recusado). Ver `anthropic-techniques.md` §3 e §10.
 
 ### Variantes
 
@@ -317,6 +317,7 @@ Para conteudo complexo que exige raciocinio:
 [CO-STAR padrao]
 PROCESS: Pense passo a passo antes de escrever. Considere multiplas abordagens.
 ```
+(Em Claude 5, omita a linha PROCESS e ajuste o `effort`.)
 
 ### TIDD-EC + Few-Shot
 Para precisao maxima:

@@ -327,5 +327,5 @@ Pontos Fortes:
 | Tom errado na resposta | Role generico | Especificar role com dominio |
 | Respostas vagas/genericas | Falta de contexto | Add cenario e audience |
 | Inventa fatos | Sem grounding | Add "cite fontes" e saida para incerteza |
-| Formato inconsistente | Sem XML output spec | Add tags de output + prefill |
+| Formato inconsistente | Sem XML output spec | Add tags de output + Structured Outputs (prefill retorna 400 nos modelos atuais) |
 | Resposta muito longa | Sem restricao de tamanho | "Max X palavras" ou "Exatamente N bullets" |

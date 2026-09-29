@@ -9,14 +9,15 @@ Baseado na documentacao oficial da Anthropic e no tutorial interativo de prompt 
 3. [Chain of Thought (CoT)](#3-chain-of-thought-cot)
 4. [XML Tag Structuring](#4-xml-tag-structuring)
 5. [Role Prompting](#5-role-prompting)
-6. [Response Prefilling](#6-response-prefilling)
+6. [Response Prefilling (legado)](#6-response-prefilling-legado)
 7. [Prompt Chaining](#7-prompt-chaining)
 8. [Long Context Optimization](#8-long-context-optimization)
 9. [Prevencao de Alucinacao](#9-prevencao-de-alucinacao)
-10. [Adaptive Thinking](#10-adaptive-thinking-substitui-extended-thinking)
+10. [Adaptive Thinking e Effort](#10-adaptive-thinking-e-effort-familia-claude-5)
 11. [Structured Outputs e Stop Sequences](#11-structured-outputs-e-stop-sequences)
 12. [Variacoes Estrategicas](#12-variacoes-estrategicas)
 13. [Combinacoes de Tecnicas](#13-combinacoes-de-tecnicas)
+14. [Ajustes para a familia Claude 5](#14-ajustes-para-a-familia-claude-5)
 
 ---
 
@@ -103,9 +104,11 @@ Por que e bom: Classifica em multiplas categorias quando relevante, nao forca ca
 
 **Fundamento:** Raciocinio passo a passo reduz erros em matematica, logica e analise. O processo estruturado produz respostas mais coerentes e defenveis.
 
-**REGRA CRITICA:** Sempre faca Claude externalizar o pensamento. Sem output de raciocinio = sem raciocinio real.
+**Escopo (familia Claude 5):** em Opus 5.5 e Fable 5.1 o thinking adaptativo esta **sempre ligado**, e no Sonnet 5 vem ligado por default. Nesses modelos o CoT verbal e redundante: a profundidade se controla pelo `effort` (ver §10). Pior: pedir que o modelo **reproduza o raciocinio no texto da resposta** pode ser recusado com `stop_reason: "refusal"`, categoria `reasoning_extraction` (Opus 5.5, Fable 5.1). Se precisa ver o raciocinio, leia os blocos de thinking com `display: "summarized"`.
 
-**Tres niveis:**
+**Onde CoT verbal ainda vale:** modelos sem thinking nativo (Haiku 4.5 sem extended thinking, Notion Custom AI, OpenClaw, GPT/Llama sem reasoning). Nesses, **externalize o pensamento** — sem output de raciocinio nao ha raciocinio real.
+
+**Tres niveis (para modelos sem thinking nativo):**
 
 | Nivel | Metodo | Quando usar |
 |-------|--------|-------------|
@@ -132,9 +135,9 @@ Raciocine passo a passo:
 </answer>
 ```
 
-**Quando usar:** Tarefas que um humano precisaria pensar — matematica complexa, analise multi-fator, decisoes com trade-offs, escrita complexa.
+**Quando usar:** Tarefas que um humano precisaria pensar — matematica complexa, analise multi-fator, decisoes com trade-offs, escrita complexa — **em modelo sem thinking nativo**.
 
-**Quando NAO usar:** Tarefas simples e factuais. CoT aumenta latencia e tokens.
+**Quando NAO usar:** Tarefas simples e factuais (CoT aumenta latencia e tokens), e em qualquer modelo Claude com adaptive thinking — la o "Guiado" com passos numerados tambem tende a piorar: a doc oficial diz *"Prefer general instructions over prescriptive steps. A prompt like 'think thoroughly' often produces better reasoning than a hand-written step-by-step plan."*
 
 ---
 
@@ -192,11 +195,22 @@ Voce e analista financeiro na AcmeCorp. Gere relatorio Q2 para investidores.
 
 ---
 
-## 6. Response Prefilling
+## 6. Response Prefilling (legado)
 
-**Fundamento:** Semear o inicio da resposta de Claude controlando formato, eliminando preambulos e mantendo consistencia de persona.
+> **Nao funciona nos modelos Claude atuais.** Prefill de mensagem `assistant` retorna **HTTP 400** em toda a linha a partir de Opus 4.6 / Sonnet 4.6 — inclui Fable 5.1, Opus 5.5 e Sonnet 5. So funciona em Haiku 4.5 e em modelos legados (Opus 4.5, Sonnet 4.5 e anteriores). Para prompt novo, use as substituicoes abaixo; mantenha esta secao so para entender/manter integracoes antigas.
 
-**Tres usos principais:**
+**Substituicoes oficiais:**
+
+| Uso antigo do prefill | Substituto nos modelos atuais |
+|-----------------------|------------------------------|
+| Forcar JSON (`{`) | Structured Outputs / `output_config.format` (§11) |
+| Eliminar preambulo | Instrucao no system: "Responda direto, sem preambulo. Nao comece com 'Aqui esta...', 'Com base em...'" |
+| Manter persona | Role no system + lembrete no turno do usuario (ou mid-conversation system message) |
+| Continuar resposta interrompida | Mover para o user: "Sua resposta anterior foi interrompida e terminou em `[...]`. Continue de onde parou." |
+
+**Fundamento (historico):** Semear o inicio da resposta de Claude controlando formato, eliminando preambulos e mantendo consistencia de persona.
+
+**Tres usos principais (so Haiku 4.5 / modelos legados):**
 
 1. **Forcar JSON:** Prefill com `{`
 2. **Eliminar preambulo:** Prefill com a tag de output esperada
@@ -209,9 +223,7 @@ messages=[
 ]
 ```
 
-**Restricao:** Prefill nao pode terminar com whitespace. Nao suportado com Adaptive Thinking no Opus 4.8 (qualquer prefill de mensagem assistant retorna HTTP 400 — use `output_config.format` em vez disso). Em Sonnet 4.6 e modelos anteriores, prefill continua funcionando quando thinking esta desativado.
-
-**Nota:** Para JSON garantido com schema especifico, use Structured Outputs em vez de prefilling.
+**Restricao:** Prefill nao pode terminar com whitespace.
 
 ---
 
@@ -256,9 +268,9 @@ Prompt 3: "Melhore o resumo baseado no feedback.
 
 ## 8. Long Context Optimization
 
-**Fundamento:** Claude tem janelas de contexto grandes — 1M tokens no Opus 4.8 e 200K-1M no Sonnet 4.6. Posicionamento e estrutura dos dados impactam qualidade da resposta em ate 30%, e essa sensibilidade aumenta quanto maior o contexto.
+**Fundamento:** Claude tem janelas de contexto grandes — 1M tokens (default, sem beta header) em Fable 5.1, Opus 5.5 e Sonnet 5; 200K no Haiku 4.5. Posicionamento e estrutura dos dados impactam qualidade da resposta em ate 30%, e essa sensibilidade aumenta quanto maior o contexto.
 
-> **Nota tokenizer (Opus 4.7+):** o Opus 4.8 usa o MESMO tokenizer do 4.7, que consome 1.0x-1.35x mais tokens para o mesmo texto vs Opus 4.6. Se voce calcula custo ou define `max_tokens` com base em contagens do 4.6 (ou anteriores), adicione ~35% de headroom.
+> **Nota tokenizer:** Opus 5.5 e Fable 5.1 usam o tokenizer introduzido no Opus 4.7 (1.0x-1.35x mais tokens que os modelos anteriores a ele). O **Sonnet 5 tem tokenizer novo, ~30% mais tokens que o Sonnet 4.6** — o preco por token caiu, mas o custo por tarefa nao cai na mesma proporcao. Re-conte tokens no modelo alvo em vez de reaproveitar contagens antigas.
 
 **Tres tecnicas:**
 
@@ -294,122 +306,115 @@ Depois, baseado nessas citacoes, responda em <answer>.
 
 1. **De uma "saida":** "So responda se tiver certeza."
 2. **Exija evidencia:** "Em `<scratchpad>`, extraia a citacao mais relevante e avalie se responde a pergunta."
-3. **Guie o tom pelo prompt:** em modelos antigos (<= Opus 4.6, Sonnet 4.6 sem adaptive), `temperature=0` funcionava para tarefas factuais. **No Opus 4.8, `temperature`/`top_p`/`top_k` nao-default retornam HTTP 400** — o sampling agora e guiado por prompting e pelo effort level. Use instrucoes explicitas e POSITIVAS como "Responda de forma conservadora usando apenas fatos verificaveis; se faltar evidencia, diga 'nao sei'."
+3. **Guie o tom pelo prompt:** `temperature=0` funcionava em modelos antigos. **Em todo modelo a partir do Opus 4.7 (inclui Fable 5.1, Opus 5.5, Sonnet 5), `temperature`/`top_p`/`top_k` nao-default retornam HTTP 400** — e o SDK Python v1.0+ nem aceita esses parametros (`TypeError`). So o Haiku 4.5 ainda aceita `temperature` ou `top_p` (um de cada vez). Use instrucoes explicitas e POSITIVAS como "Responda usando apenas fatos verificaveis; se faltar evidencia, diga 'nao sei'."
 
 ---
 
-## 10. Adaptive Thinking (substitui Extended Thinking)
+## 10. Adaptive Thinking e Effort (familia Claude 5)
 
-**Fundamento:** Adaptive Thinking permite que Claude "pense mais" em tarefas complexas, alocando tokens de computacao para raciocinio antes de responder. E o **unico modo de thinking no Opus 4.8** (Extended Thinking classico com `budget_tokens` foi REMOVIDO — retorna HTTP 400 no 4.8). O `effort` e o **lever primario de profundidade de raciocinio**; guiar o pensamento por prompt verbal e secundario/best-effort.
+**Fundamento:** Adaptive Thinking permite que Claude "pense mais" em tarefas complexas, decidindo sozinho quando e quanto pensar. O **`effort` e o lever primario** de profundidade (e de custo); guiar o pensamento por prompt verbal e secundario. Extended Thinking classico (`thinking: {type: "enabled", budget_tokens: N}`) **retorna 400** em Fable 5.1, Opus 5.5 e Sonnet 5 — so o Haiku 4.5 ainda usa esse modo.
 
-**Como funciona:** Claude decide automaticamente quanto pensar, guiado pelo `effort` level. Voce nao controla o budget em tokens — voce controla a intensidade.
+**Thinking por modelo (set/2026):**
+
+| Modelo | Thinking | Pode desligar? | Effort default |
+|--------|----------|----------------|----------------|
+| Fable 5.1 | Adaptive, sempre ligado | Nao (`disabled` = 400) | `high` |
+| Opus 5.5 | Adaptive, sempre ligado | Nao (`disabled` = 400) | **`medium`** |
+| Sonnet 5 | Adaptive, ligado por default | Sim (`{type: "disabled"}`) | `high` |
+| Haiku 4.5 | Extended manual (`budget_tokens`), desligado por default | — | sem effort |
 
 ```python
-# Novo padrao (Opus 4.8)
+# Padrao atual (Opus 5.5)
 client.messages.create(
-    model="claude-opus-4-8",
-    max_tokens=86000,  # ~35% headroom (tokenizer Opus 4.7+, igual ao 4.7)
-    thinking={"type": "adaptive"},
-    output_config={"effort": "xhigh"},  # low | medium | high | xhigh | max
+    model="claude-opus-5-5",
+    max_tokens=64000,               # cobre thinking + resposta; em xhigh/max comece em 64k+
+    output_config={"effort": "medium"},  # low | medium | high | xhigh | max — SETE EXPLICITO
     messages=[{"role": "user", "content": "..."}],
 )
+# Nao precisa mandar `thinking`: no Opus 5.5 e no Fable 5.1 ele esta sempre ligado.
 ```
 
-**Effort levels:**
+**Effort levels (tabela geral da doc):**
 
-| Level | Comportamento | Quando usar |
-|-------|--------------|-------------|
-| `low` | Pula thinking em problemas simples | Tarefas curtas, latencia-sensitivas |
-| `medium` | Thinking moderado | Custo-sensitivo |
-| `high` | Sempre pensa (**default API no Opus 4.8**) | Balanceado |
-| `xhigh` | Sempre pensa profundamente | Coding, agentic, pesquisa — **recomendado setar explicito** (mesmo sendo default do Claude Code Pro/Max) |
-| `max` | Sem restricoes | Pode causar overthinking |
+| Level | Uso tipico |
+|-------|-----------|
+| `low` | Tarefas simples, latencia/custo baixos, **subagentes** |
+| `medium` | Equilibrio — **default do Opus 5.5** |
+| `high` | Raciocinio complexo, coding dificil, agentes — default dos demais modelos |
+| `xhigh` | Tarefas agenticas longas (>30 min) com orcamento de milhoes de tokens |
+| `max` | Capacidade maxima sem limite de gasto; na pratica, reservar para ganho medido |
 
-> **Mudanca de default no 4.8:** o default subiu/desceu de calibracao — no Opus 4.7 o default era `xhigh`; **no Opus 4.8 o default e `high`**. Os nomes sao os mesmos, mas os budgets foram recalibrados. A doc oficial recomenda **setar `xhigh` explicitamente** para coding, agentic e pesquisa profunda.
+> **Os nomes nao equivalem entre modelos.** O `medium` do Opus 5.5 empata ou supera o `high` do Opus 5; o `medium` do Sonnet 5 ~ `high` do Sonnet 4.6; o `low` do Fable 5.1 costuma competir em custo por tarefa com Opus/Sonnet em effort mais alto. A recomendacao "`xhigh` para coding" valia para Opus 4.7/4.8 — **nao carregue esse habito para a familia 5**: comece no default, sete explicito e faca um sweep nos seus evals.
+
+> **Ressalva de campo:** no lancamento, `max` no Opus 5.5 bateu no teto de 128K de output ainda pensando (Simon Willison, 2 de 2 tentativas). Reserve `xhigh`/`max` para onde voce mediu ganho.
 
 **Diferenca de CoT estruturado:**
 
 | Aspecto | CoT Estruturado | Adaptive Thinking |
 |---------|----------------|-------------------|
 | Controle | Voce define os passos | Claude decide como pensar, guiado por `effort` |
-| Visibilidade | Pensamento visivel no output | Depende de `thinking.display` (default `"omitted"` no 4.8) |
-| Configuracao | Via prompt | Via `thinking: {type: "adaptive"}` + `effort` |
-| Uso | Qualquer modelo | Opus 4.8 (unico modo), Sonnet 4.6 (opcional) |
+| Visibilidade | Pensamento no texto da resposta | Blocos `thinking`; `display` default `"omitted"` (vazios) — use `"summarized"` para ler |
+| Uso | Modelos sem thinking nativo | Toda a familia Claude 5 |
 
-**Quando usar Adaptive Thinking:**
+**Restricoes importantes (Fable 5.1 / Opus 5.5 / Sonnet 5):**
+- **Prefill** do assistant retorna 400 — use `output_config.format` / structured outputs (§6, §11)
+- **`temperature`/`top_p`/`top_k`** nao-default retornam 400
+- **`tool_choice` forcado** (`{type: "any"}` ou `{type: "tool"}`) retorna 400 em **Opus 5.5 e Fable 5.1** (Sonnet 5 ainda aceita). Use `auto` + instrucao explicita + tools com `strict: true`, ou structured outputs
+- **A resposta pode comecar com blocos `thinking`** antes do texto: codigo que le `content[0].text` quebra — selecione blocos por `type`. Em loops de tool use, devolva os blocos `thinking` **inalterados**
+- **Texto entre tool calls** (Opus 5.5, Fable 5.1) vem em blocos `thinking`, vazios por default — interfaces que mostram progresso ficam "mudas"; use `display: "updates"` (beta) ou `"summarized"`
+- **Historico append-only** (Opus 5.5, Fable 5.1): editar turnos anteriores, o `system` ou as `tools` invalida os thinking blocks seguintes (400 em contas criadas a partir de 31/08/2026). Mudancas no meio da sessao vao em mensagens `role: "system"` no meio do array
+- **`max_tokens` cobre thinking + resposta**, e tokens de thinking sao cobrados mesmo quando nao exibidos
 
-| Situacao | Recomendado? | Justificativa |
-|----------|-------------|---------------|
-| Raciocinio multi-step complexo | SIM — `xhigh`/`max` | Melhora significativa de qualidade |
-| Analise de trade-offs | SIM — `high`/`xhigh` | Exploracao mais profunda de opcoes |
-| Planejamento detalhado | SIM — `xhigh` | Considera mais cenarios |
-| Codigo complexo com interdependencias | SIM — `xhigh` (default Claude Code; setar explicito na API) | Reduz bugs e inconsistencias |
-| Perguntas factuais simples | `low` ou pula | Overhead desnecessario |
-| Formatacao ou conversao | `low` | Tarefa mecanica |
+**O que NAO colocar no prompt (familia 5):**
+- "Pense com cuidado antes de responder" em system prompt de chat — atrasa o primeiro token sem ganho medido (doc do Opus 5.5). Quer mais ou menos raciocinio? Mude o `effort`
+- "Escreva seu raciocinio na resposta" — pode ser recusado (`reasoning_extraction`). Leia os blocos com `display: "summarized"`
+- Plano passo a passo escrito a mao para "ajudar a pensar" — *"Prefer general instructions over prescriptive steps"*
 
-**Restricoes importantes:**
-- **Incompativel com prefilling** — no Opus 4.8, prefill de mensagem assistant retorna 400; use `output_config.format` em vez disso
-- **Nao microgerencie** — deixe Claude decidir como pensar; voce so ajusta o `effort` (lever primario; steering verbal e secundario)
-- **`temperature`/`top_p`/`top_k` nao-default retornam 400** no Opus 4.8 — sampling e guiado por prompting + effort
-- **`budget_tokens` foi removido** — retorna 400; use `thinking: {type: "adaptive"}` + `effort`
-- **Tokens de thinking contam no custo** mesmo nao sendo exibidos no output
-- **Interleaved thinking e automatico** no Opus 4.8 com adaptive (sem beta header necessario) — Claude pode pensar entre tool calls
-- **`thinking.display` default e `"omitted"`** no Opus 4.8 (era `"summarized"` no 4.6): streams nao emitem `thinking_delta` por default; se voce mostra reasoning na UI, passe `display: "summarized"` explicitamente
-
-**Promptable:** voce pode guiar a profundidade via system prompt:
-
+**Quando baixar a profundidade sem baixar o effort** (ex.: latencia em chat), uma linha no system ajuda — meça a qualidade depois:
 ```
-Aborde esta tarefa de forma profunda e meticulosa. Pense cuidadosamente sobre:
-- Multiplas abordagens possiveis e seus trade-offs
-- Implicacoes e consequencias de cada decisao
-- Como diferentes elementos se inter-relacionam
-
-Nao se apresse — e melhor pensar profundamente e fornecer uma solucao robusta.
+Answer directly without deliberating.
 ```
 
-Ou, para tarefas rapidas:
-```
-Priorize responder rapidamente. Nao elabore alem do necessario.
-```
+**Mudar effort no meio da conversa sem perder cache (beta):** em Fable 5.1, Opus 5.5 e Opus 5, uma mensagem `{"role": "system", "content": [], "output_config": {"effort": "low"}}` (header `mid-conversation-output-config-2026-07-01`) vale do proximo turno em diante. Mudar o `effort` top-level entre requests invalida o prompt cache.
 
-**Task budgets (beta):** para loops agenticos longos, use `task_budget` (header `task-budgets-2026-03-13`, minimo 20k tokens) para limitar spend total:
+**Task budgets (beta):** para loops agenticos longos, `task_budget` (header `task-budgets-2026-03-13`, minimo 20k tokens) diz ao modelo quantos tokens ele tem para o loop inteiro:
 
 ```python
 output_config={
-    "effort": "high",
+    "effort": "medium",
     "task_budget": {"type": "tokens", "total": 128000},
 }
 ```
 
 **Quando preferir CoT estruturado sobre Adaptive Thinking:**
-- Precisa ver o raciocinio no output (auditoria, debugging, apresentacao)
-- Quer controlar os passos especificos do raciocinio
-- Modelo alvo nao suporta Adaptive Thinking (ex: modelos nao-Claude)
-- Tarefas onde transparencia do raciocinio e crucial
+- Modelo alvo nao tem thinking nativo (Haiku 4.5 sem extended thinking, modelos nao-Claude, Notion Custom AI, OpenClaw)
+- Nos modelos Claude 5, para auditoria do raciocinio, use `display: "summarized"` em vez de CoT no texto
 
-**Migrando de Extended Thinking (`budget_tokens`) para Adaptive:**
-- Remover `budget_tokens: N` do body (retorna 400 no 4.7)
-- Substituir por `thinking: {type: "adaptive"}` + `output_config: {effort: "<level>"}`
-- Regra pratica de mapping: `budget_tokens=8000` -> `effort: "medium"`, `16000-32000` -> `"high"`, `32000-64000` -> `"xhigh"`, `>64000` -> `"max"`
-- `/claude-api migrate` no Claude Code automatiza parte do refactor
+**Migrando de codigo antigo:**
+- Remover `budget_tokens` e `thinking: {type: "disabled"}` (este ultimo so continua valido no Sonnet 5)
+- Controlar profundidade por `output_config: {effort: "<level>"}`; fazer sweep em vez de mapear 1:1
+- Trocar prefill e `tool_choice` forcado (ver restricoes acima)
+- Ler resposta por `type`; rever `max_tokens`
+- `/claude-api migrate this project to claude-opus-5-5` no Claude Code automatiza o refactor e gera checklist
 
 ---
 
 ## 11. Structured Outputs e Stop Sequences
 
-**Fundamento:** Complementos ao prefilling para garantir formato de output e economizar tokens.
+**Fundamento:** Garantir formato de output e economizar tokens. Nos modelos atuais sao o **substituto do prefilling** (que retorna 400).
 
 ### Structured Outputs
 
-**O que e:** Feature da API que garante output em JSON valido seguindo um schema especifico. Diferente de prefilling, valida estrutura automaticamente.
+**O que e:** Feature da API (`output_config.format`) que garante output em JSON valido seguindo um schema especifico, validando a estrutura automaticamente.
 
-**Quando usar Structured Outputs vs Prefilling:**
+**Como garantir formato nos modelos atuais:**
 
 | Cenario | Usar | Justificativa |
 |---------|------|---------------|
 | JSON com schema rigido | Structured Outputs | Garantia de validacao |
-| JSON simples sem validacao critica | Prefilling com `{` | Mais simples |
-| Output que nao e JSON | Prefilling | Structured Outputs so para JSON |
+| JSON simples | Structured Outputs | Prefill `{` retorna 400 em Fable 5.1/Opus 5.5/Sonnet 5 |
+| Output que nao e JSON | XML output tags + instrucao no system + stop sequence | Sem prefill disponivel |
+| Chamada de tool obrigatoria | `tool_choice: auto` + instrucao explicita + `strict: true` | `tool_choice` forcado retorna 400 em Opus 5.5/Fable 5.1 |
 | Integracao com sistemas tipados | Structured Outputs | Type safety |
 
 **Exemplo de schema:**
@@ -446,23 +451,21 @@ stop_sequences=["---", "Nota:", "PS:"]
 
 3. **Economia em extracao:**
 ```python
-# Prompt: "Extraia o email: "
-# Prefill: "O email e: "
-stop_sequences=["\n", " "]
-# Para apos o email, sem texto adicional
+# Prompt: "Extraia o email e responda so com ele dentro de <email></email>."
+stop_sequences=["</email>"]
+# Para ao fechar a tag, sem texto adicional
 ```
 
-**Combinacao poderosa — XML + Prefill + Stop:**
+**Combinacao — XML + instrucao + Stop (substitui o antigo XML + Prefill + Stop):**
 
 ```python
-messages=[
-    {"role": "user", "content": "Classifique: <texto>...</texto>\n<classificacao>"},
-    {"role": "assistant", "content": "<categoria>"}
-],
+system="Responda apenas com <classificacao><categoria>...</categoria></classificacao>, sem preambulo."
+messages=[{"role": "user", "content": "Classifique: <texto>...</texto>"}]
 stop_sequences=["</classificacao>"]
+# Leia o bloco de type "text" — a resposta pode comecar com blocos "thinking".
 ```
 
-Resultado: Claude emite apenas o conteudo dentro das tags, sem preambulo nem postscript.
+Para classificacao com valores fechados, Structured Outputs com `enum` e mais robusto.
 
 ---
 
@@ -509,7 +512,7 @@ Resultado: Claude emite apenas o conteudo dentro das tags, sem preambulo nem pos
 - 3-5 exemplos anotados
 - Edge cases e fallbacks explicitos
 - Anti-patterns detalhados
-- Adaptive Thinking com effort `xhigh` ou `max` recomendado
+- Effort acima do default (`high`/`xhigh`) so se o eval mostrar ganho — na familia 5 o default ja e forte
 
 **Quando usar:**
 - Tarefas de alta consequencia
@@ -644,13 +647,59 @@ As combinacoes mais eficazes:
 
 | Combinacao | Caso de Uso | Eficacia |
 |-----------|------------|---------|
-| Role + CoT | Raciocinio complexo (math, logica) | Muito Alta |
-| XML + Prefill + Stop Sequences | Pipelines de extracao estruturada | Muito Alta |
+| Role + effort adequado (Claude 5) / Role + CoT (sem thinking nativo) | Raciocinio complexo (math, logica) | Muito Alta |
+| Structured Outputs (ou XML + Stop Sequences) | Pipelines de extracao estruturada | Muito Alta |
 | Few-Shot + Output Format | Classificacao e categorizacao | Alta |
 | CoT + Anti-alucinacao | Q&A baseado em documentos | Muito Alta |
-| Role + Few-Shot + Prefill | Chatbots e agentes conversacionais | Alta |
+| Role + Few-Shot + instrucao de formato no system | Chatbots e agentes conversacionais | Alta |
 
 **Hierarquia de prioridade para troubleshooting:**
-1. Clareza → 2. Exemplos → 3. CoT → 4. XML → 5. Role → 6. Prefill → 7. Chaining → 8. Long Context
+1. Clareza → 2. Exemplos → 3. Effort (Claude 5) / CoT (sem thinking nativo) → 4. XML → 5. Role → 6. Formato (Structured Outputs) → 7. Chaining → 8. Long Context
 
 Quando algo nao funciona, trabalhe esta lista em ordem.
+
+---
+
+## 14. Ajustes para a familia Claude 5
+
+Fontes: [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices), [Prompting Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5), [Prompting Fable 5.1](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1), [Prompting Fable 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5), [Prompting Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5), [Prompting Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5). Verificado em 2026-09-27.
+
+**Principio geral:** prompts e skills escritos para modelos anteriores tendem a ser **prescritivos demais**. A doc do Fable 5 e direta: *"Skills developed for prior models are often too prescriptive for Claude Fable 5 and can degrade output quality."* Ao MELHORAR um prompt antigo, **remova** instrucoes antes de acrescentar.
+
+### Parar de fazer
+
+| Padrao antigo | Por que sai | Modelo |
+|---------------|------------|--------|
+| Plano passo a passo escrito a mao para "guiar o raciocinio" | Instrucao geral + objetivo + porque rende mais | Toda a familia 5 |
+| Regras anti-formatacao ("nao use bullets/negrito/headers") | O Fable 5.1 ja formata pouco; a regra empurra para prosa densa. Troque por regra de *quando* formatar | Fable 5.1 |
+| "Guarde todos os achados para a resposta final" | Suprime as atualizacoes de progresso uteis | Fable 5.1, Opus 5.5 |
+| "Revise duas vezes" / "faca uma verificacao final" | O modelo ja verifica sozinho; a instrucao gera over-verification. Remover, nao reescrever | Opus 5 / 5.5 |
+| "Pense com cuidado antes de responder" (chat) | Atrasa o primeiro token sem ganho medido; profundidade e o `effort` | Opus 5.5 |
+| "Escreva seu raciocinio na resposta" | Pode ser recusado (`reasoning_extraction`) | Opus 5.5, Fable 5.1 |
+| "Seja conservador" em harness de revisao | O Sonnet 5 obedece ao pe da letra e perde recall | Sonnet 5 |
+| "Evite o visual generico de IA" (frontend) | So troca um estilo default por outro | Opus 5.5 |
+
+### Comecar a fazer
+
+- **Diga o que deixar de fora.** O Fable 5.1 tende a entregar mais que o pedido (corrige codigo vizinho, estende comportamento). Uma instrucao de escopo reduz os extras sem perder sucesso:
+  ```
+  Se encontrar um bug pre-existente ou algo que a tarefa nao menciona, nao corrija nem estenda nesta mudanca, a menos que o pedido nao funcione sem isso; reporte como follow-up no resumo.
+  ```
+- **Sonnet 5 e literal:** ele nao generaliza uma instrucao de um item para os outros. Se a regra vale para todos, diga "para todos os itens".
+- **Tarefas autonomas longas:** Opus 5.5 e Fable 5.1 as vezes encerram o turno anunciando o proximo passo ("Next, I'll...") ou pedindo permissao ("Shall I apply this?") para algo ja pedido. Nomeie essas paradas indesejadas e as desejadas (so parar quando nada avanca sem o usuario, ou para acao destrutiva). A doc do Opus 5.5 traz um paragrafo pronto (secao "Unattended agentic runs").
+- **Prosa "mannered" (Fable 5.1):** frases longas e metaforas no lugar de afirmacao direta. `Please remove all mannered prose.` funciona.
+- **Agentes multi-app:** antes de agir, mandar explorar (emails, planilhas, registros) inclusive fontes que a tarefa nao citou — melhora mensuravel no Opus 5.5.
+- **Texto colado pelo usuario:** envolver em `<pasted_content id="...">` com uma nota no system melhora a resistencia a injecao (Opus 5.5).
+- **Frontend:** listar os padroes concretos a evitar ("fundo creme, rotulos 01/02/03, botoes pill") em vez de pedir "nao generico".
+- **Multiagente:** um sinal de tempo (`elapsed 340s / 1200s`) no fim de cada mensagem faz o time paralelizar e terminar antes; o agente lider nao deve ficar parado esperando subagente.
+- **Loops de tool (Fable 5.1):** uma frase pedindo para agrupar tool calls independentes evita uma chamada por turno.
+
+### Escolha de modelo (para recomendar ao usuario)
+
+| Uso | Modelo | Effort inicial |
+|-----|--------|----------------|
+| Maioria dos casos (default da doc) | Opus 5.5 (`claude-opus-5-5`, $4/$20) | `medium` |
+| Raciocinio exigente, agentes de horas, pesquisa com entregavel longo | Fable 5.1 (`claude-fable-5-1`, $10/$50) | `high` |
+| Dia a dia com velocidade (codigo, analise, conteudo) | Sonnet 5 (`claude-sonnet-5`, $2/$10) | `high` (ou `medium`) |
+| Volume, latencia, subagentes simples | Haiku 4.5 (`claude-haiku-4-5`, $1/$5) | sem effort |
+

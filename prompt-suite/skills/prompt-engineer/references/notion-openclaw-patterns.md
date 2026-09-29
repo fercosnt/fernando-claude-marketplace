@@ -173,7 +173,7 @@ Siga estas regras:
 | Prompt sem exemplo | Comportamento imprevisivel | Sempre incluir 1 exemplo |
 | Hardcode de contexto especifico | Nao e reutilizavel | Usar variaveis `{empresa}`, `{produto}` |
 | Instrucoes muito longas | Usuarios abandonam | Maximo 400 palavras |
-| "Use extended/adaptive thinking" | Feature especifica de Claude (Opus 4.8 usa Adaptive Thinking, controlada por `effort`) | Omitir ou usar "pense antes de responder" |
+| "Use extended/adaptive thinking" | Feature especifica da API do Claude (controlada por `effort`), inexistente nessas plataformas | Omitir ou usar "pense antes de responder" |
 
 ### Exemplo Real: Gerador de Copy para Redes Sociais
 

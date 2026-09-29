@@ -71,6 +71,8 @@ LLMs respondem aos mesmos principios de persuasao que humanos. Use para garantir
 | **Prova Social** | "TODA VEZ", "X sem Y = falha" | Estabelecer normas universais |
 | **Unidade** | "Somos colegas", "nosso codebase" | Workflows colaborativos |
 
+> **Calibre a intensidade para os modelos atuais.** Desde o Opus 4.5 os modelos respondem mais ao system prompt, e linguagem agressiva escrita para combater *undertriggering* passa a causar *overtriggering*. A doc oficial: *"Where you might have said 'CRITICAL: You MUST use this tool when...', you can use more normal prompting like 'Use this tool when...'"* e *"Instructions like 'If in doubt, use [tool]' will cause overtriggering."* Reserve "VOCE DEVE"/"NUNCA" para regras de seguranca ou irreversiveis; no resto, frase normal com o porque. Se ainda exagerar, baixe o `effort`.
+
 ### Principios a EVITAR
 
 | Principio | Por que evitar |
@@ -311,7 +313,7 @@ Permite executar subagents em background enquanto continua trabalhando.
 **Exemplo de instrucao:**
 ```markdown
 Para tarefas independentes, use run_in_background=true no Task tool.
-Use TaskOutput para verificar resultado quando necessario.
+Quando o agente terminar, leia o resultado com Read no arquivo de output informado.
 ```
 
 ---

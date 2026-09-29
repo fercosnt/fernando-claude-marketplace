@@ -72,12 +72,13 @@ Consulte `references/anthropic-techniques.md` para detalhes. Aqui o guia rapido:
 |----------|-------------------|
 | Tarefa simples e direta | Clareza + XML tags |
 | Precisa de formato consistente | Few-Shot (2-3 exemplos) + XML output tags |
-| Raciocinio complexo | Chain of Thought (guiado ou estruturado) |
+| Raciocinio complexo | Claude 5: `effort` adequado + objetivo claro; sem thinking nativo: Chain of Thought |
 | Dominio especializado | Role Prompting (especifico > generico) |
 | Multiplos passos | Prompt Chaining com handoffs XML |
 | Contexto longo (>20K tokens) | Dados no topo, query no final |
 | Precisa evitar erros comuns | DO/DON'T/VERIFY triad |
-| Skill ou hook do Claude Code | Persuasion principles (Authority + Commitment) |
+| Skill ou hook do Claude Code | Persuasion principles (Authority + Commitment), com enfase calibrada |
+| Prompt antigo sendo migrado para Claude 5 | Remover scaffolding herdado (§14 de anthropic-techniques) |
 
 ### Passo 3: Construir o Prompt
 
@@ -95,6 +96,7 @@ Sucesso medido por: [criterios]
 </primary_objective>
 
 <approach>
+<!-- So quando a ORDEM importa. Senao, descreva objetivo + criterio e deixe o modelo planejar -->
 1. [Passo] — porque [justificativa]
 2. [Passo] — para [resultado]
 3. [Passo] — garantindo [qualidade]
@@ -140,10 +142,13 @@ Apos fornecer o resultado inicial:
 ```
 
 <inviolable_principles>
-**Principios inviolaveis (calibrados para Opus 4.8):**
+**Principios inviolaveis (calibrados para a familia Claude 5 — Fable 5.1, Opus 5.5, Sonnet 5):**
 - Cada instrucao DEVE ter o PORQUE (Context > Configuration)
+- **Objetivo + criterio de sucesso > passo a passo prescrito** — a doc oficial: *"Prefer general instructions over prescriptive steps"*; skills escritas para modelos anteriores "are often too prescriptive" e podem degradar a saida. Numere passos so quando a ordem importa de fato
 - **Instrucoes POSITIVAS > negativas** — diga o que fazer, com alvo quantificado. "Mantenha abaixo de 200 palavras" > "nao seja verboso"
-- **Explicito e especifico** — o modelo 4.8 e mais literal: se voce nao pediu, ele nao faz. Alvos quantificados (numeros, limites) > qualitativos ("conciso", "detalhado")
+- **Explicito e especifico** — os modelos atuais sao literais (o Sonnet 5 nao generaliza uma regra de um item para os outros): se voce nao pediu, ele nao faz. Alvos quantificados (numeros, limites) > qualitativos ("conciso", "detalhado")
+- **Tom normal, sem CAPS agressivo** — "CRITICAL: You MUST" escrito para modelos antigos agora causa overtriggering. Reserve enfase para regras de seguranca/irreversiveis
+- **Nao adicione "revise duas vezes" nem regras anti-formatacao por reflexo** — o Opus 5.x ja se verifica (vira over-verification) e o Fable 5.1 ja formata pouco. Ver `references/anthropic-techniques.md` §14
 - **Exemplos concretos > descricao abstrata** — 3-5 exemplos do tom/formato desejado valem mais que adjetivos. Exemplos anotados (mostrar POR QUE e bom)
 - XML tags para separar secoes semanticamente
 - **Verbosidade calibrada pela complexidade** da tarefa, nao fixa — peca explicitamente o comprimento quando importa
@@ -285,7 +290,11 @@ Use a tabela de troubleshooting:
 | Tom errado | Role generico ou ausente | Especificar role com dominio |
 | Respostas genericas | Falta de contexto | Adicionar cenario e audience |
 | Hallucina fatos | Sem grounding | Adicionar "cite fontes" e "so responda se tiver certeza" |
-| Formato errado | Sem output spec | Adicionar XML output tags + prefill |
+| Formato errado | Sem output spec | Adicionar XML output tags + Structured Outputs (prefill da 400 nos modelos atuais) |
+| Resposta lenta / pensa demais (Claude 5) | Effort alto ou "pense com cuidado" no prompt | Baixar `effort`; remover a instrucao de pensar |
+| Faz mais do que foi pedido (Fable 5.1) | Escopo implicito | Dizer o que deixar de fora e reportar como follow-up |
+| Para no meio da tarefa anunciando o proximo passo (Opus 5.5 / Fable 5.1) | Encerramento de turno em tarefa autonoma | Nomear as paradas indesejadas e as desejadas (ver §14 do anthropic-techniques) |
+| Prompt antigo piorou no modelo novo | Scaffolding prescritivo, CAPS, regras anti-formatacao | Remover instrucoes herdadas antes de acrescentar |
 
 ### Passo 3: Recomendar
 
@@ -307,7 +316,7 @@ Trate Claude como "funcionario brilhante no primeiro dia" — zero contexto prev
 Separe TUDO: `<instructions>`, `<data>`, `<examples>`, `<output>`, `<thinking>`. Claude foi treinado para reconhecer XML como organizador de prompts.
 
 ### 3. Chain of Thought
-**No Opus 4.8 (e demais modelos com Adaptive Thinking) o lever primario de profundidade de raciocinio e o parametro `effort`** — o steering verbal de CoT e secundario/best-effort. Forcar CoT verbal ("pense passo a passo") em modelos com thinking nativo e largamente **obsoleto**: ajuste o `effort` em vez disso.
+**Na familia Claude 5 o thinking ja roda sozinho** (sempre ligado no Opus 5.5 e no Fable 5.1, ligado por default no Sonnet 5) e **o lever de profundidade e o `effort`** — default `medium` no Opus 5.5, `high` nos demais. Forcar CoT verbal ("pense passo a passo") e **obsoleto** nesses modelos, e pedir "escreva seu raciocinio na resposta" pode ser **recusado** (`reasoning_extraction`). "Pense com cuidado antes de responder" em system de chat so atrasa a resposta.
 
 CoT verbal ainda e util onde NAO ha thinking nativo (Notion Custom AI, OpenClaw, GPT/Llama sem reasoning):
 - Basico: "Pense passo a passo"
@@ -320,7 +329,7 @@ CoT verbal ainda e util onde NAO ha thinking nativo (Notion Custom AI, OpenClaw,
 Requisitos: Relevantes, Diversos, Anotados. Usar `<example>` tags. Incluir "Por que e bom". **3-5 exemplos concretos ancoram tom/formato melhor do que qualquer descricao abstrata** — prefira mostrar a descrever.
 
 ### 5. Role Prompting (uso enxuto)
-Um role conciso e especifico ainda ajuda a ativar dominio: "Cientista de dados senior especializado em churn prediction" > "Cientista de dados". Mas **personas elaboradas e emotional primers ("voce e um genio", "sua carreira depende disso") sao obsoletos no Opus 4.8** — nao melhoram qualidade e inflam o prompt. Prefira instrucoes diretas + exemplos.
+Um role conciso e especifico ainda ajuda a ativar dominio: "Cientista de dados senior especializado em churn prediction" > "Cientista de dados". Mas **personas elaboradas e emotional primers ("voce e um genio", "sua carreira depende disso") sao obsoletos nos modelos atuais** — nao melhoram qualidade e inflam o prompt. Prefira instrucoes diretas + exemplos.
 
 ### 6. Prompt Chaining
 Quando usar: 3+ passos distintos. Padrao: Gerar -> Revisar -> Refinar. Handoff via XML entre etapas.
@@ -356,11 +365,13 @@ NUNCA faca isso em um prompt:
 3. **Role generico** — "Voce e um assistente" nao ativa conhecimento especializado
 4. **Over-engineering** — Microgerenciar cada passo sufoca a inteligencia do modelo
 5. **Ignorar a plataforma** — Prompt de Desktop nao funciona em Claude Code e vice-versa
-6. **Pedir pensamento interno sem output** (so em modelos sem thinking nativo) — Sem externalizacao = sem raciocinio. Em Opus 4.8 use `effort`, nao CoT verbal forcado
+6. **Pedir pensamento interno sem output** (so em modelos sem thinking nativo) — Sem externalizacao = sem raciocinio. Na familia Claude 5 e o contrario: use `effort` e nao peca o raciocinio no texto (pode ser recusado)
 7. **Linguagem robotica** — "Voce devera proceder a executar" vs "Faca X porque Y"
-8. **Personas elaboradas e emotional primers** — "voce e o melhor X do mundo", "sua carreira depende disso": obsoletos no Opus 4.8, nao melhoram qualidade
+8. **Personas elaboradas e emotional primers** — "voce e o melhor X do mundo", "sua carreira depende disso": obsoletos nos modelos atuais, nao melhoram qualidade
 9. **Instrucoes negativas vagas** — "nao seja verboso" / "evite ser generico": troque por alvo positivo quantificado ("maximo 200 palavras", "cite 3 exemplos concretos")
 10. **CoT verbal forcado em modelo com thinking** — redundante com Adaptive Thinking; controle profundidade pelo `effort`
+11. **Scaffolding herdado de modelo antigo** — plano passo a passo, "revise duas vezes", "nao use bullets", "CRITICAL: You MUST": no MELHORAR, remova antes de acrescentar
+12. **Prefill ou `tool_choice` forcado em prompt de API** — retornam 400 nos modelos atuais (prefill em toda a familia 5; `tool_choice` any/tool no Opus 5.5 e Fable 5.1). Use Structured Outputs / `tool_choice: auto` + instrucao
 </anti_patterns>
 
 <edge_cases>
@@ -419,14 +430,14 @@ Se o prompt fornecido for >1000 palavras:
 | Tecnica | Claude | GPT-4 | Gemini | Llama | Notion Custom AI | OpenClaw |
 |---------|--------|-------|--------|-------|-----------------|----------|
 | XML Tags | Nativo | Usar markdown | Parcial | Usar markdown | Nao usar (markdown) | Nao usar (markdown) |
-| Prefilling | Suportado (exceto Opus 4.8) | Nao suportado | Nao suportado | Nao suportado | Nao disponivel | Nao disponivel |
-| Adaptive Thinking | Opus 4.8 (unico modo) / Sonnet 4.6 (opcional) | o1/o3/o4-mini (reasoning) | Flash Thinking | Nao disponivel | Nao disponivel | Nao disponivel |
+| Prefilling | So Haiku 4.5 (400 em Fable 5.1 / Opus 5.5 / Sonnet 5) | Nao suportado | Nao suportado | Nao suportado | Nao disponivel | Nao disponivel |
+| Adaptive Thinking | Sempre ligado (Fable 5.1, Opus 5.5) / default ligado (Sonnet 5); Haiku 4.5 usa extended manual | o1/o3/o4-mini (reasoning) | Flash Thinking | Nao disponivel | Nao disponivel | Nao disponivel |
 | Few-Shot | 3-5 exemplos | 3-7 exemplos | 2-4 exemplos | 1-3 exemplos | 1-2 (contexto limitado) | 1-2 (contexto limitado) |
-| Context Window | 1M (Opus 4.8) / 200K-1M (Sonnet 4.6) | 128K | 1M+ | 8K-128K | Limitado (varia) | Limitado (varia) |
+| Context Window | 1M (Fable 5.1, Opus 5.5, Sonnet 5) / 200K (Haiku 4.5) | 128K | 1M+ | 8K-128K | Limitado (varia) | Limitado (varia) |
 | Structured Output | Via API | JSON mode | JSON | Depende | Texto/Markdown | Texto/Markdown |
 | System Prompt | Separado | Separado | Integrado | Integrado | Custom Instructions | System Prompt fixo |
 | Tools | MCP, Bash, etc | Function calling | Function calling | Depende | Nenhuma | Nenhuma |
-| Sampling params | `temperature`/`top_p` rejeitados no Opus 4.8 | Ajustavel | Ajustavel | Ajustavel | N/A | N/A |
+| Sampling params | `temperature`/`top_p`/`top_k` dao 400 (so Haiku 4.5 aceita) | Ajustavel | Ajustavel | Ajustavel | N/A | N/A |
 
 **Nota:** Para Notion Custom AI e OpenClaw, consulte `references/notion-openclaw-patterns.md` para padroes especificos. Estas plataformas nao tem acesso a tools, prefilling ou XML — prompts devem ser model-agnostic, concisos e em markdown/texto estruturado.
 </multi_model_support>
@@ -434,7 +445,7 @@ Se o prompt fornecido for >1000 palavras:
 <references>
 ## References
 
-- `references/anthropic-techniques.md` — 13 tecnicas oficiais com exemplos detalhados
+- `references/anthropic-techniques.md` — 13 tecnicas oficiais com exemplos detalhados + §14 ajustes para a familia Claude 5 (parar/comecar, escolha de modelo)
 - `references/claude-code-patterns.md` — Padroes para skills, hooks, commands, subagents
 - `references/claude-desktop-patterns.md` — Artifacts, Adaptive Thinking, Tools, Projects, Custom Instructions
 - `references/n8n-agent-patterns.md` — System prompts e agentes AI no N8N

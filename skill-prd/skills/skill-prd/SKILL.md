@@ -3,7 +3,7 @@ name: skill-prd
 description: >-
   Plan and document what to build BEFORE coding. Creates PRDs, project/feature specs, scopes, and backlogs.
   Triggers: "PRD", "requisitos", "planejar projeto", "definir escopo", "doc de requisitos".
-effort: xhigh
+effort: high
 ---
 
 <role_and_context>

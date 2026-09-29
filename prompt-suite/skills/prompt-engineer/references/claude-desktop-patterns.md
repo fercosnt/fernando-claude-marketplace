@@ -74,48 +74,44 @@ Nao economize em criatividade — mostre o que e possivel fazer.
 
 ## 2. Adaptive Thinking
 
-Adaptive Thinking permite que Claude "pense mais" em tarefas complexas. E o unico modo de thinking no **Opus 4.8** (Extended Thinking classico com `budget_tokens` foi removido). No Desktop, a intensidade e controlada por um toggle/effort selector (low/medium/high/xhigh/max). O `effort` e o lever primario de profundidade; instrucoes verbais de "pense mais" sao secundarias.
+Adaptive Thinking permite que Claude "pense mais" em tarefas complexas, decidindo sozinho quanto pensar. Nos modelos atuais (Fable 5.1, Opus 5.5) ele esta **sempre ligado**; no Sonnet 5 vem ligado por default. Extended Thinking classico (`budget_tokens`) so existe no Haiku 4.5. O `effort` e o lever primario de profundidade; instrucoes verbais de "pense mais" sao secundarias — e no chat do Opus 5.5 atrasam a resposta sem ganho medido.
 
 > **Nota:** em versoes mais antigas, essa feature chamava-se "Extended Thinking". Vasta parte da literatura online ainda usa esse nome — trate como sinonimo ao atualizar prompts antigos.
 
 ### Quando Recomendar Thinking (e qual effort)
 
+Defaults: `high` em Fable 5.1 e Sonnet 5; **`medium` no Opus 5.5** (o `medium` dele empata ou supera o `high` do Opus 5). Os nomes de effort nao equivalem entre modelos — comece no default e so suba com motivo.
+
 | Situacao | Effort recomendado | Justificativa |
 |----------|-------------------|---------------|
-| Raciocinio multi-step complexo | `xhigh` / `max` | Melhora qualidade significativamente |
-| Analise de trade-offs | `high` / `xhigh` | Permite exploracao mais profunda |
-| Planejamento detalhado | `xhigh` | Considera mais opcoes |
-| Codigo complexo com interdependencias | `xhigh` (default Claude Code Pro/Max) | Reduz bugs e inconsistencias |
-| Perguntas factuais simples | `low` ou desligar | Overhead desnecessario |
+| Raciocinio multi-step complexo | `high` | Suba para `xhigh` so se o resultado ficar raso |
+| Analise de trade-offs | default → `high` | Exploracao mais profunda |
+| Planejamento detalhado | `high` | Considera mais opcoes |
+| Tarefa agentica longa (>30 min, muitas tool calls) | `xhigh` | E o uso que a doc reserva para `xhigh` |
+| Perguntas factuais simples | `low` | Overhead desnecessario |
 | Tarefas criativas simples | `medium` | Depende da profundidade desejada |
 | Formatacao ou conversao | `low` | Tarefa mecanica |
 
 ### Como Indicar no Prompt
 
-Nao controle o Thinking em baixo nivel — instrua o comportamento desejado e, se relevante, sugira o effort:
+Nao controle o Thinking em baixo nivel — descreva o objetivo e o criterio de qualidade, e sugira o effort ao usuario quando relevante. Evite escrever o plano de raciocinio passo a passo: *"Prefer general instructions over prescriptive steps"*.
 
 ```xml
-<thinking_guidance>
-Aborde esta tarefa de forma profunda e meticulosa. Pense cuidadosamente sobre:
-- Multiplas abordagens possiveis e seus trade-offs
-- Implicacoes e consequencias de cada decisao
-- Como diferentes elementos se inter-relacionam
+<quality_bar>
+Esta decisao tem consequencias caras se errada: considere as alternativas relevantes e os trade-offs antes de recomendar.
 
-Nao se apresse — e melhor pensar profundamente e fornecer uma solucao robusta.
-
-[Nota para o usuario: Esta tarefa se beneficia de effort alto. No Desktop, ative o toggle de thinking; no Claude Code, o default Pro/Max ja e xhigh.]
-</thinking_guidance>
+[Nota para o usuario: se a resposta vier rasa, suba o effort no seletor (Desktop) ou via /effort (Claude Code).]
+</quality_bar>
 ```
 
-### Restricoes Importantes (Opus 4.8)
+### Restricoes Importantes (familia Claude 5)
 
-- **Prefilling nao e mais suportado** em mensagens assistant no Opus 4.8 (retorna 400). Use `output_config.format` ou estruture via XML no prompt.
+- **Prefilling nao e suportado** em nenhum modelo atual exceto Haiku 4.5 (retorna 400). Use `output_config.format` ou estruture via XML no prompt.
 - **`temperature`/`top_p`/`top_k` nao-default retornam 400** — sampling agora e guiado por prompting + effort level.
+- **Nao peca o raciocinio escrito na resposta** — pode ser recusado (`reasoning_extraction`) no Opus 5.5 e no Fable 5.1.
 - Nao microgerencie o processo de pensamento — ajuste apenas o effort (lever primario).
-- **Default de effort no Opus 4.8 e `high`** (era `xhigh` no 4.7) — para coding/agentic/pesquisa, recomenda-se setar `xhigh` explicitamente.
-- `thinking.display` default e `"omitted"` no 4.8: a UI nao mostra reasoning a menos que voce peca explicitamente `display: "summarized"`.
-- No Desktop, o usuario controla a ativacao e o effort pelo toggle. No Claude Code, defina via `/effort` ou frontmatter de SKILL.md.
-- Suportado no Opus 4.8 (unico modo), Sonnet 4.6, e via `effort` level configuravel no Claude Code.
+- `thinking.display` default e `"omitted"`: a API nao devolve o texto do raciocinio a menos que voce peca `display: "summarized"`.
+- No Desktop, o usuario controla o effort pelo seletor. No Claude Code, via `/effort` ou `effort:` no frontmatter de SKILL.md (so Claude Code — no upload para claude.ai esse campo da erro).
 
 ---
 
