@@ -1,0 +1,14 @@
+{
+ "_nota": "Fixture fictícia com valores sentinela. Retorno simulado de 🔒 Remuneração para COL-01. Só rh-historico pode ler, e só na visão de reajuste.",
+ "resultados": [
+  {
+   "Registro": "FICT-Remuneração — SDR — vigência 2026-08",
+   "Colaborador": "COL-01",
+   "Cargo": "CAR-SDR",
+   "Fixo": 1111.11,
+   "Variável (regra)": "FICT-regra-7777",
+   "Vigência": "2026-08-03 →",
+   "Fonte (descritivo/política)": "FICT-política"
+  }
+ ]
+}

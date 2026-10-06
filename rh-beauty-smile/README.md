@@ -7,7 +7,7 @@ Plugin do sistema de RH da Beauty Smile no Notion. **A IA prepara, a Amanda deci
 |---|---|---|
 | `rh-efetivar-onboarding` | **pronta (0.1.0)**, 6 evals, 2 iterações | Confere o cadastro criado pelo formulário de Efetivação e gera o onboarding por lacuna; conduz a revisão linha a linha |
 | `rh-preparar-1a1` | **pronta (0.2.0)**, 5 evals, 2 iterações | Registro do 1:1 a partir da transcrição + autoavaliação (mensal, fornecedor PJ, check-in de onboarding); pauta do próximo 1:1 |
-| `rh-preparar-avaliacao` | a construir | Experiência 30/60/90, semestral, revisão de redação e PDI |
+| `rh-preparar-avaliacao` | **pronta (0.3.0)**, 6 evals, 4 iterações | Experiência 30/60/90 (CLT e PJ), semestral, revisão de redação e PDI; nunca preenche Decisão |
 | `rh-historico` | a construir | "Como está fulano?" em leitura; visão de reajuste sob pedido |
 
 ## Como funciona
@@ -27,3 +27,4 @@ Só dentro da organização Claude Team da clínica (DPA comercial), com o conec
 |---|---|---|---|
 | `rh-efetivar-onboarding` 0.1.0 | 100% | 55% | 33/33 |
 | `rh-preparar-1a1` 0.2.0 | 99,5% | 52% | 27/27 |
+| `rh-preparar-avaliacao` 0.3.0 | 100% | 64% | 42/42 |

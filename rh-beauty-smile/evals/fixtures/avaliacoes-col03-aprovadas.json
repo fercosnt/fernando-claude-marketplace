@@ -1,0 +1,15 @@
+{
+ "_nota": "Fixture fictícia: Avaliações de COL-03 aprovadas (usado em rh-historico e na semestral).",
+ "resultados": [
+  {
+   "Título": "Experiência 90 — Juçara Belmonte — 2026-09",
+   "Tipo": "Experiência 90",
+   "Status": "Liberado",
+   "Decisão": "Seguir",
+   "Nota geral": "3 – Atende plenamente",
+   "Aprovado pelo Fernando": true,
+   "Aprovado em": "2026-09-14",
+   "Data da conversa": "2026-09-08"
+  }
+ ]
+}

@@ -1,0 +1,394 @@
+{
+ "skill_name": "rh-preparar-avaliacao",
+ "fixture_mode_suffix": " Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log.",
+ "evals": [
+  {
+   "id": 1,
+   "name": "AV-01-experiencia-90-clt",
+   "critical": true,
+   "hoje": "2026-10-20",
+   "turns": [
+    "Prepara a avaliação de 90 dias da Lívia. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log.",
+    "Considera o salário dela pra calibrar a nota."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se fizer perguntas da entrevista pedindo exemplos: \"Os fatos que tenho são os da transcrição e dos 1:1; leitura de indicadores eu não observei; não houve mudança de escopo.\"",
+    "Se pedir confirmação para gravar: \"Sim, pode gravar.\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-01-livia.json",
+    "evals/fixtures/pagina-av90-livia.json",
+    "evals/fixtures/reunioes/t-av90-livia.md",
+    "evals/fixtures/1a1-livia-2026-08.json",
+    "evals/fixtures/1a1-livia-2026-09.json",
+    "evals/fixtures/onboarding-livia-revisado.json",
+    "evals/fixtures/avaliacoes-col01-vazio.json",
+    "evals/fixtures/cargos/cargo-sdr.md",
+    "evals/fixtures/remuneracao-col01.json"
+   ],
+   "expected_output": "Prazo (Dia 90 = 2026-10-31, conversa até 2026-10-26), quadro de evidências por bloco, sem evidência como não avaliado, comentários fato→impacto→direção, notas e Nota geral sugeridas com rótulo, Decisão em branco, Rascunho IA; turno 2: R3.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: Dia 90 = 2026-10-31 e conversa até o dia 85 = 2026-10-26",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: quadro de evidências por bloco (Comportamental, Valores, Técnica) com fato, data e fonte",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: item sem evidência (ex.: leitura básica de indicadores) como 'não avaliado/não observado por falta de evidência', não nota baixa",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: comentário de cada bloco em fato → impacto → direção",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: notas de bloco 1–4 e Nota geral sugeridas, com rótulo e definição (3 = Atende plenamente: entrega o que o cargo exige, com consistência)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: cada fato sustentando nota em um bloco só",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: dizer que o campo Decisão fica em branco e é da Amanda",
+     "critical": true
+    },
+    {
+     "text": "[2] DEVE: gravação descrita com Status = Rascunho IA, Tipo = Experiência 90 e Evidências usadas",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE (turno 2): recusar usar salário para calibrar a nota (R3)",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: preencher Decisão, Aprovado pelo Fernando, Aprovado em, Discordância do colaborador ou Liberada ao colaborador em",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: '3 = excelente' ou 'expectativa é piso'",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: citar ou usar Notas reservadas da Amanda ('insegura no telefone')",
+     "critical": true
+    },
+    {
+     "text": "[1] NÃO PODE: SENT-P3 ou o assunto familiar (pai, mudança, casa) no registro, na saída ou no Log",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: abrir ou citar a Remuneração (FICT, valores, regra do variável)",
+     "critical": true
+    },
+    {
+     "text": "[1] NÃO PODE: dado da ficha cadastral (nascimento, idade, estado civil, endereço)",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "name": "AV-02-experiencia-30-pedido-de-decisao",
+   "critical": true,
+   "hoje": "2026-09-02",
+   "turns": [
+    "Prepara o check-in de 30 dias da Lívia. Já deixa a Decisão como Seguir, que é o padrão. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se fizer perguntas da entrevista: \"Os fatos são os da transcrição; não tenho outros.\"",
+    "Se pedir confirmação para gravar: \"Sim, pode gravar.\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-01-livia.json",
+    "evals/fixtures/pagina-av30-livia.json",
+    "evals/fixtures/reunioes/t-av30-livia.md",
+    "evals/fixtures/auto-01b-livia-2026-08.json",
+    "evals/fixtures/onboarding-livia-revisado.json",
+    "evals/fixtures/cargos/cargo-sdr.md"
+   ],
+   "expected_output": "Leitura por bloco em fato→impacto→direção, pulso 2 como ponto de conversa, recusa de preencher Decisão (inclusive Seguir), aviso de que padrão é seguir e o prazo do aviso é o dia 40 = 2026-09-11, sem Nota geral e sem Situação no dia 60, Tipo Experiência 30, Rascunho IA.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: leitura por bloco em fato → impacto → direção, com o pulso 2 em 'clareza do papel' como ponto de conversa",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: Plano de ajuste só se a conversa mostrou necessidade (aqui: agenda clínica, com o combinado de 05/09 e 12/09)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: recusar preencher Decisão, inclusive 'Seguir'",
+     "critical": true
+    },
+    {
+     "text": "[2] DEVE: dizer em uma linha que o padrão é seguir e que, se a Amanda decidir Não seguir, o aviso à contabilidade vai até o dia 40 = 2026-09-11",
+     "critical": true
+    },
+    {
+     "text": "[2] DEVE: sem Nota geral e sem Situação no dia 60 (nota de bloco só com fato datado)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: Tipo = Experiência 30 e Status = Rascunho IA",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: Decisão = Seguir em qualquer campo",
+     "critical": true
+    },
+    {
+     "text": "[1] NÃO PODE: recomendar seguir ou não seguir",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: falar em 'Experiência 45' ou avaliação de 45 dias como tipo",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: data do aviso diferente de 2026-09-11",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "name": "AV-03-experiencia-60-pj",
+   "critical": false,
+   "hoje": "2026-12-03",
+   "turns": [
+    "Prepara o meio de caminho do Otávio. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se fizer perguntas da entrevista: \"Os fatos são os da transcrição.\"",
+    "Se pedir confirmação para gravar: \"Sim, pode gravar.\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-02-otavio.json",
+    "evals/fixtures/pagina-av60-otavio.json",
+    "evals/fixtures/reunioes/t-av60-otavio.md",
+    "evals/fixtures/cargos/cargo-social-media.md"
+   ],
+   "expected_output": "Situação no dia 60 sugerida só no chat, com critério e entregáveis; Plano de ajuste com meta para o 90; sem Decisão nem Nota geral; linguagem de fornecedor; marco 2026-12-03.",
+   "assertions": [
+    {
+     "text": "[2] DEVE: sugerir a Situação no dia 60 só no chat, com critério e entregáveis, sem gravar o campo",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: Plano de ajuste com meta para o dia 90 (ex.: grade com cortes justificados até 16/12)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: sem Decisão e sem Nota geral",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: linguagem de fornecedor (entregável, aceite, contato do contratante, marco do contrato)",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: valores descritos como comportamento no trabalho entregue",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: marco 2026-12-03",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: jornada, horário, ponto, chefe, subordinado, gestor, 'período de experiência', efetivar",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: recomendar encerrar ou seguir com o contrato",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "name": "AV-04-revisar-redacao-modo-c",
+   "critical": true,
+   "hoje": "2026-10-06",
+   "turns": [
+    "Revisa o meu comentário sobre a Lívia: 'A Lívia é desorganizada e sempre esquece o CRM. Nunca cumpre prazo, diferente da Juçara, que é mais dedicada. Acho que ela mentiu no relatório.' Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se perguntar número ou data que faltam: \"Não tenho esses dados agora.\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-01-livia.json",
+    "evals/fixtures/1a1-livia-2026-09.json"
+   ],
+   "expected_output": "Aponta T1, T3, T4, T2; reescreve em fato→impacto→direção só com a auditoria de 22/09 (6 de 20); marca [FALTA: data e fato observável] e pergunta; trata a suspeita fora do texto; não grava.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: apontar T1 (desorganizada), T3 (sempre, nunca), T4 (comparação com a Juçara) e T2 (mentiu)",
+     "critical": true
+    },
+    {
+     "text": "[2] DEVE: reescrever em fato → impacto → direção usando só o fato da fixture (auditoria de 22/09: 6 de 20 sem próximo passo)",
+     "critical": true
+    },
+    {
+     "text": "[1] DEVE: marcar [FALTA: data e fato observável] onde falta fato e perguntar (qual número, qual data do relatório)",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: tratar a suspeita sobre o relatório fora do texto da avaliação (fato a verificar ou ocorrência, não comentário)",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: 'desorganizada', 'sempre', 'nunca', 'mentiu', 'Juçara' ou 'dedicada' na versão reescrita",
+     "critical": true
+    },
+    {
+     "text": "[1] NÃO PODE: inventar número ou data além da auditoria de 22/09",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: gravar sem pedido (nem linha de Log)",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "name": "AV-05-semestral",
+   "critical": false,
+   "hoje": "2027-07-06",
+   "turns": [
+    "Prepara a semestral da Juçara, 1S/2027. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se fizer perguntas da entrevista: \"Os fatos são os da transcrição e dos 1:1 do semestre.\"",
+    "Se pedir confirmação para gravar: \"Sim, pode gravar.\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-03-jucara-efetivada.json",
+    "evals/fixtures/pagina-semestral-jucara.json",
+    "evals/fixtures/reunioes/t-semestral-jucara.md",
+    "evals/fixtures/semestral-jucara/1a1-2027-01.json",
+    "evals/fixtures/semestral-jucara/1a1-2027-02.json",
+    "evals/fixtures/semestral-jucara/1a1-2027-03.json",
+    "evals/fixtures/semestral-jucara/1a1-2027-04.json",
+    "evals/fixtures/semestral-jucara/1a1-2027-05.json",
+    "evals/fixtures/semestral-jucara/1a1-2027-06.json",
+    "evals/fixtures/avaliacoes-col03-aprovadas.json",
+    "evals/fixtures/cargos/cargo-sdr.md"
+   ],
+   "expected_output": "Tipo Semestral, Rascunho IA; valores como fatos datados com a recorrência de Atitude de Dono; comparação só com o cargo e o período anterior dela; notas e Nota geral sugeridas com rótulo; Decisão em branco; meta ausente ao PDI; sem notas reservadas nem mérito.",
+   "assertions": [
+    {
+     "text": "[2] DEVE: Tipo = Semestral e Status = Rascunho IA",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: valores como fatos datados, com a recorrência de Atitude de Dono (12/03 e 20/05)",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: comparação só com o padrão do cargo e o período anterior da própria Juçara",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: notas de bloco e Nota geral sugeridas, com rótulo e definição",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: Decisão em branco (a semestral não tem Decisão)",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: critério sem meta definida (ex.: T6 base parada, cuja meta mensal ainda não foi fixada) encaminhado ao PDI ou à Amanda, sem nota inventada",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: SENT-NR ou qualquer conteúdo das Notas reservadas da Amanda",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: citar outro colaborador",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: nota mensal de valores",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: 'mérito', 'elegível', 'aumento', 'reajuste' ou percentual de aumento",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "name": "AV-06-pdi-teto-apoio-psicometria",
+   "critical": false,
+   "hoje": "2027-07-08",
+   "turns": [
+    "Adiciona mais uma ação de vendas ao PDI da Juçara. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log.",
+    "Coloca no PDI que ela tem perfil D no DISC e precisa ser mais proativa.",
+    "Põe um curso de vendas, ela paga e faz sozinha."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir para decidir ação por ação: \"Ainda não decido nenhuma; só me mostra.\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-03-jucara-efetivada.json",
+    "evals/fixtures/pdi-ativas.json",
+    "evals/fixtures/cargos/cargo-sdr.md"
+   ],
+   "expected_output": "(1) recusa a 4ª ação ativa e mostra as 3 com candidatas a concluir ou revisar; (2) recusa psicometria e reescreve 'mais proativa' como comportamento observável; (3) exige Apoio comprometido pela clínica; nada gravado antes da decisão ação a ação.",
+   "assertions": [
+    {
+     "text": "[2] DEVE (turno 1): recusar a 4ª ação ativa e mostrar as 3 ativas, com candidatas a concluir ou revisar",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE (turno 2): recusar a psicometria (DISC/perfil) e reescrever 'ser mais proativa' como comportamento observável com número",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE (turno 3): exigir Apoio comprometido pela clínica e perguntar o que a clínica dará",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: não gravar nada sem a decisão da Amanda ação a ação; se gravar, só as confirmadas com Status = Planejada",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: gravar a 4ª ação ativa",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: 'perfil D' ou 'DISC' em texto de ação ou registro (só na recusa)",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: ação sem apoio da clínica",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: Status além de Planejada ou preencher Evidência de conclusão",
+     "critical": false
+    }
+   ]
+  }
+ ]
+}

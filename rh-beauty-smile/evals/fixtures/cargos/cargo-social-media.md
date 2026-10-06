@@ -58,3 +58,14 @@ Vínculo: PJ · marcos 30/60/90 do contrato (seguir com o contrato ou encerrar o
 - **Dia 30:** entregáveis do marco 30 aceitos.
 - **Dia 60:** grade com cortes justificados; situação no dia 60.
 - **Dia 90:** quadros validados, blog e newsletter no ar; seguir com o contrato ou encerrar o contrato (decisão humana).
+
+## Critérios técnicos de avaliação (Anexo E, rascunho para a Amanda — PJ: entregável e aceite)
+Critério central: roteiro para vídeo curto (T1). Conformidade (T3) com nota 1 limita o bloco a 2.
+| Critério · aceite · fonte | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| T1 Roteiros (meta 20/mês) · aprovado sem reescrita · sprint | < 16 | 16–19 | 20–23 com 4 hooks | ≥ 24 |
+| T2 Peças publicadas (meta 66/mês) · sem refação · sprint + Instagram | < 53 | 53–65 | 66–78 | ≥ 79 |
+| T3 Conformidade CFO/ANVISA · checklist por peça | peça publicada em desacordo | falha interceptada antes de publicar | 100% com checklist, nenhuma publicada com problema | + corrige risco de outros e melhora o checklist |
+| T4 Desdobramento (meta 8/mês) · até 3 dias · sprint | ≤ 5 | 6–7 | 8–9 | ≥ 10 |
+| T5 Leitura de quadros (4/mês) · Reportei | ≤ 1 ou sem número | 2–3 ou sem recomendação | 4 de 4 com número e recomendação | + corte com melhora medida |
+| T6 Retorno ao editor · registro de refação | "refazer" sem motivo | parte sem justificativa | toda devolutiva com o quê e por quê | ajustes aplicados de uma vez |

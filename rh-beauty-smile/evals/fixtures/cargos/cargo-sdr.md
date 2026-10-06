@@ -76,3 +76,14 @@ Janelas em dias úteis: D0 = admissão · D1–D5 = até o 5º dia útil · Sema
 
 ### Pendências da trilha
 - [TBD] Buddy do SDR: a Coordenação nomeia.
+
+## Critérios técnicos de avaliação (Anexo E, rascunho para a Amanda)
+Critério central: velocidade e cobertura de resposta. Na experiência, o nível 3 é a rampa do mês (agendamento 10% · 12% · 15%).
+| Critério · fonte | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| T1 Velocidade e cobertura de resposta · GHL | média > 10 min ou < 90% no mesmo dia | 5–10 min ou 90–99% | até 5 min e 100% no mesmo dia | até 4 min e 100%, sustentado |
+| T2 Registro no CRM · amostra semanal (etapa + próximo passo) | < 90% da amostra | 90–97% | 100% (tolerância 2%, corrigida no dia) | 100% em todas as amostras, lista zerada |
+| T3 Agendamento · GHL/Clinicorp | < 80% da meta do mês | 80–99% | meta do mês na rampa e intervalo até 2 dias | ≥ 120% da meta |
+| T4 Comparecimento · Clinicorp | < 56% | 56–70% | > 70% (mês 1: acompanhar; mês 2: ≥ 65%) | ≥ 80%, toda falta recontatada |
+| T5 Qualificação e follow-up · 5 conversas/mês no roteiro | < 3 de 5, ou promessa de resultado | 3 de 5 | 4 de 5, todo lead com desfecho | 5 de 5 e o script criado melhora a taxa |
+| T6 Base parada (a partir do dia 60) · GHL | < 80% da meta | 80–99% | meta mensal | ≥ 120% |

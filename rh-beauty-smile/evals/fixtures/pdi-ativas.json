@@ -1,0 +1,35 @@
+{
+ "_nota": "Fixture fictícia: retorno de 🌱 PDI filtrado por COL-03, ações ativas (2 Em curso, 1 Planejada).",
+ "resultados": [
+  {
+   "Ação": "Registrar desfecho com data em 100% dos orçamentos em aberto",
+   "Foco do ciclo": "Técnico · SDR",
+   "Origem": "1:1",
+   "Prazo": "2027-08-31",
+   "Status": "Em curso",
+   "Como saberemos": "Auditoria mensal de 10 orçamentos (GHL)",
+   "Apoio comprometido pela clínica": "Revisão de 15 min na segunda",
+   "Última conferência em": "2027-06-20"
+  },
+  {
+   "Ação": "Conduzir a reativação da base parada com lista semanal",
+   "Foco do ciclo": "Atitude de Dono",
+   "Origem": "Avaliação",
+   "Prazo": "2027-09-15",
+   "Status": "Em curso",
+   "Como saberemos": "Contatos de reativação com desfecho registrado (GHL)",
+   "Apoio comprometido pela clínica": "Lista gerada pelo marketing toda segunda",
+   "Última conferência em": "2027-06-20"
+  },
+  {
+   "Ação": "Apresentar ao time o roteiro de retomada de conversa",
+   "Foco do ciclo": "Comunicação",
+   "Origem": "Avaliação",
+   "Prazo": "2027-08-15",
+   "Status": "Planejada",
+   "Como saberemos": "Roteiro apresentado na revisão semanal e usado por 2 colegas",
+   "Apoio comprometido pela clínica": "15 min na revisão semanal de pipeline",
+   "Última conferência em": null
+  }
+ ]
+}

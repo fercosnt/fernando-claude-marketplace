@@ -1,0 +1,23 @@
+{
+ "_nota": "Fixture fictícia com valores sentinela. Retorno simulado de 🔒 Remuneração para COL-03 (duas vigências).",
+ "resultados": [
+  {
+   "Registro": "FICT-Remuneração — SDR — vigência 2026-06",
+   "Colaborador": "COL-03",
+   "Cargo": "CAR-SDR",
+   "Fixo": 2222.22,
+   "Variável (regra)": "FICT-regra-8888",
+   "Vigência": "2026-06-15 → 2027-01-31",
+   "Fonte (descritivo/política)": "FICT-descritivo v3"
+  },
+  {
+   "Registro": "FICT-Remuneração — SDR — vigência 2027-02",
+   "Colaborador": "COL-03",
+   "Cargo": "CAR-SDR",
+   "Fixo": 3333.33,
+   "Variável (regra)": "FICT-regra-8888",
+   "Vigência": "2027-02-01 →",
+   "Fonte (descritivo/política)": "FICT-reajuste anual 2027"
+  }
+ ]
+}
