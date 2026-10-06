@@ -1,0 +1,174 @@
+{
+ "_nota": "Fixture fictícia: onboarding da Lívia já revisado pela Amanda (Status = Revisado), com a seção \"Verificar na 1ª semana\".",
+ "url": "https://notion.invalid/FAKE-onb-livia",
+ "Nome": "Onboarding — Lívia Amaranto",
+ "Colaborador": "COL-01 · Lívia Amaranto",
+ "Cargo": "CAR-SDR",
+ "Status": "Revisado",
+ "Início": "2026-08-03",
+ "Trilha usada": "Padrão",
+ "Versão da trilha usada": "t1 · descritivo v3",
+ "Ajustes individuais": "12 linhas: 9 aceitas, 2 editadas, 1 recusada; 2 para verificar; 0 sem decisão da Amanda",
+ "Buddy": "Colega da recepção (fictício)",
+ "corpo": {
+  "callout": "Rascunho IA. Nada aqui vale até a Amanda revisar linha a linha e mudar o status para Revisado.",
+  "trilha_datada": [
+   {
+    "data": "2026-08-03",
+    "fase": "D0",
+    "item": "FX-01 Boas-vindas da Coordenação e do CEO",
+    "origem": "fixo"
+   },
+   {
+    "data": "2026-08-03",
+    "fase": "D0",
+    "item": "FX-02 Buddy: função de apoio (recepção ou comercial, fora da decisão); nome a definir pela Amanda",
+    "origem": "fixo"
+   },
+   {
+    "data": "2026-08-03 a 2026-08-07",
+    "fase": "D0 e D1–D5",
+    "item": "FX-03 Apresentação à equipe",
+    "origem": "fixo"
+   },
+   {
+    "data": "2026-08-04 a 2026-08-07",
+    "fase": "D1–D5",
+    "item": "FX-04 Leitura da cultura",
+    "origem": "fixo"
+   },
+   {
+    "data": "2026-08-03",
+    "fase": "D0",
+    "item": "FX-05 Aviso de privacidade",
+    "origem": "fixo"
+   },
+   {
+    "data": "2026-08-03",
+    "fase": "D0",
+    "item": "AC-01 Acessos do dia 1",
+    "origem": "fixo"
+   },
+   {
+    "data": "2026-09-01",
+    "fase": "Dia 30",
+    "item": "Check-in do dia 30 (CLT: carrega a decisão do dia 45)",
+    "origem": "marco"
+   },
+   {
+    "data": "2026-10-01",
+    "fase": "Dia 60",
+    "item": "Meio de caminho",
+    "origem": "marco"
+   },
+   {
+    "data": "2026-10-31",
+    "fase": "Dia 90",
+    "item": "Avaliação final; conversa até o dia 85 (2026-10-26)",
+    "origem": "marco"
+   }
+  ],
+  "ajustes": [
+   {
+    "#": 1,
+    "Ajuste": "Acelerar: prova prática do GoHighLevel nível 1 mantida no fim da semana 1, com reforço diário de registro",
+    "Fonte no cargo": "Uso de CRM (Parte I · Competências técnicas); AJ-01",
+    "Fonte no CV/seleção": "Lacunas da seleção: sem CRM estruturado",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 2,
+    "Ajuste": "Reforçar: GoHighLevel nível 2 com 2 sessões extras de pipeline antes da prova do Dia ~25",
+    "Fonte no cargo": "Organização; follow-up (AJ-02)",
+    "Fonte no CV/seleção": "Lacunas da seleção: sem CRM estruturado",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 3,
+    "Ajuste": "Verificar na 1ª semana: leitura básica de indicadores. Como: ler o próprio funil da semana com a Coordenação",
+    "Fonte no cargo": "Leitura básica de indicadores (Parte I)",
+    "Fonte no CV/seleção": "sem evidência",
+    "Confiança": "baixa",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 4,
+    "Ajuste": "Acelerar: Clinicorp encurtado para a semana 1",
+    "Fonte no cargo": "Organização de agenda (AJ-04)",
+    "Fonte no CV/seleção": "CV: agenda online de clínica de estética, 01/2025–07/2026",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 5,
+    "Ajuste": "Reforçar: shadowing extra com o closer nas semanas 1–2",
+    "Fonte no cargo": "Qualificação consultiva (AJ-06)",
+    "Fonte no CV/seleção": "Lacunas da seleção: sem venda de ticket médio/alto",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 6,
+    "Ajuste": "Acelerar: cadência própria de follow-up por WhatsApp já na semana 2",
+    "Fonte no cargo": "Nutrição e follow-up (AJ-07)",
+    "Fonte no CV/seleção": "CV: acompanhamento de orçamentos por WhatsApp",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 7,
+    "Ajuste": "Verificar na 1ª semana: Instagram como canal de relacionamento. Como: responder 5 DMs reais com revisão",
+    "Fonte no cargo": "Instagram como canal (Requisitos desejáveis)",
+    "Fonte no CV/seleção": "sem evidência",
+    "Confiança": "baixa",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 8,
+    "Ajuste": "Acelerar: confirmações da véspera assumidas no D3",
+    "Fonte no cargo": "Agenda, confirmações (Parte I)",
+    "Fonte no CV/seleção": "Fortes da seleção: organização de agenda",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 9,
+    "Ajuste": "Aprofundar: modelos de mensagem do WhatsApp revisados na semana 1, sem treino básico de escrita",
+    "Fonte no cargo": "Venda consultiva por WhatsApp (Parte I)",
+    "Fonte no CV/seleção": "Fortes da seleção: escrita clara e cordial no WhatsApp",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 10,
+    "Ajuste": "Reforçar: relatório diário com checklist de próximo passo nas 2 primeiras semanas",
+    "Fonte no cargo": "Registro 100% no CRM (Indicadores)",
+    "Fonte no CV/seleção": "Lacunas da seleção: usava planilhas",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 11,
+    "Ajuste": "Verificar na 1ª semana: telefone com naturalidade. Como: acompanhar 3 ligações de confirmação",
+    "Fonte no cargo": "Comunicação por telefone (Parte I)",
+    "Fonte no CV/seleção": "sem evidência",
+    "Confiança": "baixa",
+    "Decisão da Amanda": "aceito"
+   },
+   {
+    "#": 12,
+    "Ajuste": "Acelerar: atendimento autônomo avaliado na semana 3 pela prova do nível 1",
+    "Fonte no cargo": "Captação e 1º contato (AJ-09)",
+    "Fonte no CV/seleção": "CV: atendimento por WhatsApp e telefone no mesmo dia",
+    "Confiança": "alta",
+    "Decisão da Amanda": "aceito"
+   }
+  ],
+  "verificar_na_1a_semana": [
+   "Agenda clínica no Clinicorp (marcar e remarcar sem ajuda). Como: observar 3 remarcações reais",
+   "Tom no WhatsApp dentro do roteiro. Como: revisar 10 conversas"
+  ]
+ }
+}
