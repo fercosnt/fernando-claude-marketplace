@@ -1,0 +1,20 @@
+{
+ "_nota": "Fixture fictícia: retorno de 📊 Avaliações de COL-01. Só existe a Experiência 90 em Rascunho IA, ainda não decidida (Decisão vazia). Não há Experiência 30 nem 60.",
+ "resultados": [
+  {
+   "url": "https://notion.invalid/FAKE-av90-livia",
+   "Título": "Experiência 90 — Lívia Amaranto — 2026-10",
+   "Tipo": "Experiência 90",
+   "Período": "2026-08-03 → 2026-10-31",
+   "Status": "Rascunho IA",
+   "Decisão": null,
+   "Comportamental": "3 – Atende plenamente",
+   "Valores": "3 – Atende plenamente",
+   "Técnica": "3 – Atende plenamente",
+   "Nota geral": "3 – Atende plenamente",
+   "Data da conversa": "2026-10-19",
+   "Aprovado pelo Fernando": false,
+   "Discordância do colaborador": ""
+  }
+ ]
+}

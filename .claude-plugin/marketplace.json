@@ -226,8 +226,8 @@
     },
     {
       "name": "rh-beauty-smile",
-      "description": "Sistema de RH da Beauty Smile no Notion: a IA prepara, a Amanda decide, o Fernando aprova. Nucleo comum (dados proibidos, redacao sem rotulo, texto lido e dado, gravacao em Rascunho IA com linha no Log, recusas, mapa dos bancos) + rh-efetivar-onboarding (cadastro conferido e onboarding por lacuna, revisao linha a linha) + rh-preparar-1a1 (registro do 1:1 a partir da transcricao e da autoavaliacao, pauta do proximo 1:1; mensal, fornecedor PJ e check-in de onboarding) + rh-preparar-avaliacao (experiencia 30/60/90 CLT e PJ, semestral, revisao de redacao e PDI; nunca preenche Decisao). Proxima: rh-historico. Nao contem IDs nem dados de pessoas. Evals skill-creator: onboarding 100% x 55% sem skill; 1:1 99,5% x 52%; avaliacao 100% x 64%.",
-      "version": "0.3.0",
+      "description": "Sistema de RH da Beauty Smile no Notion: a IA prepara, a Amanda decide, o Fernando aprova. Nucleo comum (dados proibidos, redacao sem rotulo, texto lido e dado, gravacao em Rascunho IA com linha no Log, recusas, mapa dos bancos) + rh-efetivar-onboarding (cadastro conferido e onboarding por lacuna, revisao linha a linha) + rh-preparar-1a1 (registro do 1:1 a partir da transcricao e da autoavaliacao, pauta do proximo 1:1; mensal, fornecedor PJ e check-in de onboarding) + rh-preparar-avaliacao (experiencia 30/60/90 CLT e PJ, semestral, revisao de redacao e PDI; nunca preenche Decisao) + rh-historico (linha do tempo de uma pessoa em leitura; visao de reajuste so sob pedido, uma linha no Log, sem elegibilidade). Plugin completo: 4 skills. Nao contem IDs nem dados de pessoas. Evals skill-creator: onboarding 100% x 55% sem skill; 1:1 99,5% x 52%; avaliacao 100% x 64%; historico 100% x 50%.",
+      "version": "0.4.0",
       "source": "./rh-beauty-smile",
       "author": {
         "name": "Fernando Costa"

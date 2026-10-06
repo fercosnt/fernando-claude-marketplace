@@ -1,6 +1,6 @@
 {
   "name": "rh-beauty-smile",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Sistema de RH da Beauty Smile no Notion: confere cadastro e gera onboarding por lacuna, registra 1:1 a partir da transcrição, prepara avaliações de experiência/semestral e PDI, e resume o histórico de uma pessoa. A IA prepara, a Amanda decide, o Fernando aprova.",
   "author": { "name": "Fernando Rodrigues da Costa" },
   "keywords": ["rh", "notion", "onboarding", "1:1", "avaliacao", "beauty-smile"]

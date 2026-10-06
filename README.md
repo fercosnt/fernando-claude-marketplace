@@ -51,7 +51,7 @@ Skills com `scripts/` (ex.: `pesquisa-profunda`, `presentation-text-extractor`) 
 | [skill-prd](./skill-prd/) | Criacao, validacao e melhoria de PRDs estruturados — 4 modos, 3 niveis, scorecard 5D, Deep Modules, vertical slicing (tracer bullets) | 1 | 0.3.0 |
 | [conta-azul](./conta-azul/) | ERP Conta Azul via MCP local — 38 tools (resumo financeiro, receber/pagar, saldos, vendas, NF), escrita opcional com previa antes de enviar. Credenciais em `~/.conta-azul-mcp.json` | 3 | 0.1.1 |
 | [fotona-design-system](./fotona-design-system/) | Design system da Fotona Brasil — os dois registros da marca (claro de produto, escuro de marca), tokens, logo, fontes, 14 componentes, 9 arquetipos de slide, 7 formatos de post e prompts de imagem | 1 | 1.0.0 |
-| [rh-beauty-smile](./rh-beauty-smile/) | Sistema de RH da Beauty Smile no Notion — núcleo comum + `rh-efetivar-onboarding` (cadastro conferido e onboarding por lacuna) + `rh-preparar-1a1` (registro do 1:1 a partir da transcrição; pauta) + `rh-preparar-avaliacao` (experiência 30/60/90, semestral, redação, PDI). Sem IDs nem dados de pessoas | 3 | 0.3.0 |
+| [rh-beauty-smile](./rh-beauty-smile/) | Sistema de RH da Beauty Smile no Notion — núcleo comum + `rh-efetivar-onboarding` (cadastro conferido e onboarding por lacuna) + `rh-preparar-1a1` (registro do 1:1 a partir da transcrição; pauta) + `rh-preparar-avaliacao` (experiência 30/60/90, semestral, redação, PDI) + `rh-historico` (linha do tempo em leitura; visão de reajuste sob pedido). Sem IDs nem dados de pessoas | 4 | 0.4.0 |
 
 ## Skills avulsas
 
