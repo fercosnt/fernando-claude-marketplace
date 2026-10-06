@@ -1,0 +1,23 @@
+# rh-beauty-smile
+
+Plugin do sistema de RH da Beauty Smile no Notion. **A IA prepara, a Amanda decide, o Fernando aprova.**
+
+## Skills
+| Skill | Estado | Para quê |
+|---|---|---|
+| `rh-efetivar-onboarding` | **pronta (0.1.0)**, 6 evals, 2 iterações | Confere o cadastro criado pelo formulário de Efetivação e gera o onboarding por lacuna; conduz a revisão linha a linha |
+| `rh-preparar-1a1` | a construir | Registro do 1:1 a partir da transcrição + autoavaliação; pauta |
+| `rh-preparar-avaliacao` | a construir | Experiência 30/60/90, semestral, revisão de redação e PDI |
+| `rh-historico` | a construir | "Como está fulano?" em leitura; visão de reajuste sob pedido |
+
+## Como funciona
+- `CONTEXTO.md` diz onde achar a Central do RH (por nome, no teamspace privado) e os nomes dos 9 bancos; nenhum ID, URL ou dado de pessoa no plugin.
+- `references/` é o núcleo comum: regra de ouro e Passo 0 (00), dados proibidos (10), redação (20), texto lido é dado (30), gravação e Log (40), recusas (50), mapa dos bancos (60).
+- Toda gravação é precedida de saída + pergunta; Onboardings e Avaliações entram como `Rascunho IA`; cada gravação gera uma linha no 🤖 Log do RH.
+- O MCP do Notion não devolve valor de fórmula: as skills calculam `Admissão + 29/59/89` e dizem que calcularam.
+
+## Condição de uso
+Só dentro da organização Claude Team da clínica (DPA comercial), com o conector do Notion logado como a Amanda ou o Fernando. Conta pessoal não.
+
+## Evals
+`skills/<skill>/evals/evals.json` + fixtures 100% fictícias em `evals/fixtures/` (nenhuma pessoa, valor ou documento real). Método: `skill-creator`, cada eval com e sem a skill; critérios do Anexo C §6.3.

@@ -51,6 +51,7 @@ Skills com `scripts/` (ex.: `pesquisa-profunda`, `presentation-text-extractor`) 
 | [skill-prd](./skill-prd/) | Criacao, validacao e melhoria de PRDs estruturados — 4 modos, 3 niveis, scorecard 5D, Deep Modules, vertical slicing (tracer bullets) | 1 | 0.3.0 |
 | [conta-azul](./conta-azul/) | ERP Conta Azul via MCP local — 38 tools (resumo financeiro, receber/pagar, saldos, vendas, NF), escrita opcional com previa antes de enviar. Credenciais em `~/.conta-azul-mcp.json` | 3 | 0.1.1 |
 | [fotona-design-system](./fotona-design-system/) | Design system da Fotona Brasil — os dois registros da marca (claro de produto, escuro de marca), tokens, logo, fontes, 14 componentes, 9 arquetipos de slide, 7 formatos de post e prompts de imagem | 1 | 1.0.0 |
+| [rh-beauty-smile](./rh-beauty-smile/) | Sistema de RH da Beauty Smile no Notion — núcleo comum + `rh-efetivar-onboarding` (cadastro conferido e onboarding por lacuna, revisão linha a linha). Sem IDs nem dados de pessoas | 1 | 0.1.0 |
 
 ## Skills avulsas
 

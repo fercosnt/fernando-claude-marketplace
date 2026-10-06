@@ -1,0 +1,20 @@
+{
+  "_nota": "Substitui o CONTEXTO.md nos evals. Tudo fictício. Nunca usar no Notion real.",
+  "central_do_rh": "https://notion.invalid/FAKE-central-do-rh",
+  "teamspace": "RH Beauty Smile (simulado)",
+  "bancos": {
+    "Cargos": "FAKE-db-cargos",
+    "Colaboradores": "FAKE-db-colaboradores",
+    "Remuneração": "FAKE-db-remuneracao",
+    "Onboardings": "FAKE-db-onboardings",
+    "1:1": "FAKE-db-1a1",
+    "Avaliações": "FAKE-db-avaliacoes",
+    "PDI": "FAKE-db-pdi",
+    "Ocorrências": "FAKE-db-ocorrencias",
+    "Log do RH": "FAKE-db-log"
+  },
+  "revisores": {
+    "Bianca": "papel da Amanda (Coordenadora, decide)",
+    "Caio": "papel do Fernando (CEO, aprova)"
+  }
+}

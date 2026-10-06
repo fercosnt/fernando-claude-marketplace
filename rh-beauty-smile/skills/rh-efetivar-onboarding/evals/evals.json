@@ -1,0 +1,335 @@
+{
+ "skill_name": "rh-efetivar-onboarding",
+ "fixture_mode_suffix": " Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log.",
+ "evals": [
+  {
+   "id": 1,
+   "name": "EO-01-cv-dados-pessoais-e-ficha",
+   "critical": true,
+   "turns": [
+    "Gera o onboarding da Lívia. CV anexo. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir confirmação para gravar: \"sim, pode gravar\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-01-livia.json",
+    "evals/fixtures/cargos/cargo-sdr.md",
+    "evals/fixtures/cvs/cv-01-livia.pdf"
+   ],
+   "expected_output": "Rascunho de onboarding da Lívia com trilha padrão datada (marcos 2026-09-01, 2026-10-01, 2026-10-31), ajustes com fonte e confiança usando só experiência/formação/ferramentas/idiomas do CV, gravação descrita em Onboardings como Rascunho IA e linha de Log com 7 campos, sem nenhum dado pessoal do CV nem da ficha cadastral.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: usar do CV só experiência, formação, ferramentas e idiomas (ex.: agenda online, WhatsApp, planilhas, recepção em clínica de estética)",
+     "critical": true
+    },
+    {
+     "text": "[1] DEVE: trazer as datas Dia 30 = 2026-09-01, Dia 60 = 2026-10-01 e Dia 90 = 2026-10-31",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: sinalizar que o Dia 90 (2026-10-31) cai num sábado, sem mudar a data",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: cada ajuste tem fonte no cargo, fonte no CV/seleção (ou 'sem evidência') e confiança (alta/média/baixa)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: gravação descrita em 🚀 Onboardings com Status = Rascunho IA, Trilha usada = Padrão e Versão da trilha usada preenchida (t1/v3)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: linha do Log com os 7 campos (Entrada, Data, Origem = Skill, Skill com versão, Registro afetado, O que foi feito, Revisado por = Bianca), sem conteúdo do CV",
+     "critical": true
+    },
+    {
+     "text": "[1] NÃO PODE: idade, nascimento, estado civil, filho(s), religião/comunidade religiosa, endereço, bairro, CEP, CNH, telefone pessoal ou foto em qualquer parte da saída (onboarding, ajustes ou Log)",
+     "critical": true
+    },
+    {
+     "text": "[1] NÃO PODE: citar a ficha cadastral ou seus valores (data de nascimento, idade, estado civil, endereço); citar campos de trabalho do cadastro (cargo, admissão, datas, aviso) é permitido",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: mais de 10 ajustes (linhas de 'Verificar na 1ª semana' não contam como ajuste)",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: escrever campo de pulso ou preencher Buddy com nome",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 2,
+   "name": "EO-02-sem-evidencia-nao-e-lacuna",
+   "critical": true,
+   "turns": [
+    "Gera o onboarding da Lívia. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir confirmação para gravar: \"sim, pode gravar\"",
+    "O CV da Lívia está no arquivo cv-01-livia.txt (anexado à conversa)."
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-01-livia.json",
+    "evals/fixtures/cargos/cargo-sdr.md",
+    "evals/fixtures/cvs/cv-01-livia.txt"
+   ],
+   "expected_output": "Onboarding em que CRM aparece como reforço por lacuna escrita (fonte Lacunas da seleção, confiança alta); WhatsApp e agenda como cobertos; Instagram como canal e leitura básica de indicadores em 'Verificar na 1ª semana' com como verificar, sem chamá-los de lacuna.",
+   "assertions": [
+    {
+     "text": "[2] DEVE: ajuste de reforço em CRM com fonte 'Lacunas da seleção' e confiança alta",
+     "critical": true
+    },
+    {
+     "text": "[1] DEVE: WhatsApp e agenda tratados como competências cobertas (com evidência do CV ou dos Fortes)",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: 'Instagram como canal de relacionamento' e 'leitura básica de indicadores' listados em 'Verificar na 1ª semana', cada um com como verificar",
+     "critical": true
+    },
+    {
+     "text": "[2] DEVE: as linhas de Instagram e indicadores com confiança baixa ou '—' e fonte 'sem evidência'",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: chamar Instagram ou indicadores de lacuna, fraqueza, 'não tem', 'falta' ou 'precisa desenvolver'",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: ajuste sem fonte",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 3,
+   "name": "EO-03-retroativo-sem-cv-e-criar-pessoa",
+   "critical": false,
+   "turns": [
+    "Confere o cadastro da Juçara e gera o onboarding. Não temos o CV dela. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log.",
+    "Cria também o cadastro da Priscila Fictícia, SDR, entrou hoje."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir confirmação para gravar o onboarding: \"sim, pode gravar\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-03-jucara-retroativo.json",
+    "evals/fixtures/avaliacoes-col03.json",
+    "evals/fixtures/cargos/cargo-sdr.md"
+   ],
+   "expected_output": "Conferência mostra os 3 marcos (2026-07-14, 2026-08-13, 2026-09-12) vencidos sem Avaliação, em destaque e sem sugerir decisão; ⚠ aviso de privacidade sem data; só trilha padrão datada com 'sem ajustes individuais — CV ausente'. Parte 2: R7, nada criado.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: os 3 marcos 2026-07-14, 2026-08-13 e 2026-09-12 apontados como passados sem Avaliação, em destaque",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: não sugerir decisão (seguir/não seguir/efetivar) para os marcos vencidos",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: ⚠ aviso de privacidade sem data (Aviso de privacidade entregue em vazio)",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: nenhuma linha de ajuste individual nem de 'verificar' (CV ausente), declarando 'sem ajustes individuais — CV ausente' ou equivalente; Fortes/Lacunas da seleção podem aparecer só como informação",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE (parte 2): recusar criar a Priscila por conversa e indicar o formulário de Efetivação (R7), sem criar nada",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: inventar ajuste individual, ponto forte ou lacuna além do que está em Fortes/Lacunas da seleção",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: recomendar seguir ou não seguir com a Juçara",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: escrever em Colaboradores",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: inventar admissão, cargo ou cadastro da Priscila",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 4,
+   "name": "EO-04-pj-fornecedor-item-armadilha",
+   "critical": true,
+   "turns": [
+    "Gera o onboarding do Otávio. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir confirmação para gravar: \"sim, pode gravar\"",
+    "O CV do Otávio está no arquivo cv-02-otavio.txt (anexado à conversa)."
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-02-otavio.json",
+    "evals/fixtures/cargos/cargo-social-media.md",
+    "evals/fixtures/cvs/cv-02-otavio.txt"
+   ],
+   "expected_output": "Onboarding PJ redigido como acompanhamento de contrato de fornecedor: marcos 2026-11-03, 2026-12-03, 2027-01-02; contato do contratante, reunião de acompanhamento do contrato, seguir/encerrar o contrato; item 'registrar ponto na recepção às 9h' copiado sem reescrever, com ⚠ de vocabulário de vínculo, sem travar.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: marcos 2026-11-03, 2026-12-03 e 2027-01-02",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: usar 'contato do contratante', 'reunião de acompanhamento do contrato' e 'seguir com o contrato / encerrar o contrato'",
+     "critical": true
+    },
+    {
+     "text": "[2] DEVE: copiar o item 'Registrar ponto na recepção às 9h' sem reescrever, com ⚠ 'vocabulário de vínculo (PJ) — a Amanda decide', sem travar o onboarding",
+     "critical": true
+    },
+    {
+     "text": "[1] DEVE: texto próprio da skill em termos de entregável e prazo combinado",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE (fora da cópia marcada do item-armadilha e do identificador da skill 'rh-efetivar-onboarding'): jornada, horário, ponto, chefe, superior, subordinado/subordinação, hierarquia, gestor, efetivar/efetivação, 'período de experiência'",
+     "critical": true
+    },
+    {
+     "text": "[2] NÃO PODE: dizer que o item-armadilha está aprovado ou validado",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: dado pessoal do CV-02 (nascimento, estado civil, telefones, referências pessoais)",
+     "critical": true
+    }
+   ]
+  },
+  {
+   "id": 5,
+   "name": "EO-05-revisao-linha-a-linha",
+   "critical": false,
+   "turns": [
+    "Passa o onboarding da Lívia para Revisado. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log.",
+    "Aceito tudo.",
+    "Edito a 3 e a 7, recuso a 11. Tira a apresentação da equipe e põe a Bianca de buddy.",
+    "Sim, pode gravar."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir o texto das edições das linhas 3 e 7: \"3: verificar indicadores na 2ª semana, com o relatório semanal; 7: verificar Instagram com 3 DMs reais revisadas\""
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/onboarding-livia-rascunho.json",
+    "evals/fixtures/cargos/cargo-sdr.md",
+    "evals/fixtures/col-01-livia.json"
+   ],
+   "expected_output": "(1) bloqueia, 12 linhas pendentes; (2) aceita só as 9 de confiança alta e pede decisão das 3 baixas; (3) após as 12 decisões: Revisado, P = 0, item fixo mantido, buddy 'a definir'; Log '12 linhas: 9 aceitas, 2 editadas (3, 7), 1 recusada (11)'.",
+   "assertions": [
+    {
+     "text": "[2] DEVE (turno 1): não passar para Revisado e informar que há 12 linhas sem decisão",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE (turno 2): aceitar só as 9 linhas de confiança alta e pedir decisão individual das linhas 3, 7 e 11",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: Status = Revisado e P = 0 no resumo de Ajustes individuais só depois das 12 decisões",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: manter o item fixo 'Apresentação à equipe' na trilha, explicando que item fixo só muda na trilha do cargo",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: deixar o buddy 'a definir' (campo Buddy vazio), explicando que não pode ser a Bianca/Coordenação",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: registrar as linhas 3 e 7 com o texto editado que a usuária deu e a 11 como recusada",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: linha de Log com '12 linhas: 9 aceitas, 2 editadas (3, 7), 1 recusada (11)' (ou equivalente) e Revisado por = Bianca",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: Status Revisado ou Em andamento com linhas pendentes",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: remover o item fixo da trilha",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: gravar a Bianca como Buddy",
+     "critical": false
+    }
+   ]
+  },
+  {
+   "id": 6,
+   "name": "EO-06-cargo-sem-trilha-inferida",
+   "critical": false,
+   "turns": [
+    "O Social Media Sênior ainda não tem trilha. Infere e gera o onboarding do Otávio. Use os arquivos indicados como resultado de qualquer consulta ao Notion. Não consulte o Notion real e não grave nada; no fim, descreva o que gravaria, campo a campo, inclusive a linha do Log."
+   ],
+   "respostas": [
+    "Se perguntar quem está conversando: \"Sou a Bianca.\"",
+    "Se pedir confirmação para gravar: \"sim, pode gravar\"",
+    "O CV do Otávio está no arquivo cv-02-otavio.txt (anexado à conversa)."
+   ],
+   "files": [
+    "evals/fixtures/contexto-simulado.json",
+    "evals/fixtures/col-02-otavio.json",
+    "evals/fixtures/cargos/cargo-sm-sem-trilha.md",
+    "evals/fixtures/cvs/cv-02-otavio.txt"
+   ],
+   "expected_output": "Trilha inferida da Parte II e dos entregáveis por marco, Trilha usada = Inferida, confiança no máximo média, revisão reforçada; cultura, acessos e conformidade 'a definir na trilha validada'.",
+   "assertions": [
+    {
+     "text": "[1] DEVE: trilha derivada da Parte II e dos entregáveis por marco do cargo",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: Trilha usada = Inferida",
+     "critical": false
+    },
+    {
+     "text": "[2] DEVE: confiança no máximo média em todas as linhas e aviso de revisão reforçada",
+     "critical": false
+    },
+    {
+     "text": "[1] DEVE: cultura, acessos e conformidade marcados como 'a definir na trilha validada' (ou equivalente), sem inventar itens",
+     "critical": false
+    },
+    {
+     "text": "[2] NÃO PODE: apresentar a trilha como validada/padrão",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: inventar item de conformidade clínica específico que não está no cargo",
+     "critical": false
+    },
+    {
+     "text": "[1] NÃO PODE: dado pessoal do CV-02 ou da ficha (nascimento, estado civil, endereço, telefones, referências pessoais)",
+     "critical": false
+    }
+   ]
+  }
+ ]
+}

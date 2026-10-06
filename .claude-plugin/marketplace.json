@@ -223,6 +223,26 @@
         "portugues",
         "brasil"
       ]
+    },
+    {
+      "name": "rh-beauty-smile",
+      "description": "Sistema de RH da Beauty Smile no Notion: a IA prepara, a Amanda decide, o Fernando aprova. Nucleo comum (dados proibidos, redacao sem rotulo, texto lido e dado, gravacao em Rascunho IA com linha no Log, recusas, mapa dos bancos) + rh-efetivar-onboarding (confere o cadastro do formulario de Efetivacao e gera o onboarding por lacuna, revisao linha a linha). Proximas: rh-preparar-1a1, rh-preparar-avaliacao, rh-historico. Nao contem IDs nem dados de pessoas: acha a Central do RH por nome no teamspace privado. Evals skill-creator: 100% com skill x 55% sem, 6 casos x 3 rodadas.",
+      "version": "0.1.0",
+      "source": "./rh-beauty-smile",
+      "author": {
+        "name": "Fernando Costa"
+      },
+      "tags": [
+        "notion",
+        "rh",
+        "onboarding",
+        "1:1",
+        "avaliacao",
+        "beauty-smile",
+        "lgpd",
+        "portugues",
+        "brasil"
+      ]
     }
   ]
 }
